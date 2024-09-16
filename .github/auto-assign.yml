@@ -1,0 +1,15 @@
+# 출처 : https://green1229.tistory.com/477
+
+# PR시 자동 reviewer 등록
+addReviewers: true
+
+# 자기 자신을 Assignee으로 드옭
+addAssignees: author
+
+# 리뷰어
+reviewers:
+  - amm0124
+
+# A number of reviewers added to the pull request
+# Set 0 to add all the reviewers (default: 0)
+numberOfReviewers: 0
