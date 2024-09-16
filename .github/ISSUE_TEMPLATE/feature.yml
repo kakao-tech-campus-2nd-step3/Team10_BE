@@ -1,0 +1,22 @@
+name: "✏️ Feature"
+description: "기능 template"
+labels: "✏️ Feature"
+body:
+  - type: textarea
+    attributes:
+      label: ✏️ Describe
+      description: 기능 작성
+      placeholder: 자세하게 적어주세요!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: ✅ TO-DO
+      description: TO-DO 작성
+      placeholder: 기능을 위해 무엇을 할 지 적어주세요!
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 🙋🏻 More
+      description: 더 하고 싶은 말이 있다면 작성해 주세요!

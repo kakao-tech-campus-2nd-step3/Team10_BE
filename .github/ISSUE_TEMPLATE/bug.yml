@@ -6,14 +6,14 @@ body:
     attributes:
       label: 🐞 Describe
       description: 버그 설명
-      placeholder: 자세히 적어주세요
+      placeholder: 자세히 적어주세요!
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 📄 Logs
-      description: 로그 있으면 복붙해 주세요.
+      description: 로그 있으면 복붙해 주세요!
       render: shell
     validations:
       required: false
@@ -21,13 +21,11 @@ body:
   - type: textarea
     attributes:
       label: 🌏 Environment
-      description: 버그가 발생한 환경에 대해 작성해 주세요.
-      placeholder: |
-        OS: macOS 12.2.1
+      description: 버그가 발생한 환경에 대해 작성해 주세요!
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: 🙋🏻 More
-      description: 더 하고 싶은 말이 있다면 작성해 주세요.
+      description: 더 하고 싶은 말이 있다면 작성해 주세요!

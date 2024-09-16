@@ -1,9 +1,11 @@
 # 출처 : https://green1229.tistory.com/477
 
+# PR시 reviewer 자동 등록 설정
+
 # PR시 자동 reviewer 등록
 addReviewers: true
 
-# 자기 자신을 Assignee으로 드옭
+# 자기 자신을 Assignee으로 등록
 addAssignees: author
 
 # 리뷰어
