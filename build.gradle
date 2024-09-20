@@ -32,6 +32,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.json:json:20210307'
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
