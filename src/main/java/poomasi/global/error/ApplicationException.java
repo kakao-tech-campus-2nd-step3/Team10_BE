@@ -1,4 +1,4 @@
-package poomasi.global.exception;
+package poomasi.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
