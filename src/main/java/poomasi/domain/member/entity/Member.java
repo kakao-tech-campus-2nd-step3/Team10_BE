@@ -1,8 +1,10 @@
 package poomasi.domain.member.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @Table(name="member")
 @NoArgsConstructor
@@ -32,13 +34,19 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile profile;
 
-    public MemberProfile getProfile() {
-        return profile;
+    public Member(String email, String password, LoginType loginType, MemberType memberType, String snsAuthId) {
+        this.email = email;
+        this.password = password;
+        this.loginType = loginType;
+        this.memberType = memberType;
+        this.snsAuthId = snsAuthId;
     }
 
     public void setProfile(MemberProfile profile) {
         this.profile = profile;
-        profile.setMember(this);
+        if (profile != null) {
+            profile.setMember(this);
+        }
     }
 
 }
