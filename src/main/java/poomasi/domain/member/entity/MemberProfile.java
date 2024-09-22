@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "member_profile")
@@ -24,6 +26,12 @@ public class MemberProfile {
     @Column(length = 255)
     private String address;
 
+    @Column(nullable = false)
+    private boolean isSuspended;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
     @Setter
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", referencedColumnName = "id")
@@ -33,6 +41,8 @@ public class MemberProfile {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.isSuspended = false;  // 기본값
+        this.createdAt = LocalDateTime.now();  // 현재 시간
         this.member = member;
     }
 
