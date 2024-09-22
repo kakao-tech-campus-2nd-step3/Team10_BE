@@ -27,6 +27,8 @@ dependencies {
 
     // Spring Security
     implementation 'org.springframework.security:spring-security-crypto:5.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // H2 Database
     runtimeOnly 'com.h2database:h2'
