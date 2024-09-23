@@ -3,7 +3,10 @@ package poomasi.domain.farm.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm.dto.FarmRegisterRequest;
+import poomasi.domain.farm.dto.FarmResponse;
 import poomasi.domain.farm.repository.FarmRepository;
+import poomasi.global.error.BusinessError;
+import poomasi.global.error.BusinessException;
 
 @Service
 @AllArgsConstructor
@@ -17,5 +20,11 @@ public class FarmManageService {
 
 
         return farmRepository.save(request.toEntity()).getId();
+    }
+
+    public FarmResponse getFarm(Long farmId) {
+        return farmRepository.findById(farmId)
+                .map(FarmResponse::fromEntity)
+                .orElseThrow(() -> new BusinessException(BusinessError.FARM_NOT_FOUND));
     }
 }
