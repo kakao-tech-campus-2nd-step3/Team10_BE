@@ -14,7 +14,7 @@ public class FarmMangeController {
 
     @GetMapping("/api/farm/{farmId}")
     public ResponseEntity<?> getFarm(@RequestParam Long farmId) {
-        return ResponseEntity.ok(farmManageService.getFarm(farmId));
+        return ResponseEntity.ok(farmManageService.getFarmByFarmId(farmId));
 
     }
 

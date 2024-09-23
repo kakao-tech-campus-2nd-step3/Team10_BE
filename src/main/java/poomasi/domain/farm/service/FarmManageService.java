@@ -22,9 +22,11 @@ public class FarmManageService {
         return farmRepository.save(request.toEntity()).getId();
     }
 
-    public FarmResponse getFarm(Long farmId) {
+    public FarmResponse getFarmByFarmId(Long farmId) {
         return farmRepository.findById(farmId)
                 .map(FarmResponse::fromEntity)
                 .orElseThrow(() -> new BusinessException(BusinessError.FARM_NOT_FOUND));
     }
+
+
 }
