@@ -1,7 +1,9 @@
 package poomasi.domain.farm.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import poomasi.domain.farm.dto.FarmRegisterRequest;
 import poomasi.domain.farm.service.FarmManageService;
@@ -13,7 +15,7 @@ public class FarmMangeController {
     private final FarmManageService farmManageService;
 
     @PostMapping("/api/farm")
-    public Long registerFarm(FarmRegisterRequest request) {
-        return farmManageService.registerFarm(request);
+    public ResponseEntity<?> registerFarm(@RequestBody FarmRegisterRequest request) {
+        return ResponseEntity.ok(farmManageService.registerFarm(request));
     }
 }
