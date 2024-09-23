@@ -41,8 +41,8 @@ public class MemberProfile {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.isSuspended = false;  // 기본값
-        this.createdAt = LocalDateTime.now();  // 현재 시간
+        this.isSuspended = false;
+        this.createdAt = LocalDateTime.now();
         this.member = member;
     }
 
