@@ -31,7 +31,7 @@ public class JwtProvider {
     }
 
     // 토큰 생성
-    private String generateAccessToken(final String email, final Map<String, Object> claims) {
+    public String generateAccessToken(final String email, final Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)
@@ -41,7 +41,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    private String generateRefreshToken(final String email) {
+    public String generateRefreshToken(final String email) {
         return Jwts.builder()
                 .setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
