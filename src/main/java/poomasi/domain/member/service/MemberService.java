@@ -8,7 +8,7 @@ import poomasi.domain.member.dto.response.LoginResponse;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtUtil;
+import poomasi.global.util.JwtProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,10 +23,10 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
 
-    public MemberService(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public MemberService(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -40,8 +40,8 @@ public class MemberService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", member.getId());
 
-        String accessToken = jwtUtil.generateAccessToken(member.getEmail(), claims);
-        String refreshToken = jwtUtil.generateRefreshToken(member.getEmail());
+        String accessToken = jwtProvider.generateAccessToken(member.getEmail(), claims);
+        String refreshToken = jwtProvider.generateRefreshToken(member.getEmail());
 
         return new LoginResponse(accessToken, refreshToken);
     }
