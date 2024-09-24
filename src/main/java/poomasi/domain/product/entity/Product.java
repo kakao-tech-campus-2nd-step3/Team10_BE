@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
 @SQLSelect(sql = "SELECT * FROM farm WHERE status = ProductStatus.OPEN")
@@ -40,6 +42,7 @@ public class Product {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
 
     @Builder
     public Product(Long productId,
