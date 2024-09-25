@@ -11,7 +11,7 @@ import poomasi.domain.farm.service.FarmFarmerService;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/farm/farmer")
+@RequestMapping("/api/farm")
 public class FarmFarmerController {
     private final FarmFarmerService farmFarmerService;
 
