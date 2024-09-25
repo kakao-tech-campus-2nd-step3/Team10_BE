@@ -1,6 +1,7 @@
 package poomasi.domain.farm.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.farm.service.FarmService;
@@ -17,9 +18,8 @@ public class FarmController {
         return ResponseEntity.ok(farmService.getFarmByFarmId(farmId));
     }
 
-    // 농장 조회 페이지네이션
     @GetMapping("")
-    public ResponseEntity<?> getFarmList(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(farmService.getFarmList(page, size));
+    public ResponseEntity<?> getFarmList(Pageable pageable) {
+        return ResponseEntity.ok(farmService.getFarmList(pageable));
     }
 }
