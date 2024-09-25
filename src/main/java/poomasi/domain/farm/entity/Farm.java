@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLSelect;
 import org.hibernate.annotations.UpdateTimestamp;
+import poomasi.domain.farm.dto.FarmUpdateRequest;
 
 import java.time.LocalDateTime;
 
@@ -60,4 +61,13 @@ public class Farm {
         this.description = description;
     }
 
+    public Farm updateFarm(FarmUpdateRequest farmUpdateRequest) {
+        this.name = farmUpdateRequest.name();
+        this.address = farmUpdateRequest.address();
+        this.addressDetail = farmUpdateRequest.addressDetail();
+        this.latitude = farmUpdateRequest.latitude();
+        this.longitude = farmUpdateRequest.longitude();
+        this.description = farmUpdateRequest.description();
+        return this;
+    }
 }

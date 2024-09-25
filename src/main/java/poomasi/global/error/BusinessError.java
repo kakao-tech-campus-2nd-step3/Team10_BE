@@ -10,6 +10,7 @@ import lombok.Getter;
 public enum BusinessError {
     // Farm
     FARM_NOT_FOUND(HttpStatus.NOT_FOUND, "농장을 찾을 수 없습니다."),
+    FARM_OWNER_MISMATCH(HttpStatus.FORBIDDEN, "해당 농장의 소유자가 아닙니다."),
     ;
 
     private final HttpStatus httpStatus;
