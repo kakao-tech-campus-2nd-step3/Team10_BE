@@ -31,6 +31,8 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
+    // 할거: 리프레시 토큰 적용, 로그아웃, 회원가입,
+
     public LoginResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmailAndLoginType(loginRequest.email(), LOCAL)
                 .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));

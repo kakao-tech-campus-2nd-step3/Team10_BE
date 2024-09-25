@@ -3,11 +3,15 @@ package poomasi.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLSelect;
 
 @Getter
 @Entity
 @Table(name="member")
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
+@SQLSelect(sql = "SELECT * FROM farm WHERE deleted = false")
 public class Member {
 
     @Id
@@ -26,7 +30,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
-    private MemberType memberType;
+    private Role role;
 
     @Column(nullable = true)
     private String snsAuthId;
@@ -34,11 +38,11 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile profile;
 
-    public Member(String email, String password, LoginType loginType, MemberType memberType, String snsAuthId) {
+    public Member(String email, String password, LoginType loginType, Role role, String snsAuthId) {
         this.email = email;
         this.password = password;
         this.loginType = loginType;
-        this.memberType = memberType;
+        this.role = role;
         this.snsAuthId = snsAuthId;
     }
 
