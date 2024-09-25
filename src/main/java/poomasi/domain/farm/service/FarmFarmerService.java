@@ -7,7 +7,7 @@ import poomasi.domain.farm.repository.FarmRepository;
 
 @Service
 @AllArgsConstructor
-public class FarmSellerService {
+public class FarmFarmerService {
     private final FarmRepository farmRepository;
 
     public Long registerFarm(FarmRegisterRequest request) {
