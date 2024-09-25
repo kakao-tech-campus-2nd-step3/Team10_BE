@@ -16,4 +16,10 @@ public class FarmController {
     public ResponseEntity<?> getFarm(@RequestParam Long farmId) {
         return ResponseEntity.ok(farmService.getFarmByFarmId(farmId));
     }
+
+    // 농장 조회 페이지네이션
+    @GetMapping("")
+    public ResponseEntity<?> getFarmList(@RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(farmService.getFarmList(page, size));
+    }
 }

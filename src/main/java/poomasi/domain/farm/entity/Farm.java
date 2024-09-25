@@ -29,6 +29,8 @@ public class Farm {
     @Column(name = "owner_id")
     private Long ownerId;
 
+    private String description;
+
     private String address; // 도로명 주소
     private String addressDetail; // 상세 주소
 
@@ -48,13 +50,14 @@ public class Farm {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude) {
+    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description) {
         this.name = name;
         this.ownerId = ownerId;
         this.address = address;
         this.addressDetail = addressDetail;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.description = description;
     }
 
 }

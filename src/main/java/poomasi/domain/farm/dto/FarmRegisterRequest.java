@@ -20,6 +20,7 @@ public record FarmRegisterRequest(
                 .addressDetail(addressDetail)
                 .latitude(latitude)
                 .longitude(longitude)
+                .description(description)
                 .build();
     }
 }
