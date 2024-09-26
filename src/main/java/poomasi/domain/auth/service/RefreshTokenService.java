@@ -23,21 +23,26 @@ public class RefreshTokenService {
 
         checkRefreshToken(refreshToken);
 
-        Long id = refreshTokenManager.getRefreshToken(refreshToken);
+        Long MemberId = refreshTokenManager.getRefreshToken(refreshToken);
 
         String email = jwtProvider.getSubjectFromToken(refreshToken);
 
+        return getTokenResponse(MemberId, email, jwtProvider, refreshTokenManager);
+    }
+
+    public static TokenResponse getTokenResponse(Long memberId, String email, JwtProvider jwtProvider, RefreshToken refreshTokenManager) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id",id);
+        claims.put("id", memberId);
         String newAccessToken = jwtProvider.generateAccessToken(email, claims);
 
-        refreshTokenManager.removeRefreshToken(refreshToken);
+        refreshTokenManager.removeMemberRefreshToken(memberId);
 
         String newRefreshToken = jwtProvider.generateRefreshToken(email);
-        refreshTokenManager.putRefreshToken(newRefreshToken, id);
+        refreshTokenManager.putRefreshToken(newRefreshToken, memberId);
 
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
+
 
     private void checkRefreshToken(final String refreshToken) {
         if(Boolean.FALSE.equals(jwtProvider.validateToken(refreshToken)))

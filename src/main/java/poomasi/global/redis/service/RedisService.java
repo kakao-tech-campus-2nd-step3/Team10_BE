@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Component
@@ -31,6 +35,11 @@ public class RedisService {
 
     public void deleteValues(String key) {
         redisTemplate.delete(key);
+    }
+
+    public List<String> getKeysByPattern(String pattern){
+        Set<String> keys = redisTemplate.keys(pattern);
+        return keys != null ? new ArrayList<>(keys) : Collections.emptyList();
     }
 
 }

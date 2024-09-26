@@ -7,6 +7,7 @@ import poomasi.global.error.BusinessException;
 import poomasi.global.redis.service.RedisService;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
@@ -26,12 +27,21 @@ public class RefreshToken {
 
     public Long getRefreshToken(final String refreshToken) {
         String result = redisService.getValues(refreshToken);
-        return Optional.ofNullable(result != null ? Long.parseLong(result) : null)
+        return Optional.ofNullable(result)
+                .map(Long::parseLong)
                 .orElseThrow(() -> new BusinessException(REFRESH_TOKEN_NOT_FOUND));
     }
 
     public void removeRefreshToken(final String refreshToken) {
         redisService.deleteValues(refreshToken);
+    }
+
+    public void removeMemberRefreshToken(final Long userId) {
+        List<String> keys = redisService.getKeysByPattern(userId.toString());
+
+        for (String key : keys) {
+            removeRefreshToken(key);
+        }
     }
 
 }
