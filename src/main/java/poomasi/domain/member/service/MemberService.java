@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.member.dto.request.LoginRequest;
-import poomasi.domain.member.dto.response.LoginResponse;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
@@ -31,9 +31,9 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    // 할거: 리프레시 토큰 적용, 로그아웃, 회원가입, Redis 연동
+    // 할거: 로그아웃, 회원가입
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmailAndLoginType(loginRequest.email(), LOCAL)
                 .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
 
@@ -47,6 +47,6 @@ public class MemberService {
         String accessToken = jwtProvider.generateAccessToken(member.getEmail(), claims);
         String refreshToken = jwtProvider.generateRefreshToken(member.getEmail());
 
-        return new LoginResponse(accessToken, refreshToken);
+        return new TokenResponse(accessToken, refreshToken);
     }
 }
