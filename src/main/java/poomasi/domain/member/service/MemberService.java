@@ -35,7 +35,7 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    // 할거: 로그아웃, 일반 회원가입, 농부로 회원가입, 카카오 로그인
+    // 할거: 농부로 회원가입, 카카오 로그인
     // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
     // 일반 회원가입 한 것과 같은 이메일로 카카오 로그인 할 경우 계정 통합
     // 통합시 로그인 타입은 LOCAL
@@ -64,7 +64,7 @@ public class MemberService {
             // 로그인 타입이 카카오인 경우, 계정 통합
             if (loginType != LoginType.LOCAL) {
                 Member member = existingMember.get();
-                member.setLoginType(LOCAL);
+                member.kakaoToLocal(loginRequest.password());
                 memberRepository.save(member);
                 return getTokenResponse(member.getId(), member.getEmail(), jwtProvider, refreshTokenManager);
             } else {

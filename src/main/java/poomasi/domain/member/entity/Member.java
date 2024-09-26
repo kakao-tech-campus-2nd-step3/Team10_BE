@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLSelect;
 
+import static poomasi.domain.member.entity.LoginType.LOCAL;
+
 @Getter
 @Entity
 @Table(name="member")
@@ -52,6 +54,11 @@ public class Member {
         if (profile != null) {
             profile.setMember(this);
         }
+    }
+
+    public void kakaoToLocal(String password){
+        this.password = password;
+        this.loginType = LOCAL;
     }
 
 }
