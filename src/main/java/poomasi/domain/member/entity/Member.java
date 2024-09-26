@@ -19,7 +19,7 @@ public class Member {
     private Long id;
 
     @Column(unique = true, nullable = true, length = 50)
-    private String email;
+    private String username;
 
     @Column(nullable = true)
     private String password;
