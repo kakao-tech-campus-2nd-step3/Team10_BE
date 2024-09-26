@@ -32,7 +32,8 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    // 할거: 로그아웃, 회원가입
+    // 할거: 로그아웃, 일반 회원가입, 농부로 회원가입, 카카오 로그인
+    // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
 
     public TokenResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmailAndLoginType(loginRequest.email(), LOCAL)
@@ -47,4 +48,5 @@ public class MemberService {
 
         return getTokenResponse(memberId, memberEmail, jwtProvider, refreshTokenManager);
     }
+
 }

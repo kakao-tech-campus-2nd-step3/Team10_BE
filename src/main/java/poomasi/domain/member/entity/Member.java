@@ -33,17 +33,17 @@ public class Member {
     private Role role;
 
     @Column(nullable = true)
-    private String snsAuthId;
+    private String kakaoAuthId;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile profile;
 
-    public Member(String email, String password, LoginType loginType, Role role, String snsAuthId) {
+    public Member(String email, String password, LoginType loginType, Role role, String kakaoAuthId) {
         this.email = email;
         this.password = password;
         this.loginType = loginType;
         this.role = role;
-        this.snsAuthId = snsAuthId;
+        this.kakaoAuthId = kakaoAuthId;
     }
 
     public void setProfile(MemberProfile profile) {

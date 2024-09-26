@@ -21,4 +21,5 @@ public class AuthController {
                 .header("Authorization", "Bearer " + responseBody.accessToken())
                 .body(responseBody);
     }
+
 }
