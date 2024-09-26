@@ -28,7 +28,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long categoryId;
-    private Long userId; //등록한 사람
+    private Long farmerId; //등록한 사람
     private String name;
     private String description;
     private String imageUrl;
@@ -47,14 +47,14 @@ public class Product {
     @Builder
     public Product(Long productId,
                    Long categoryId,
-                   Long userId, //등록한 사람
+                   Long farmerId, //등록한 사람
                    String name,
                    String description,
                    String imageUrl,
                    int quantity,
                    String price) {
         this.categoryId = categoryId;
-        this.userId = userId;
+        this.farmerId = farmerId;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;

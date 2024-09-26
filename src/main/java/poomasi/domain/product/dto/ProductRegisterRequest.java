@@ -4,7 +4,7 @@ import poomasi.domain.product.entity.Product;
 
 public record ProductRegisterRequest(
         Long categoryId,
-        Long userId, //등록한 사람
+        Long farmerId, //등록한 사람
         String name,
         String description,
         String imageUrl,
@@ -14,7 +14,7 @@ public record ProductRegisterRequest(
     public Product toEntity() {
         return Product.builder()
                 .categoryId(categoryId)
-                .userId(userId)
+                .farmerId(farmerId)
                 .name(name)
                 .description(description)
                 .quantity(0)

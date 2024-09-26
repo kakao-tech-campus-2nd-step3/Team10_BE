@@ -6,11 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.category.dto.CategoryRequest;
-import poomasi.domain.category.dto.CategoryResponse;
 import poomasi.domain.category.service.CategoryAdminService;
-import poomasi.domain.category.service.CategoryService;
-
-import java.util.List;
 
 @Controller
 @AllArgsConstructor

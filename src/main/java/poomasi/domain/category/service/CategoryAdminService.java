@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.category.dto.CategoryRequest;
-import poomasi.domain.category.dto.CategoryResponse;
 import poomasi.domain.category.entity.Category;
 import poomasi.domain.category.repository.CategoryRepository;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor

@@ -22,21 +22,16 @@ public class ProductFarmerService {
         return saveProduct.getId();
     }
 
-    public Long modifyProduct(String token, ProductRegisterRequest productRequest, Long productId) {
+    public void modifyProduct(String token, ProductRegisterRequest productRequest, Long productId) {
         //주인인지 알아보기
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
-
-        Product modifyProduct = productRepository.save(product.modify(productRequest));
-        return modifyProduct.getId();
+        Product product = getProductByProductId(productId);
+        productRepository.save(product.modify(productRequest));
     }
 
     @Transactional
     public void deleteProduct(String token, Long productId) {
         //주인인지 알아보기
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
-
+        Product product = getProductByProductId(productId);
         product.close();
         productRepository.delete(product);
     }
@@ -44,8 +39,10 @@ public class ProductFarmerService {
     @Transactional
     public void addQuantity(String token, Long productId, Integer quantity) {
         //주인인지 알아보기
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
-        product.addQuantity(quantity);
+        getProductByProductId(productId).addQuantity(quantity);;
+    }
+
+    private Product getProductByProductId(Long productId) {
+        return productRepository.findById(productId).orElseThrow(()-> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
     }
 }
