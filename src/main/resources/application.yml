@@ -1,0 +1,11 @@
+spring:
+    application:
+        name: team10-poomasi
+logging:
+    level:
+        org:
+            springframework:
+                security : TRACE
+                web: DEBUG
+
+#spring.application.name=team10-poomasi
