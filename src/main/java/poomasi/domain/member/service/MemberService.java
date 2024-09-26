@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.entity.RefreshToken;
+import poomasi.domain.member.dto.request.BusinessRegistrationRequest;
 import poomasi.domain.member.dto.request.LoginRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
+import static poomasi.domain.member.entity.Role.ROLE_FARMER;
 import static poomasi.global.error.BusinessError.*;
 
 @Service
@@ -35,10 +37,12 @@ public class MemberService {
         this.jwtProvider = jwtProvider;
     }
 
-    // 할거: 농부로 회원가입, 카카오 로그인
+    // 할거: 카카오 로그인
     // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
     // 일반 회원가입 한 것과 같은 이메일로 카카오 로그인 할 경우 계정 통합
     // 통합시 로그인 타입은 LOCAL
+
+    // 사업자 등록 번호 검사 로직은 추후 논의 필요
 
     public TokenResponse login(LoginRequest loginRequest) {
         Member member = memberRepository.findByEmailAndLoginType(loginRequest.email(), LOCAL)
@@ -77,6 +81,23 @@ public class MemberService {
         return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtProvider, refreshTokenManager);
     }
 
+    @Transactional
+    public void upgradeToFarmer(Long memberId, BusinessRegistrationRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
+
+        if (!isValidBusinessRegistration(request)) {
+            throw new BusinessException(INVALID_BUSINESS_REGISTRATION);
+        }
+
+        member.setRole(ROLE_FARMER);
+        memberRepository.save(member);
+    }
+
+    // 사업자 등록 번호 유효한지 임시 작성
+    private boolean isValidBusinessRegistration(BusinessRegistrationRequest request) {
+        return request.businessRegistrationNumber() != null && !request.businessRegistrationNumber().isEmpty();
+    }
 
     @Transactional
     public void logout(Long memberId) {

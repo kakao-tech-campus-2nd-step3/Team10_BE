@@ -32,6 +32,7 @@ public class Member {
     @Column(nullable = true)
     private LoginType loginType;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private Role role;
