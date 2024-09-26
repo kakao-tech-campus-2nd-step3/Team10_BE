@@ -36,8 +36,8 @@ public class RefreshToken {
         redisService.deleteValues(refreshToken);
     }
 
-    public void removeMemberRefreshToken(final Long userId) {
-        List<String> keys = redisService.getKeysByPattern(userId.toString());
+    public void removeMemberRefreshToken(final Long memberId) {
+        List<String> keys = redisService.getKeysByPattern(memberId.toString());
 
         for (String key : keys) {
             removeRefreshToken(key);

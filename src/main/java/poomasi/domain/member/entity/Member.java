@@ -3,6 +3,7 @@ package poomasi.domain.member.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLSelect;
 
@@ -24,6 +25,7 @@ public class Member {
     @Column(nullable = true)
     private String password;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
     private LoginType loginType;
@@ -38,12 +40,11 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile profile;
 
-    public Member(String email, String password, LoginType loginType, Role role, String kakaoAuthId) {
+    public Member(String email, String password, LoginType loginType, Role role) {
         this.email = email;
         this.password = password;
         this.loginType = loginType;
         this.role = role;
-        this.kakaoAuthId = kakaoAuthId;
     }
 
     public void setProfile(MemberProfile profile) {
