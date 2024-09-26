@@ -22,8 +22,11 @@ public class JwtProvider {
 
     private SecretKey secretKey;
 
-    private final long ACCESS_TOKEN_EXPIRATION_TIME = 3600000; // 1시간
-    private final long REFRESH_TOKEN_EXPIRATION_TIME = 604800000; // 7일
+    @Value("${jwt.access-token-expiration-time}")
+    private long ACCESS_TOKEN_EXPIRATION_TIME;
+
+    @Value("${jwt.refresh-token-expiration-time}")
+    private long REFRESH_TOKEN_EXPIRATION_TIME;
 
     @PostConstruct
     public void init() {
