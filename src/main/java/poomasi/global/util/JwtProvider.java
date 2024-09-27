@@ -80,16 +80,8 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (SecurityException e) {
-            log.warn("유효하지 않은 JWT signature입니다: {}", e.getMessage());
-        } catch (MalformedJwtException e) {
-            log.warn("유효하지 않은 JWT token입니다: {}", e.getMessage());
-        } catch (ExpiredJwtException e) {
-            log.warn("JWT token이 만료되었습니다: {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            log.warn("지원되지 않는 JWT token입니다: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.warn("JWT claims가 비어있습니다: {}", e.getMessage());
+        } catch (JwtException | IllegalArgumentException e) {
+            log.warn("유효하지 않은 JWT token입니다");
         }
 
         return false;
