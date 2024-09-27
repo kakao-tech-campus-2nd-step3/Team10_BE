@@ -65,8 +65,7 @@ public class MemberService {
 
     @Transactional
     public void upgradeToFarmer(Long memberId, Boolean hasFarmerQualification) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
+        Member member = findMemberById(memberId);
 
         if (!hasFarmerQualification) {
             throw new BusinessException(INVALID_FARMER_QUALIFICATION);
@@ -79,6 +78,11 @@ public class MemberService {
     @Transactional
     public void logout(Long memberId) {
         refreshTokenManager.removeMemberRefreshToken(memberId);
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
     }
 
 
