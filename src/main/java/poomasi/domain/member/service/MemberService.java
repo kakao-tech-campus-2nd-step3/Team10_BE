@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.entity.RefreshToken;
-import poomasi.domain.member.dto.request.BusinessRegistrationRequest;
 import poomasi.domain.member.dto.request.LoginRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
@@ -17,7 +16,6 @@ import poomasi.global.util.JwtProvider;
 import java.util.Optional;
 
 import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
-import static poomasi.domain.member.entity.LoginType.LOCAL;
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
 import static poomasi.domain.member.entity.Role.ROLE_FARMER;
 import static poomasi.global.error.BusinessError.*;
@@ -68,21 +66,16 @@ public class MemberService {
     }
 
     @Transactional
-    public void upgradeToFarmer(Long memberId, BusinessRegistrationRequest request) {
+    public void upgradeToFarmer(Long memberId, Boolean hasFarmerQualification) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
 
-        if (!isValidBusinessRegistration(request)) {
-            throw new BusinessException(INVALID_BUSINESS_REGISTRATION);
+        if (!hasFarmerQualification) {
+            throw new BusinessException(INVALID_FARMER_QUALIFICATION);
         }
 
         member.setRole(ROLE_FARMER);
         memberRepository.save(member);
-    }
-
-    // 사업자 등록 번호 유효한지 임시 작성
-    private boolean isValidBusinessRegistration(BusinessRegistrationRequest request) {
-        return request.businessRegistrationNumber() != null && !request.businessRegistrationNumber().isEmpty();
     }
 
     @Transactional

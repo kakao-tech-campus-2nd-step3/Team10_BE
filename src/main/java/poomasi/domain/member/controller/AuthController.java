@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.member.dto.request.BusinessRegistrationRequest;
 import poomasi.domain.member.service.MemberService;
 import poomasi.domain.member.dto.request.LoginRequest;
 
@@ -30,8 +29,8 @@ public class AuthController {
     // 농부로 업그레이드
     @PutMapping("/toFarmer/{memberId}")
     public ResponseEntity<Void> upgradeToFarmer(@PathVariable Long memberId,
-                                                @RequestBody BusinessRegistrationRequest request) {
-        memberService.upgradeToFarmer(memberId, request);
+                                                @RequestBody Boolean hasFarmerQualification) {
+        memberService.upgradeToFarmer(memberId, hasFarmerQualification);
         return ResponseEntity.noContent().build();
     }
 
