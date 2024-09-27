@@ -37,7 +37,9 @@ public class UsernamePasswordAuthenticationFilterImpl extends UsernamePasswordAu
         String username = obtainUsername(request);
         String password = obtainPassword(request);
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+        //authenticationManager과 UserdetailService를 조회함.
         return authenticationManager.authenticate(authToken);
+
     }
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
