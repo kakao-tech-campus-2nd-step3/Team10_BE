@@ -1,5 +1,6 @@
 package poomasi.domain.member.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import static poomasi.domain.member.entity.Role.ROLE_FARMER;
 import static poomasi.global.error.BusinessError.*;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
 
@@ -30,10 +32,6 @@ public class MemberService {
     private final JwtProvider jwtProvider;
 
     private RefreshToken refreshTokenManager;
-
-    public MemberService(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
 
     // 할거: 카카오 로그인
     // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합

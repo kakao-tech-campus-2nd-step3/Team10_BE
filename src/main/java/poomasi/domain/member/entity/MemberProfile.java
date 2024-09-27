@@ -27,7 +27,7 @@ public class MemberProfile {
     private String address;
 
     @Column(nullable = false)
-    private boolean isSuspended;
+    private boolean isBanned;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -41,7 +41,7 @@ public class MemberProfile {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.address = address;
-        this.isSuspended = false;
+        this.isBanned = false;
         this.createdAt = LocalDateTime.now();
         this.member = member;
     }
