@@ -1,11 +1,11 @@
-package poomasi.domain.member.controller;
+package poomasi.domain.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.member.service.MemberService;
+import poomasi.domain.auth.service.AuthService;
 import poomasi.domain.member.dto.request.LoginRequest;
 
 import static poomasi.domain.member.entity.LoginType.LOCAL;
@@ -15,12 +15,12 @@ import static poomasi.domain.member.entity.LoginType.LOCAL;
 public class AuthController {
 
     @Autowired
-    private MemberService memberService;
+    private AuthService authService;
 
     // 일반, 구매자 회원 가입
     @PostMapping("/sign_up")
     public ResponseEntity<TokenResponse> signUp(@RequestBody LoginRequest loginRequest) {
-        TokenResponse responseBody = memberService.signUp(loginRequest, LOCAL);
+        TokenResponse responseBody = authService.signUp(loginRequest, LOCAL);
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + responseBody.accessToken())
                 .body(responseBody);
@@ -30,13 +30,13 @@ public class AuthController {
     @PutMapping("/toFarmer/{memberId}")
     public ResponseEntity<Void> upgradeToFarmer(@PathVariable Long memberId,
                                                 @RequestBody Boolean hasFarmerQualification) {
-        memberService.upgradeToFarmer(memberId, hasFarmerQualification);
+        authService.upgradeToFarmer(memberId, hasFarmerQualification);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/logout/{memberId}")
     public ResponseEntity<Void> logout(@PathVariable Long memberId) {
-        memberService.logout(memberId);
+        authService.logout(memberId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

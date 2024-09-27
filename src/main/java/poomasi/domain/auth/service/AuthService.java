@@ -1,4 +1,4 @@
-package poomasi.domain.member.service;
+package poomasi.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static poomasi.global.error.BusinessError.*;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MemberService {
+public class AuthService {
 
     @Autowired
     private MemberRepository memberRepository;
