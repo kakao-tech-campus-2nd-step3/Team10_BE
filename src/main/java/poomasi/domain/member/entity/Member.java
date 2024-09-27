@@ -13,8 +13,8 @@ import static poomasi.domain.member.entity.LoginType.LOCAL;
 @Entity
 @Table(name="member")
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
-@SQLSelect(sql = "SELECT * FROM farm WHERE deleted = false")
+@SQLDelete(sql = "UPDATE member SET deleted = true WHERE id = ?")
+@SQLSelect(sql = "SELECT * FROM member WHERE deleted = false")
 public class Member {
 
     @Id
