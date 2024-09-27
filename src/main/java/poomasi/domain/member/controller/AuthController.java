@@ -18,14 +18,6 @@ public class AuthController {
     @Autowired
     private MemberService memberService;
 
-    @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-        TokenResponse responseBody = memberService.login(loginRequest);
-        return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + responseBody.accessToken())
-                .body(responseBody);
-    }
-
     // 일반, 구매자 회원 가입
     @PostMapping("/sign_up")
     public ResponseEntity<TokenResponse> signUp(@RequestBody LoginRequest loginRequest) {

@@ -44,20 +44,6 @@ public class MemberService {
 
     // 사업자 등록 번호 검사 로직은 추후 논의 필요
 
-    public TokenResponse login(LoginRequest loginRequest) {
-        Member member = memberRepository.findByEmailAndLoginType(loginRequest.email(), LOCAL)
-                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
-
-        if (!new BCryptPasswordEncoder().matches(loginRequest.password(), member.getPassword())) {
-            throw new BusinessException(INVALID_CREDENTIAL);
-        }
-
-        Long memberId = member.getId();
-        String memberEmail = member.getEmail();
-
-        return getTokenResponse(memberId, memberEmail, jwtProvider, refreshTokenManager);
-    }
-
     @Transactional
     public TokenResponse signUp(LoginRequest loginRequest, LoginType loginType) {
 
