@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.entity.RefreshToken;
-import poomasi.domain.member.dto.request.LoginRequest;
+import poomasi.domain.auth.dto.request.LoginRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;

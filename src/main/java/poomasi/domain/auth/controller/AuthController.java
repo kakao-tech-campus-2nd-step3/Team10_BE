@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.service.AuthService;
-import poomasi.domain.member.dto.request.LoginRequest;
+import poomasi.domain.auth.dto.request.LoginRequest;
 
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 
