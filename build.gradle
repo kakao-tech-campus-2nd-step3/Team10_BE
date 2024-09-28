@@ -30,6 +30,9 @@ dependencies {
 
     // Spring Security
     implementation 'org.springframework.security:spring-security-crypto:5.7.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     // H2 Database
     runtimeOnly 'com.h2database:h2'
@@ -50,6 +53,9 @@ dependencies {
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 
