@@ -12,6 +12,7 @@ import poomasi.domain.category.dto.CategoryRequest;
 @Getter
 @NoArgsConstructor
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

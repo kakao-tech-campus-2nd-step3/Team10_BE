@@ -12,9 +12,10 @@ import poomasi.global.error.BusinessException;
 @Service
 @AllArgsConstructor
 public class CategoryAdminService {
+
     private final CategoryRepository categoryRepository;
 
-    public Long registerCategory(String token, CategoryRequest categoryRequest) {
+    public Long registerCategory(CategoryRequest categoryRequest) {
         //admin인지 확인
 
         Category category = categoryRequest.toEntity();
@@ -23,17 +24,19 @@ public class CategoryAdminService {
     }
 
     @Transactional
-    public void modifyCategory(String token, Long categoryId, CategoryRequest categoryRequest) {
+    public void modifyCategory(Long categoryId, CategoryRequest categoryRequest) {
         //admin인지 확인
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
         category.modifyName(categoryRequest);
     }
 
     @Transactional
-    public void deleteCategory(String token, Long categoryId) {
+    public void deleteCategory(Long categoryId) {
         //admin인지 확인
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
         categoryRepository.delete(category);
     }
 }

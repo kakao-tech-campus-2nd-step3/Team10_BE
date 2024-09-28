@@ -11,6 +11,7 @@ import poomasi.domain.product.service.ProductAdminService;
 @Controller
 @AllArgsConstructor
 public class ProductAdminController {
+
     private final ProductAdminService productAdminService;
 
     @PutMapping("/api/products/{product_id}/open")

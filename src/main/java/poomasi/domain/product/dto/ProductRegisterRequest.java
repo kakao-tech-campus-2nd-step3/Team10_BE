@@ -11,6 +11,7 @@ public record ProductRegisterRequest(
         int quantity,
         String price
 ) {
+
     public Product toEntity() {
         return Product.builder()
                 .categoryId(categoryId)

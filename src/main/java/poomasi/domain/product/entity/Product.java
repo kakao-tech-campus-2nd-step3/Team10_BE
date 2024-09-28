@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLSelect;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.product.dto.ProductRegisterRequest;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -34,7 +33,6 @@ public class Product {
     private String imageUrl;
     private int quantity;
     private String price;
-    private ProductStatus status = ProductStatus.PENDING;
     private boolean deleted = Boolean.FALSE;
 
     @CreationTimestamp
@@ -46,13 +44,13 @@ public class Product {
 
     @Builder
     public Product(Long productId,
-                   Long categoryId,
-                   Long farmerId, //등록한 사람
-                   String name,
-                   String description,
-                   String imageUrl,
-                   int quantity,
-                   String price) {
+            Long categoryId,
+            Long farmerId, //등록한 사람
+            String name,
+            String description,
+            String imageUrl,
+            int quantity,
+            String price) {
         this.categoryId = categoryId;
         this.farmerId = farmerId;
         this.name = name;
@@ -70,14 +68,6 @@ public class Product {
         this.quantity = productRegisterRequest.quantity();
         this.price = productRegisterRequest.price();
         return this;
-    }
-
-    public void close() {
-        this.status = ProductStatus.CLOSED;
-    }
-
-    public void open() {
-        this.status = ProductStatus.OPEN;
     }
 
     public void addQuantity(Integer quantity) {
