@@ -1,11 +1,6 @@
 spring:
-    application:
-        name: team10-poomasi
-logging:
-    level:
-        org:
-            springframework:
-                security : TRACE
-                web: DEBUG
+  application:
+    name: team10-poomasi
+  config:
+    import: optional:application-secret.yml
 
-#spring.application.name=team10-poomasi
