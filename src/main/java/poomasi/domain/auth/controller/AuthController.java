@@ -18,7 +18,7 @@ public class AuthController {
     private AuthService authService;
 
     // 일반, 구매자 회원 가입
-    @PostMapping("/sign_up")
+    @PostMapping("/sign-up")
     public ResponseEntity<TokenResponse> signUp(@RequestBody LoginRequest loginRequest) {
         TokenResponse responseBody = authService.signUp(loginRequest, LOCAL);
         return ResponseEntity.ok()
