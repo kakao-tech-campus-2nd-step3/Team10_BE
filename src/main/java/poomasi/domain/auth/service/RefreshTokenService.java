@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.entity.RefreshToken;
+import poomasi.domain.member.entity.Member;
+import poomasi.domain.member.repository.MemberRepository;
 import poomasi.global.error.BusinessException;
 import poomasi.global.util.JwtProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
+import static poomasi.global.error.BusinessError.*;
 
 @Service
 @RequiredArgsConstructor
@@ -18,16 +20,16 @@ public class RefreshTokenService {
 
     private final JwtProvider jwtProvider;
     private final RefreshToken refreshTokenManager;
+    private final MemberRepository memberRepository;
 
     public TokenResponse refreshToken(final String refreshToken) {
-
-        checkRefreshToken(refreshToken);
-
-        Long MemberId = refreshTokenManager.getRefreshToken(refreshToken);
-
         String email = jwtProvider.getSubjectFromToken(refreshToken);
 
-        return getTokenResponse(MemberId, email, jwtProvider, refreshTokenManager);
+        Long memberId = getMemberIdByEmail(email);
+
+        checkRefreshToken(refreshToken, memberId);
+
+        return getTokenResponse(memberId, email, jwtProvider, refreshTokenManager);
     }
 
     public static TokenResponse getTokenResponse(Long memberId, String email, JwtProvider jwtProvider, RefreshToken refreshTokenManager) {
@@ -44,8 +46,15 @@ public class RefreshTokenService {
     }
 
 
-    private void checkRefreshToken(final String refreshToken) {
-        if(Boolean.FALSE.equals(jwtProvider.validateToken(refreshToken)))
-            throw new BusinessException(REFRESH_TOKEN_NOT_FOUND);
+    private void checkRefreshToken(final String refreshToken, Long memberId) {
+        if(!jwtProvider.validateRefreshToken(refreshToken, memberId))
+            throw new BusinessException(REFRESH_TOKEN_NOT_VALID);
+    }
+
+    public Long getMemberIdByEmail(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
+
+        return member.getId();
     }
 }

@@ -76,16 +76,34 @@ public class JwtProvider {
     }
 
     // 토큰 유효성 검사
+    public Boolean validateAccessToken(final String accessToken){
+        Boolean result = validateToken(accessToken);
+
+        if (redisService.hasKeyBlackList(accessToken)){
+            log.warn("로그아웃한 JWT token입니다.");
+            result = false;
+        }
+        return result;
+    }
+
+    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
+        Boolean result = validateToken(refreshToken);
+        String storedMemberId = redisService.getValues(refreshToken);
+
+        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
+            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
+            result = false;
+        }
+
+        return result;
+    }
+
     public Boolean validateToken(final String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
-            if (redisService.hasKeyBlackList(token)){
-                log.warn("로그아웃한 JWT token입니다.");
-                return false;
-            }
             return true;
         } catch (SecurityException e) {
             log.error("잘못된 JWT 서명입니다.");
