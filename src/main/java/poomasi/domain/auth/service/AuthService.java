@@ -12,8 +12,10 @@ import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
+import poomasi.global.redis.service.RedisService;
 import poomasi.global.util.JwtProvider;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
@@ -26,12 +28,10 @@ import static poomasi.global.error.BusinessError.*;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
+    private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
-
-    private RefreshToken refreshTokenManager;
+    private final RefreshToken refreshTokenManager;
+    private final RedisService redisService;
 
     // 할거: 카카오 로그인
     // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
@@ -76,8 +76,10 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(Long memberId) {
+    public void logout(Long memberId, String accessToken) {
         refreshTokenManager.removeMemberRefreshToken(memberId);
+
+        redisService.setBlackList(accessToken, "accessToken", Duration.ofMinutes(5));
     }
 
     private Member findMemberById(Long memberId) {
