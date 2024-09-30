@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poomasi.global.redis.service.RedisService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +29,8 @@ public class JwtProvider {
 
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRATION_TIME;
+
+    private final RedisService redisService;
 
     @PostConstruct
     public void init() {
@@ -79,9 +82,21 @@ public class JwtProvider {
                     .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token);
+            if (redisService.hasKeyBlackList(token)){
+                log.warn("로그아웃한 JWT token입니다.");
+                return false;
+            }
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.warn("유효하지 않은 JWT token입니다");
+        } catch (SecurityException e) {
+            log.error("잘못된 JWT 서명입니다.");
+        } catch (MalformedJwtException e) {
+            log.error("잘못된 JWT token입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("만료된 JWT token입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("지원되지 않는 JWT token입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("JWT token이 비어있습니다.");
         }
 
         return false;
