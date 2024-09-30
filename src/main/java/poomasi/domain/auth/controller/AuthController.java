@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import poomasi.domain.auth.dto.request.TokenRequest;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.service.AuthService;
 import poomasi.domain.auth.dto.request.LoginRequest;
@@ -35,8 +36,8 @@ public class AuthController {
     }
 
     @DeleteMapping("/logout/{memberId}")
-    public ResponseEntity<Void> logout(@PathVariable Long memberId) {
-        authService.logout(memberId);
+    public ResponseEntity<Void> logout(@PathVariable Long memberId, @RequestBody TokenRequest tokenRequest) {
+        authService.logout(memberId, tokenRequest.accessToken());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
