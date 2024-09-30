@@ -22,6 +22,7 @@ public class RefreshTokenService {
     private final RefreshToken refreshTokenManager;
     private final MemberRepository memberRepository;
 
+    // 토큰 리프레시
     public TokenResponse refreshToken(final String refreshToken) {
         String email = jwtProvider.getSubjectFromToken(refreshToken);
 
