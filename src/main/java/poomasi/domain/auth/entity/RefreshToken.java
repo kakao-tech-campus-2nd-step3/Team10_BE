@@ -26,10 +26,9 @@ public class RefreshToken {
     }
 
     public Long getRefreshToken(final String refreshToken) {
-        String result = redisService.getValues(refreshToken);
-        return Optional.ofNullable(result)
-                .map(Long::parseLong)
+        String result = redisService.getValues(refreshToken)
                 .orElseThrow(() -> new BusinessException(REFRESH_TOKEN_NOT_FOUND));
+        return Long.parseLong(result);
     }
 
     public void removeRefreshToken(final String refreshToken) {

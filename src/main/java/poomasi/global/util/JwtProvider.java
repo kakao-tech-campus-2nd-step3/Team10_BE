@@ -77,25 +77,29 @@ public class JwtProvider {
 
     // 토큰 유효성 검사
     public Boolean validateAccessToken(final String accessToken){
-        Boolean result = validateToken(accessToken);
-
+        if (!validateToken(accessToken)) {
+            return false;
+        }
         if (redisService.hasKeyBlackList(accessToken)){
             log.warn("로그아웃한 JWT token입니다.");
-            result = false;
+            return false;
         }
-        return result;
+        return true;
     }
 
     public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
-        Boolean result = validateToken(refreshToken);
-        String storedMemberId = redisService.getValues(refreshToken);
+        if (!validateToken(refreshToken)) {
+            return false;
+        }
+        String storedMemberId = redisService.getValues(refreshToken)
+                .orElse(null);
 
         if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
             log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
-            result = false;
+            return false;
         }
 
-        return result;
+        return true;
     }
 
     public Boolean validateToken(final String token) {
