@@ -3,6 +3,7 @@ package poomasi.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
@@ -32,6 +33,7 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final RefreshToken refreshTokenManager;
     private final RedisService redisService;
+    private final PasswordEncoder passwordEncoder;
 
     // 할거: 카카오 로그인
     // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
@@ -50,7 +52,7 @@ public class AuthService {
             // 로그인 타입이 카카오인 경우, 계정 통합
             if (loginType != LoginType.LOCAL) {
                 Member member = existingMember.get();
-                member.kakaoToLocal(loginRequest.password());
+                member.kakaoToLocal(passwordEncoder.encode(loginRequest.password()));
                 memberRepository.save(member);
                 return getTokenResponse(member.getId(), member.getEmail(), jwtProvider, refreshTokenManager);
             } else {
@@ -58,7 +60,7 @@ public class AuthService {
             }
         }
 
-        Member newMember = new Member(loginRequest.email(), new BCryptPasswordEncoder().encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
+        Member newMember = new Member(loginRequest.email(),  passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
         return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtProvider, refreshTokenManager);
     }
@@ -79,10 +81,10 @@ public class AuthService {
     public void logout(Long memberId, String accessToken) {
         refreshTokenManager.removeMemberRefreshToken(memberId);
 
-        redisService.setBlackList(accessToken, "accessToken", Duration.ofMinutes(5));
+        redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtProvider.getAccessTokenExpiration()));
     }
 
-    private Member findMemberById(Long memberId) {
+    public Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
     }
