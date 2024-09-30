@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
-import static poomasi.domain.member.entity.Role.ROLE_FARMER;
 import static poomasi.global.error.BusinessError.*;
 
 @Service
@@ -64,28 +63,10 @@ public class AuthService {
     }
 
     @Transactional
-    public void upgradeToFarmer(Long memberId, Boolean hasFarmerQualification) {
-        Member member = findMemberById(memberId);
-
-        if (!hasFarmerQualification) {
-            throw new BusinessException(INVALID_FARMER_QUALIFICATION);
-        }
-
-        member.setRole(ROLE_FARMER);
-        memberRepository.save(member);
-    }
-
-    @Transactional
     public void logout(Long memberId, String accessToken) {
         refreshTokenManager.removeMemberRefreshToken(memberId);
 
         redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtUtil.getAccessTokenExpiration()));
     }
-
-    public Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
-    }
-
 
 }

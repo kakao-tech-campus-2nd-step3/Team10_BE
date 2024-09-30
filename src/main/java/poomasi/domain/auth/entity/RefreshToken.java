@@ -8,7 +8,6 @@ import poomasi.global.redis.service.RedisService;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
 

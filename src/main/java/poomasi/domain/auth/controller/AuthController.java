@@ -1,6 +1,6 @@
 package poomasi.domain.auth.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +12,11 @@ import poomasi.domain.auth.dto.request.LoginRequest;
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     // 일반, 구매자 회원 가입
     @PostMapping("/sign-up")
@@ -25,14 +25,6 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + responseBody.accessToken())
                 .body(responseBody);
-    }
-
-    // 농부로 업그레이드
-    @PutMapping("/toFarmer/{memberId}")
-    public ResponseEntity<Void> upgradeToFarmer(@PathVariable Long memberId,
-                                                @RequestBody Boolean hasFarmerQualification) {
-        authService.upgradeToFarmer(memberId, hasFarmerQualification);
-        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/logout/{memberId}")
