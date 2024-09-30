@@ -12,12 +12,13 @@ import poomasi.global.redis.service.RedisService;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtProvider {
+public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -39,6 +40,7 @@ public class JwtProvider {
 
     // 토큰 생성
     public String generateAccessToken(final String email, final Map<String, Object> claims) {
+        claims.put("email", email);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)
@@ -49,7 +51,11 @@ public class JwtProvider {
     }
 
     public String generateRefreshToken(final String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(email)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -58,9 +64,13 @@ public class JwtProvider {
     }
 
     // 토큰에서 정보 추출
-    // subject는 email
-    public String getSubjectFromToken(final String token) {
-        return getAllClaimsFromToken(token).getSubject();
+    public String getEmailFromToken(final String token) {
+        return getClaimFromToken(token, "email");
+    }
+
+    public String getClaimFromToken(final String token, String claimKey) {
+        Claims claims = getAllClaimsFromToken(token);
+        return claims.get(claimKey, String.class);
     }
 
     public Date getExpirationDateFromToken(final String token) {

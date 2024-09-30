@@ -7,7 +7,7 @@ import poomasi.domain.auth.entity.RefreshToken;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtProvider;
+import poomasi.global.util.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,13 +18,13 @@ import static poomasi.global.error.BusinessError.*;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtProvider;
     private final RefreshToken refreshTokenManager;
     private final MemberRepository memberRepository;
 
     // 토큰 리프레시
     public TokenResponse refreshToken(final String refreshToken) {
-        String email = jwtProvider.getSubjectFromToken(refreshToken);
+        String email = jwtProvider.getEmailFromToken(refreshToken);
 
         Long memberId = getMemberIdByEmail(email);
 
@@ -33,14 +33,14 @@ public class RefreshTokenService {
         return getTokenResponse(memberId, email, jwtProvider, refreshTokenManager);
     }
 
-    public static TokenResponse getTokenResponse(Long memberId, String email, JwtProvider jwtProvider, RefreshToken refreshTokenManager) {
+    public static TokenResponse getTokenResponse(Long memberId, String email, JwtUtil jwtUtil, RefreshToken refreshTokenManager) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", memberId);
-        String newAccessToken = jwtProvider.generateAccessToken(email, claims);
+        String newAccessToken = jwtUtil.generateAccessToken(email, claims);
 
         refreshTokenManager.removeMemberRefreshToken(memberId);
 
-        String newRefreshToken = jwtProvider.generateRefreshToken(email);
+        String newRefreshToken = jwtUtil.generateRefreshToken(email);
         refreshTokenManager.putRefreshToken(newRefreshToken, memberId);
 
         return new TokenResponse(newAccessToken, newRefreshToken);

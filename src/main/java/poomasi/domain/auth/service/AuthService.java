@@ -1,8 +1,6 @@
 package poomasi.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +12,7 @@ import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
 import poomasi.global.redis.service.RedisService;
-import poomasi.global.util.JwtProvider;
+import poomasi.global.util.JwtUtil;
 
 import java.time.Duration;
 import java.util.Optional;
@@ -30,7 +28,7 @@ import static poomasi.global.error.BusinessError.*;
 public class AuthService {
 
     private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
     private final RefreshToken refreshTokenManager;
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
@@ -54,7 +52,7 @@ public class AuthService {
                 Member member = existingMember.get();
                 member.kakaoToLocal(passwordEncoder.encode(loginRequest.password()));
                 memberRepository.save(member);
-                return getTokenResponse(member.getId(), member.getEmail(), jwtProvider, refreshTokenManager);
+                return getTokenResponse(member.getId(), member.getEmail(), jwtUtil, refreshTokenManager);
             } else {
                 throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
             }
@@ -62,7 +60,7 @@ public class AuthService {
 
         Member newMember = new Member(loginRequest.email(),  passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
-        return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtProvider, refreshTokenManager);
+        return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtUtil, refreshTokenManager);
     }
 
     @Transactional
@@ -81,7 +79,7 @@ public class AuthService {
     public void logout(Long memberId, String accessToken) {
         refreshTokenManager.removeMemberRefreshToken(memberId);
 
-        redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtProvider.getAccessTokenExpiration()));
+        redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtUtil.getAccessTokenExpiration()));
     }
 
     public Member findMemberById(Long memberId) {
