@@ -12,7 +12,6 @@ import poomasi.global.redis.service.RedisService;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -39,24 +38,20 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generateAccessToken(final String email, final Map<String, Object> claims) {
-        claims.put("email", email);
+    public String generateAccessToken(final String memberId, final Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(email)
+                .setSubject(memberId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(final String email) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("email", email);
-
+    public String generateRefreshToken(final String memberId, final Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(email)
+                .setSubject(memberId)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(secretKey, SignatureAlgorithm.HS256)

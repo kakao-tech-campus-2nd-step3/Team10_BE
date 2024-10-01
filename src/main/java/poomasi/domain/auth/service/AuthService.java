@@ -5,7 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.auth.entity.RefreshToken;
 import poomasi.domain.auth.dto.request.LoginRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
@@ -15,9 +14,9 @@ import poomasi.global.redis.service.RedisService;
 import poomasi.global.util.JwtUtil;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
 
-import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
 import static poomasi.global.error.BusinessError.*;
 
@@ -28,43 +27,32 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
     private final JwtUtil jwtUtil;
-    private final RefreshToken refreshTokenManager;
     private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
 
-    // 할거: 카카오 로그인
-    // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
-    // 일반 회원가입 한 것과 같은 이메일로 카카오 로그인 할 경우 계정 통합
-    // 통합시 로그인 타입은 LOCAL
+    // 카카오 로그인 일단 계정 분리 및 계정 연동 보류
 
     // 사업자 등록 번호 검사 로직은 추후 논의 필요
 
     @Transactional
     public TokenResponse signUp(LoginRequest loginRequest, LoginType loginType) {
-
-        Optional<Member> existingMember = memberRepository.findByEmail(loginRequest.email());
-
-        // 기존 로컬 계정이 있는 경우
-        if (existingMember.isPresent()) {
-            // 로그인 타입이 카카오인 경우, 계정 통합
-            if (loginType != LoginType.LOCAL) {
-                Member member = existingMember.get();
-                member.kakaoToLocal(passwordEncoder.encode(loginRequest.password()));
-                memberRepository.save(member);
-                return getTokenResponse(member.getId(), member.getEmail(), jwtUtil, refreshTokenManager);
-            } else {
-                throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
-            }
+        // 이메일 중복 되어도 로그인 타입 다르면 중복 x
+        if (memberRepository.findByEmailAndLoginType(loginRequest.email(), loginType).isPresent()) {
+            throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
         }
 
-        Member newMember = new Member(loginRequest.email(),  passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
+        Member newMember = new Member(loginRequest.email(), passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
-        return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtUtil, refreshTokenManager);
+
+        Map<String, Object> claims = refreshTokenService.createClaims(loginRequest.email(), ROLE_CUSTOMER);
+
+        return refreshTokenService.getTokenResponse(newMember.getId(), claims);
     }
 
     @Transactional
     public void logout(Long memberId, String accessToken) {
-        refreshTokenManager.removeMemberRefreshToken(memberId);
+        refreshTokenService.removeRefreshTokenById(memberId);
 
         redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtUtil.getAccessTokenExpiration()));
     }
