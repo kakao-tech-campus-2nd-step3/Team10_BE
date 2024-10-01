@@ -1,6 +1,6 @@
 package poomasi.domain.farm.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm.dto.FarmResponse;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FarmService {
     private final FarmRepository farmRepository;
 

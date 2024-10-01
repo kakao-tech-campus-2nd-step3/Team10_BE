@@ -1,6 +1,6 @@
 package poomasi.domain.farm.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm.dto.FarmScheduleResponse;
 import poomasi.domain.farm.dto.FarmScheduleUpdateRequest;
@@ -15,7 +15,7 @@ import static poomasi.global.error.BusinessError.FARM_SCHEDULE_ALREADY_EXISTS;
 import static poomasi.global.error.BusinessError.FARM_SCHEDULE_NOT_FOUND;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FarmScheduleService {
     private final FarmScheduleRepository farmScheduleRepository;
     private final FarmFarmerService farmFarmerService;

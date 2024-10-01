@@ -1,7 +1,7 @@
 package poomasi.domain.farm.controller;
 
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +14,7 @@ import poomasi.domain.farm.service.FarmFarmerService;
 import poomasi.domain.farm.service.FarmScheduleService;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/farm")
 public class FarmFarmerController {
     private final FarmFarmerService farmFarmerService;

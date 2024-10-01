@@ -1,6 +1,5 @@
 package poomasi.domain.farm.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import poomasi.domain.farm.entity.ScheduleStatus;
 
