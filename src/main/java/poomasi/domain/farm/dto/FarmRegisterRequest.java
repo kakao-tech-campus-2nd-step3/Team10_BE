@@ -4,7 +4,7 @@ import poomasi.domain.farm.entity.Farm;
 
 public record FarmRegisterRequest(
         String name,
-        Long ownerId,
+        Long userId,
         String address,
         String addressDetail,
         Double latitude,
@@ -15,7 +15,7 @@ public record FarmRegisterRequest(
     public Farm toEntity() {
         return Farm.builder()
                 .name(name)
-                .ownerId(ownerId)
+                .ownerId(userId)
                 .address(address)
                 .addressDetail(addressDetail)
                 .latitude(latitude)
