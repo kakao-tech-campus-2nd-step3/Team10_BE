@@ -1,9 +1,9 @@
-package poomasi.domain.farm.repository;
+package poomasi.domain.farm._schedule.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import poomasi.domain.farm.entity.FarmSchedule;
+import poomasi.domain.farm._schedule.entity.FarmSchedule;
 
 import java.time.LocalDate;
 import java.util.List;

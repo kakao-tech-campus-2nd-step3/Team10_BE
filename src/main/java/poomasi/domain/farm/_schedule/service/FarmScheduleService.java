@@ -1,12 +1,12 @@
-package poomasi.domain.farm.service;
+package poomasi.domain.farm._schedule.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.farm.dto.FarmScheduleRequest;
-import poomasi.domain.farm.dto.FarmScheduleResponse;
-import poomasi.domain.farm.dto.FarmScheduleUpdateRequest;
-import poomasi.domain.farm.entity.FarmSchedule;
-import poomasi.domain.farm.repository.FarmScheduleRepository;
+import poomasi.domain.farm._schedule.dto.FarmScheduleRequest;
+import poomasi.domain.farm._schedule.dto.FarmScheduleResponse;
+import poomasi.domain.farm._schedule.dto.FarmScheduleUpdateRequest;
+import poomasi.domain.farm._schedule.entity.FarmSchedule;
+import poomasi.domain.farm._schedule.repository.FarmScheduleRepository;
 import poomasi.global.error.BusinessException;
 
 import java.time.LocalDate;

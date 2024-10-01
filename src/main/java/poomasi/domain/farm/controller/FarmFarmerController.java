@@ -5,10 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.farm.dto.FarmRegisterRequest;
-import poomasi.domain.farm.dto.FarmScheduleUpdateRequest;
 import poomasi.domain.farm.dto.FarmUpdateRequest;
 import poomasi.domain.farm.service.FarmFarmerService;
-import poomasi.domain.farm.service.FarmScheduleService;
+import poomasi.domain.farm._schedule.service.FarmScheduleService;
 
 @RestController
 @RequiredArgsConstructor

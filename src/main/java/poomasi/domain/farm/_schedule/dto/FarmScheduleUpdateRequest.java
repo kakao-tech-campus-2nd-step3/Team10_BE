@@ -1,7 +1,7 @@
-package poomasi.domain.farm.dto;
+package poomasi.domain.farm._schedule.dto;
 
-import poomasi.domain.farm.entity.FarmSchedule;
-import poomasi.domain.farm.entity.ScheduleStatus;
+import poomasi.domain.farm._schedule.entity.FarmSchedule;
+import poomasi.domain.farm._schedule.entity.ScheduleStatus;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

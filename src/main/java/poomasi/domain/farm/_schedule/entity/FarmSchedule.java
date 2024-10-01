@@ -1,4 +1,4 @@
-package poomasi.domain.farm.entity;
+package poomasi.domain.farm._schedule.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

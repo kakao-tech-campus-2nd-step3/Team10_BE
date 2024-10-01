@@ -1,4 +1,4 @@
-package poomasi.domain.farm.entity;
+package poomasi.domain.farm._schedule.entity;
 
 public enum ScheduleStatus {
     PENDING,

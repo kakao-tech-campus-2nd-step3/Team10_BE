@@ -1,11 +1,11 @@
-package poomasi.domain.farm.controller;
+package poomasi.domain.farm._schedule.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import poomasi.domain.farm.dto.FarmScheduleRequest;
-import poomasi.domain.farm.dto.FarmScheduleUpdateRequest;
-import poomasi.domain.farm.service.FarmScheduleService;
+import poomasi.domain.farm._schedule.dto.FarmScheduleRequest;
+import poomasi.domain.farm._schedule.dto.FarmScheduleUpdateRequest;
+import poomasi.domain.farm._schedule.service.FarmScheduleService;
 
 @RestController
 @RequiredArgsConstructor
