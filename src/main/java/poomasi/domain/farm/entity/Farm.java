@@ -5,9 +5,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLSelect;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.farm.dto.FarmUpdateRequest;
 
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Table(name = "farm")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
-@SQLSelect(sql = "SELECT * FROM farm WHERE deleted = false")
 public class Farm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,21 +26,31 @@ public class Farm {
     private String name;
 
     // FIXME: owner_id는 Member의 id를 참조해야 합니다.
+    @Comment("농장 소유자 ID")
     @Column(name = "owner_id")
     private Long ownerId;
 
+    @Comment("농장 간단 설명")
     private String description;
 
-    private String address; // 도로명 주소
-    private String addressDetail; // 상세 주소
+    @Comment("도로명 주소")
+    private String address;
 
+    @Comment("상세 주소")
+    private String addressDetail;
+
+    @Comment("위도")
     private Double latitude;
+
+    @Comment("경도")
     private Double longitude;
 
+    @Comment("농장 상태")
     @Enumerated(EnumType.STRING)
-    private FarmStatus status = FarmStatus.WAITING;
+    private FarmStatus status = FarmStatus.OPEN;
 
-    private boolean deleted = false;
+    @Comment("삭제 일시")
+    private LocalDateTime deletedAt;
 
     @CreationTimestamp
     @Column(name = "created_at")
