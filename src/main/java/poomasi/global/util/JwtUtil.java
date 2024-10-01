@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poomasi.domain.member.entity.Role;
 import poomasi.global.redis.service.RedisService;
 
 import javax.crypto.SecretKey;
@@ -59,13 +60,21 @@ public class JwtUtil {
     }
 
     // 토큰에서 정보 추출
-    public String getEmailFromToken(final String token) {
-        return getClaimFromToken(token, "email");
+    public String getSubjectFromToken(final String token) {
+        return getAllClaimsFromToken(token).getSubject();
     }
 
-    public String getClaimFromToken(final String token, String claimKey) {
+    public String getEmailFromToken(final String token) {
+        return getClaimFromToken(token, "email", String.class);
+    }
+
+    public Role getRoleFromToken(final String token) {
+        return getClaimFromToken(token, "role", Role.class);
+    }
+
+    public <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
         Claims claims = getAllClaimsFromToken(token);
-        return claims.get(claimKey, String.class);
+        return claims.get(claimKey, claimType);
     }
 
     public Date getExpirationDateFromToken(final String token) {
