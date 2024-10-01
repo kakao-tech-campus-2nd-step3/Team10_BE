@@ -1,5 +1,6 @@
 package poomasi.domain.farm.entity;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "farm")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
+@SQLDelete(sql = "UPDATE farm SET deletedAt=NOW() WHERE id = ?")
 public class Farm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

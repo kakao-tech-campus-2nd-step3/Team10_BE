@@ -18,6 +18,7 @@ public enum BusinessError {
     // Farm
     FARM_NOT_FOUND(HttpStatus.NOT_FOUND, "농장을 찾을 수 없습니다."),
     FARM_OWNER_MISMATCH(HttpStatus.FORBIDDEN, "해당 농장의 소유자가 아닙니다."),
+    FARM_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 농장이 존재합니다."),
 
     // FarmSchedule
     FARM_SCHEDULE_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 날짜의 스케줄을 찾을 수 없습니다."),
