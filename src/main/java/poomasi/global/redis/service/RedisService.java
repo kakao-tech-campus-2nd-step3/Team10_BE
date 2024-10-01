@@ -2,7 +2,11 @@ package poomasi.global.redis.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import poomasi.global.redis.error.RedisConnectionException;
@@ -18,6 +22,7 @@ import java.util.function.Supplier;
 public class RedisService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final RedisTemplate<String, Object> redisBlackListTemplate;
+    private final RedisConnectionFactory redisConnectionFactory;
 
     public void setValues(String key, String data, Duration duration) {
         handleRedisException(() -> {
@@ -71,6 +76,24 @@ public class RedisService {
         Set<String> keys = redisTemplate.keys(pattern);
         return keys != null ? new ArrayList<>(keys) : Collections.emptyList();
     }
+
+    public List<String> scanKeysByPattern(String pattern) {
+        return handleRedisException(() -> {
+            List<String> keys = new ArrayList<>();
+            ScanOptions options = ScanOptions.scanOptions().match(pattern).count(100).build();
+
+            try (RedisConnection connection = redisConnectionFactory.getConnection()) {
+                Cursor<byte[]> cursor = connection.scan(options);
+                while (cursor.hasNext()) {
+                    keys.add(new String(cursor.next()));
+                }
+            } catch (Exception e) {
+                throw new RedisOperationException("Redis SCAN 중 오류 발생");
+            }
+            return keys;
+        }, "SCAN 중 오류 발생: " + pattern);
+    }
+
 
     private <T> T handleRedisException(Supplier<T> action, String errorMessage) {
         try {

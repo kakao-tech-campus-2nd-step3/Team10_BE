@@ -20,26 +20,27 @@ public class RefreshToken {
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRE_TIME;
 
-    public void putRefreshToken(final String refreshToken, Long id) {
-        redisService.setValues(refreshToken, id.toString(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
+    public void putRefreshToken(final String refreshToken, Long memberId) {
+        String redisKey = generateKey(memberId, refreshToken);
+        redisService.setValues(redisKey, memberId.toString(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
     }
 
-    public Long getRefreshToken(final String refreshToken) {
-        String result = redisService.getValues(refreshToken)
+    public Long getRefreshToken(final String refreshToken, Long memberId) {
+        String redisKey = generateKey(memberId, refreshToken);
+        String result = redisService.getValues(redisKey)
                 .orElseThrow(() -> new BusinessException(REFRESH_TOKEN_NOT_FOUND));
         return Long.parseLong(result);
     }
 
-    public void removeRefreshToken(final String refreshToken) {
-        redisService.deleteValues(refreshToken);
+    public void removeMemberRefreshToken(final Long memberId) {
+        List<String> keys = redisService.scanKeysByPattern(generateKey(memberId, "*"));
+        for (String key : keys) {
+            redisService.deleteValues(key);
+        }
     }
 
-    public void removeMemberRefreshToken(final Long memberId) {
-        List<String> keys = redisService.getKeysByPattern(memberId.toString());
-
-        for (String key : keys) {
-            removeRefreshToken(key);
-        }
+    private String generateKey(Long memberId, String token) {
+        return "refreshToken:" + memberId + ":" + token;
     }
 
 }
