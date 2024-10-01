@@ -38,6 +38,7 @@ public class Farm {
     private Double latitude;
     private Double longitude;
 
+    @Enumerated(EnumType.STRING)
     private FarmStatus status = FarmStatus.WAITING;
 
     private boolean deleted = false;
