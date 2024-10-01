@@ -12,5 +12,9 @@ import java.util.Optional;
 public interface FarmRepository extends JpaRepository<Farm, Long> {
     Page<Farm> findAll(Pageable pageable);
 
+    Page<Farm> findByDeletedAtIsNull(Pageable pageable);
+
     Optional<Farm> getFarmByOwnerIdAndDeletedAtIsNull(Long ownerId);
+
+    Optional<Farm> findByIdAndDeletedAtIsNull(Long id);
 }

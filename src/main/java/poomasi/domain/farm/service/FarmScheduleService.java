@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm.dto.FarmScheduleResponse;
 import poomasi.domain.farm.dto.FarmScheduleUpdateRequest;
+import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.entity.FarmSchedule;
 import poomasi.domain.farm.repository.FarmScheduleRepository;
 import poomasi.global.error.BusinessException;
@@ -21,14 +22,31 @@ public class FarmScheduleService {
     private final FarmFarmerService farmFarmerService;
 
     public void addFarmSchedule(FarmScheduleUpdateRequest request) {
-        // TODO: ADMIN인가, 자신의 FARM인가 확인
+        Farm farm = farmFarmerService.getFarmByFarmId(request.farmId());
 
-        farmScheduleRepository.findByFarmIdAndDate(request.farmId(), request.date())
-                .ifPresent(schedule -> {
-                    throw new BusinessException(FARM_SCHEDULE_ALREADY_EXISTS);
-                });
+        for (LocalDate date = request.startDate(); !date.isAfter(request.endDate()); date = date.plusDays(1)) {
+            if (request.availableDays().contains(date.getDayOfWeek())) {
+                farmScheduleRepository.findByFarmIdAndDate(request.farmId(), date)
+                        .ifPresent(schedule -> {
+                            throw new BusinessException(FARM_SCHEDULE_ALREADY_EXISTS);
+                        });
 
-        farmScheduleRepository.save(request.toEntity(farmFarmerService.getFarmByFarmId(request.farmId())));
+                FarmSchedule newSchedule = request.toEntity(farm, date);
+                farmScheduleRepository.save(newSchedule);
+            }
+        }
+    }
+
+    public void updateFarmSchedule(FarmScheduleUpdateRequest request) {
+        for (LocalDate date = request.startDate(); !date.isAfter(request.endDate()); date = date.plusDays(1)) {
+            if (request.availableDays().contains(date.getDayOfWeek())) {
+                FarmSchedule schedule = farmScheduleRepository.findByFarmIdAndDate(request.farmId(), date)
+                        .orElseThrow(() -> new BusinessException(FARM_SCHEDULE_NOT_FOUND));
+
+                schedule.updateStatus(request.status());
+                farmScheduleRepository.save(schedule);
+            }
+        }
     }
 
     public List<FarmScheduleResponse> getFarmSchedule(Long farmId, Long month) {
