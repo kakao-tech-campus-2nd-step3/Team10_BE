@@ -17,14 +17,14 @@ public class FarmService {
     private final FarmRepository farmRepository;
 
     public FarmResponse getFarmByFarmId(Long farmId) {
-        return farmRepository.findById(farmId)
+        return farmRepository.findByIdAndDeletedAtIsNotNull(farmId)
                 .map(FarmResponse::fromEntity)
                 .orElseThrow(() -> new BusinessException(BusinessError.FARM_NOT_FOUND));
     }
 
 
     public List<FarmResponse> getFarmList(Pageable pageable) {
-        return farmRepository.findAll(pageable).stream()
+        return farmRepository.findByDeletedAtIsNull(pageable).stream()
                 .map(FarmResponse::fromEntity)
                 .collect(Collectors.toList());
     }

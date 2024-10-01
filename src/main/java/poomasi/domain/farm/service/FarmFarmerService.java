@@ -19,7 +19,6 @@ public class FarmFarmerService {
         // TODO: 판매자 인가?
 
         farmRepository.getFarmByOwnerIdAndDeletedAtIsNull(request.userId()).ifPresent(farm -> {
-            System.out.println("이미 존재~");
             throw new BusinessException(FARM_ALREADY_EXISTS);
         });
 
@@ -29,17 +28,23 @@ public class FarmFarmerService {
 
     public Long updateFarm(Long farmerId, FarmUpdateRequest request) {
         Farm farm = this.getFarmByFarmId(request.farmId());
+
         if (!farm.getOwnerId().equals(farmerId)) {
             throw new BusinessException(FARM_OWNER_MISMATCH);
         }
-
-        // TODO: 변경 가능한 상태인가?
 
         return farmRepository.save(request.toEntity(farm)).getId();
     }
 
     public Farm getFarmByFarmId(Long farmId) {
-        return farmRepository.findById(farmId).orElseThrow(() -> new BusinessException(FARM_NOT_FOUND));
+        return farmRepository.findByIdAndDeletedAtIsNotNull(farmId).orElseThrow(() -> new BusinessException(FARM_NOT_FOUND));
     }
 
+    public void deleteFarm(Long farmerId, Long farmId) {
+        Farm farm = this.getFarmByFarmId(farmId);
+        if (!farm.getOwnerId().equals(farmerId)) {
+            throw new BusinessException(FARM_OWNER_MISMATCH);
+        }
+        farmRepository.delete(farm);
+    }
 }
