@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(name = "farm")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE farm SET deleted_at=NOW() WHERE id = ?")
+@SQLDelete(sql = "UPDATE farm SET deleted_at=current_timestamp WHERE id = ?")
 public class Farm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
