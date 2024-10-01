@@ -1,8 +1,7 @@
 package poomasi.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
@@ -12,13 +11,14 @@ import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtProvider;
+import poomasi.global.redis.service.RedisService;
+import poomasi.global.util.JwtUtil;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
-import static poomasi.domain.member.entity.Role.ROLE_FARMER;
 import static poomasi.global.error.BusinessError.*;
 
 @Service
@@ -26,12 +26,11 @@ import static poomasi.global.error.BusinessError.*;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    private final JwtProvider jwtProvider;
-
-    private RefreshToken refreshTokenManager;
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
+    private final RefreshToken refreshTokenManager;
+    private final RedisService redisService;
+    private final PasswordEncoder passwordEncoder;
 
     // 할거: 카카오 로그인
     // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
@@ -50,40 +49,24 @@ public class AuthService {
             // 로그인 타입이 카카오인 경우, 계정 통합
             if (loginType != LoginType.LOCAL) {
                 Member member = existingMember.get();
-                member.kakaoToLocal(loginRequest.password());
+                member.kakaoToLocal(passwordEncoder.encode(loginRequest.password()));
                 memberRepository.save(member);
-                return getTokenResponse(member.getId(), member.getEmail(), jwtProvider, refreshTokenManager);
+                return getTokenResponse(member.getId(), member.getEmail(), jwtUtil, refreshTokenManager);
             } else {
                 throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
             }
         }
 
-        Member newMember = new Member(loginRequest.email(), new BCryptPasswordEncoder().encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
+        Member newMember = new Member(loginRequest.email(),  passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
-        return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtProvider, refreshTokenManager);
+        return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtUtil, refreshTokenManager);
     }
 
     @Transactional
-    public void upgradeToFarmer(Long memberId, Boolean hasFarmerQualification) {
-        Member member = findMemberById(memberId);
-
-        if (!hasFarmerQualification) {
-            throw new BusinessException(INVALID_FARMER_QUALIFICATION);
-        }
-
-        member.setRole(ROLE_FARMER);
-        memberRepository.save(member);
-    }
-
-    @Transactional
-    public void logout(Long memberId) {
+    public void logout(Long memberId, String accessToken) {
         refreshTokenManager.removeMemberRefreshToken(memberId);
-    }
 
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
+        redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtUtil.getAccessTokenExpiration()));
     }
-
 
 }

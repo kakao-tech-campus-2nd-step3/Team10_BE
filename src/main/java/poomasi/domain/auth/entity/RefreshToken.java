@@ -8,7 +8,6 @@ import poomasi.global.redis.service.RedisService;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Optional;
 
 import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
 
@@ -21,27 +20,27 @@ public class RefreshToken {
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRE_TIME;
 
-    public void putRefreshToken(final String refreshToken, Long id) {
-        redisService.setValues(refreshToken, id.toString(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
+    public void putRefreshToken(final String refreshToken, Long memberId) {
+        String redisKey = generateKey(memberId, refreshToken);
+        redisService.setValues(redisKey, memberId.toString(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
     }
 
-    public Long getRefreshToken(final String refreshToken) {
-        String result = redisService.getValues(refreshToken);
-        return Optional.ofNullable(result)
-                .map(Long::parseLong)
+    public Long getRefreshToken(final String refreshToken, Long memberId) {
+        String redisKey = generateKey(memberId, refreshToken);
+        String result = redisService.getValues(redisKey)
                 .orElseThrow(() -> new BusinessException(REFRESH_TOKEN_NOT_FOUND));
-    }
-
-    public void removeRefreshToken(final String refreshToken) {
-        redisService.deleteValues(refreshToken);
+        return Long.parseLong(result);
     }
 
     public void removeMemberRefreshToken(final Long memberId) {
-        List<String> keys = redisService.getKeysByPattern(memberId.toString());
-
+        List<String> keys = redisService.scanKeysByPattern(generateKey(memberId, "*"));
         for (String key : keys) {
-            removeRefreshToken(key);
+            redisService.deleteValues(key);
         }
+    }
+
+    private String generateKey(Long memberId, String token) {
+        return "refreshToken:" + memberId + ":" + token;
     }
 
 }
