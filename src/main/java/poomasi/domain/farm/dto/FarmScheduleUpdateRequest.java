@@ -4,17 +4,22 @@ import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.entity.FarmSchedule;
 import poomasi.domain.farm.entity.ScheduleStatus;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 
 public record FarmScheduleUpdateRequest(
         Long farmId,
-        LocalDate date
+        LocalDate startDate, // 시작 날짜
+        LocalDate endDate,   // 종료 날짜
+        ScheduleStatus status, // 예약 가능 여부
+        List<DayOfWeek> availableDays // 예약 가능한 요일 리스트
 ) {
-    public FarmSchedule toEntity(Farm farm) {
+    public FarmSchedule toEntity(Farm farm, LocalDate date) {
         return FarmSchedule.builder()
                 .farm(farm)
                 .date(date)
-                .status(ScheduleStatus.PENDING)
+                .status(status)
                 .build();
     }
 }

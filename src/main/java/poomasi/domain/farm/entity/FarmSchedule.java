@@ -18,7 +18,8 @@ public class FarmSchedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @Comment("농장")
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "farm_id")
     private Farm farm;
 
@@ -33,6 +34,10 @@ public class FarmSchedule {
     public FarmSchedule(Farm farm, LocalDate date, ScheduleStatus status) {
         this.farm = farm;
         this.date = date;
+        this.status = status;
+    }
+
+    public void updateStatus(ScheduleStatus status) {
         this.status = status;
     }
 }
