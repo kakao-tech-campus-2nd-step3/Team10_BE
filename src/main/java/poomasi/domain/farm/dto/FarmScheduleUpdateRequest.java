@@ -15,9 +15,9 @@ public record FarmScheduleUpdateRequest(
         ScheduleStatus status, // 예약 가능 여부
         List<DayOfWeek> availableDays // 예약 가능한 요일 리스트
 ) {
-    public FarmSchedule toEntity(Farm farm, LocalDate date) {
+    public FarmSchedule toEntity(LocalDate date) {
         return FarmSchedule.builder()
-                .farm(farm)
+                .farmId(farmId)
                 .date(date)
                 .status(status)
                 .build();

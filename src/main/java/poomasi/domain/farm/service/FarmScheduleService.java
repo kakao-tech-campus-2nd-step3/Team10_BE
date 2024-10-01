@@ -2,9 +2,9 @@ package poomasi.domain.farm.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import poomasi.domain.farm.dto.FarmScheduleRequest;
 import poomasi.domain.farm.dto.FarmScheduleResponse;
 import poomasi.domain.farm.dto.FarmScheduleUpdateRequest;
-import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.entity.FarmSchedule;
 import poomasi.domain.farm.repository.FarmScheduleRepository;
 import poomasi.global.error.BusinessException;
@@ -22,8 +22,6 @@ public class FarmScheduleService {
     private final FarmFarmerService farmFarmerService;
 
     public void addFarmSchedule(FarmScheduleUpdateRequest request) {
-        Farm farm = farmFarmerService.getFarmByFarmId(request.farmId());
-
         for (LocalDate date = request.startDate(); !date.isAfter(request.endDate()); date = date.plusDays(1)) {
             if (request.availableDays().contains(date.getDayOfWeek())) {
                 farmScheduleRepository.findByFarmIdAndDate(request.farmId(), date)
@@ -31,7 +29,7 @@ public class FarmScheduleService {
                             throw new BusinessException(FARM_SCHEDULE_ALREADY_EXISTS);
                         });
 
-                FarmSchedule newSchedule = request.toEntity(farm, date);
+                FarmSchedule newSchedule = request.toEntity(date);
                 farmScheduleRepository.save(newSchedule);
             }
         }
@@ -49,14 +47,14 @@ public class FarmScheduleService {
         }
     }
 
-    public List<FarmScheduleResponse> getFarmSchedule(Long farmId, Long month) {
-        return farmScheduleRepository.findByFarmIdAndMonth(farmId, month).stream()
-                .map(schedule -> new FarmScheduleResponse(schedule.getId(), schedule.getDate(), schedule.getStatus()))
+    public List<FarmScheduleResponse> getFarmSchedulesByYearAndMonth(FarmScheduleRequest request) {
+        LocalDate startDate = LocalDate.of(request.year(), request.month(), 1);
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+
+        return farmScheduleRepository.findByFarmIdAndDateRange(request.farmId(), startDate, endDate).stream()
+                .map(FarmScheduleResponse::fromEntity)
                 .toList();
     }
 
-    public FarmSchedule getFarmSchedule(Long farmId, LocalDate date) {
-        return farmScheduleRepository.findByFarmIdAndDate(farmId, date)
-                .orElseThrow(() -> new BusinessException(FARM_SCHEDULE_NOT_FOUND));
-    }
+
 }

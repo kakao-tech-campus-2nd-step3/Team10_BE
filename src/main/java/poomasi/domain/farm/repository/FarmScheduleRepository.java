@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface FarmScheduleRepository extends JpaRepository<FarmSchedule, Long> {
-    @Query("SELECT FarmSchedule(f.id, f.date, f.status) FROM FarmSchedule f WHERE f.farm.id = :farmId AND MONTH(f.date) = :month")
-    List<FarmSchedule> findByFarmIdAndMonth(Long farmId, Long month);
+    @Query("SELECT f FROM FarmSchedule f WHERE f.farmId = :farmId AND f.date BETWEEN :startDate AND :endDate")
+    List<FarmSchedule> findByFarmIdAndDateRange(Long farmId, LocalDate startDate, LocalDate endDate);
 
     Optional<FarmSchedule> findByFarmIdAndDate(Long aLong, LocalDate date);
 

@@ -19,9 +19,7 @@ public class FarmSchedule {
     private Long id;
 
     @Comment("농장")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "farm_id")
-    private Farm farm;
+    private Long farmId;
 
     @Comment("예약 가능 날짜")
     private LocalDate date;
@@ -31,8 +29,8 @@ public class FarmSchedule {
     private ScheduleStatus status;
 
     @Builder
-    public FarmSchedule(Farm farm, LocalDate date, ScheduleStatus status) {
-        this.farm = farm;
+    public FarmSchedule(Long farmId, LocalDate date, ScheduleStatus status) {
+        this.farmId = farmId;
         this.date = date;
         this.status = status;
     }
