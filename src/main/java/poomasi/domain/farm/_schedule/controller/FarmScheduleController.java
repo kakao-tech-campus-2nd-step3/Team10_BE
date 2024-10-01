@@ -13,12 +13,6 @@ import poomasi.domain.farm._schedule.service.FarmScheduleService;
 public class FarmScheduleController {
     private final FarmScheduleService farmScheduleService;
 
-    @PostMapping("/schedule")
-    public ResponseEntity<?> addFarmSchedule(@RequestBody FarmScheduleUpdateRequest request) {
-        farmScheduleService.addFarmSchedule(request);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/schedule")
     public ResponseEntity<?> getFarmSchedule(@RequestParam Long farmId, @RequestParam Integer year, @RequestParam Integer month) {
         return ResponseEntity.ok(farmScheduleService.getFarmSchedulesByYearAndMonth(new FarmScheduleRequest(farmId, year, month)));
