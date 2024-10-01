@@ -40,5 +40,5 @@ out/
 .DS_Store
 
 ## applicaion-secret
-src/main/resources/application-secret.yml
+application-secret.yml
 
