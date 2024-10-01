@@ -2,9 +2,11 @@ package poomasi.domain.farm._schedule.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import poomasi.domain.farm._schedule.dto.FarmScheduleRequest;
-import poomasi.domain.farm._schedule.dto.FarmScheduleUpdateRequest;
 import poomasi.domain.farm._schedule.service.FarmScheduleService;
 
 @RestController
@@ -12,12 +14,6 @@ import poomasi.domain.farm._schedule.service.FarmScheduleService;
 @RequestMapping("/api/farm")
 public class FarmScheduleController {
     private final FarmScheduleService farmScheduleService;
-
-    @PostMapping("/schedule")
-    public ResponseEntity<?> addFarmSchedule(@RequestBody FarmScheduleUpdateRequest request) {
-        farmScheduleService.addFarmSchedule(request);
-        return ResponseEntity.ok().build();
-    }
 
     @GetMapping("/schedule")
     public ResponseEntity<?> getFarmSchedule(@RequestParam Long farmId, @RequestParam Integer year, @RequestParam Integer month) {
