@@ -1,6 +1,5 @@
 package poomasi.domain.farm.dto;
 
-import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.entity.FarmSchedule;
 import poomasi.domain.farm.entity.ScheduleStatus;
 

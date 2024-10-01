@@ -13,13 +13,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static poomasi.global.error.BusinessError.FARM_SCHEDULE_ALREADY_EXISTS;
-import static poomasi.global.error.BusinessError.FARM_SCHEDULE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class FarmScheduleService {
     private final FarmScheduleRepository farmScheduleRepository;
-    private final FarmFarmerService farmFarmerService;
 
     public void addFarmSchedule(FarmScheduleUpdateRequest request) {
         for (LocalDate date = request.startDate(); !date.isAfter(request.endDate()); date = date.plusDays(1)) {
@@ -31,18 +29,6 @@ public class FarmScheduleService {
 
                 FarmSchedule newSchedule = request.toEntity(date);
                 farmScheduleRepository.save(newSchedule);
-            }
-        }
-    }
-
-    public void updateFarmSchedule(FarmScheduleUpdateRequest request) {
-        for (LocalDate date = request.startDate(); !date.isAfter(request.endDate()); date = date.plusDays(1)) {
-            if (request.availableDays().contains(date.getDayOfWeek())) {
-                FarmSchedule schedule = farmScheduleRepository.findByFarmIdAndDate(request.farmId(), date)
-                        .orElseThrow(() -> new BusinessException(FARM_SCHEDULE_NOT_FOUND));
-
-                schedule.updateStatus(request.status());
-                farmScheduleRepository.save(schedule);
             }
         }
     }
