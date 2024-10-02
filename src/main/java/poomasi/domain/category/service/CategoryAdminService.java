@@ -1,6 +1,7 @@
 package poomasi.domain.category.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.category.dto.CategoryRequest;
@@ -10,9 +11,8 @@ import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryAdminService {
-
     private final CategoryRepository categoryRepository;
 
     public Long registerCategory(CategoryRequest categoryRequest) {

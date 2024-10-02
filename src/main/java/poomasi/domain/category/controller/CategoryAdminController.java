@@ -19,15 +19,15 @@ public class CategoryAdminController {
         return new ResponseEntity<>(categoryId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/api/categories/{category_id}")
-    public ResponseEntity<?> modifyCategory(@PathVariable("category_id") Long categoryId,
+    @PutMapping("/api/categories/{categoryId}")
+    public ResponseEntity<?> modifyCategory(@PathVariable Long categoryId,
             @RequestBody CategoryRequest categoryRequest) {
         categoryAdminService.modifyCategory(categoryId, categoryRequest);
         return new ResponseEntity<>(categoryId, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/categories/{category_id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable("category_id") Long categoryId) {
+    @DeleteMapping("/api/categories/{categoryId}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
         categoryAdminService.deleteCategory(categoryId);
         return new ResponseEntity<>(categoryId, HttpStatus.OK);
     }

@@ -18,7 +18,6 @@ public record ProductRegisterRequest(
                 .farmerId(farmerId)
                 .name(name)
                 .description(description)
-                .quantity(0)
                 .imageUrl(imageUrl)
                 .quantity(quantity)
                 .price(price)

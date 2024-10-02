@@ -26,22 +26,22 @@ public class ProductFarmerController {
         return new ResponseEntity<>(productId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/api/products/{product_id}")
+    @PutMapping("/api/products/{productId}")
     public ResponseEntity<?> modifyProduct(@RequestBody ProductRegisterRequest product,
-                                           @PathVariable("product_id") Long productId) {
+                                           @PathVariable Long productId) {
         productFarmerService.modifyProduct(product, productId);
         return new ResponseEntity<>(productId, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/products/{product_id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable("product_id") Long productId) {
+    @DeleteMapping("/api/products/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
         productFarmerService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/api/products/{product_id}/count/{quantity}")
-    public ResponseEntity<?> addQuantity(@PathVariable("product_id") Long productId,
-                                         @PathVariable("quantity") Integer quantity) {
+    @PatchMapping("/api/products/{productId}/count/{quantity}")
+    public ResponseEntity<?> addQuantity(@PathVariable Long productId,
+                                         @PathVariable Integer quantity) {
         productFarmerService.addQuantity(productId, quantity);
         return new ResponseEntity<>(HttpStatus.OK);
     }

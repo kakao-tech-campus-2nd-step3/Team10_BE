@@ -16,9 +16,8 @@ import poomasi.domain.product.dto.ProductRegisterRequest;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE farm SET deletedAt = current_timestamp WHERE id = ?")
+@SQLDelete(sql = "UPDATE product SET deletedAt = current_timestamp WHERE id = ?")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
