@@ -8,8 +8,8 @@ public record ProductRegisterRequest(
         String name,
         String description,
         String imageUrl,
-        int quantity,
-        String price
+        int stock,
+        Long price
 ) {
 
     public Product toEntity() {
@@ -19,7 +19,7 @@ public record ProductRegisterRequest(
                 .name(name)
                 .description(description)
                 .imageUrl(imageUrl)
-                .quantity(quantity)
+                .stock(stock)
                 .price(price)
                 .build();
     }

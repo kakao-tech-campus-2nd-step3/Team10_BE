@@ -30,8 +30,13 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    public boolean isFarmer(Long memberId) {
+        Member member = findMemberById(memberId);
+        return member.isFarmer();
+    }
+
     public Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
     }
 }
