@@ -36,7 +36,7 @@ public class MemberService {
     }
 
     public Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
     }
 }

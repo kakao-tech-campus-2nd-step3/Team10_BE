@@ -14,7 +14,7 @@ import static poomasi.domain.member.entity.LoginType.LOCAL;
 @Entity
 @Table(name = "member")
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE member SET deletedAt = current_timestamp WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET deleted_at = current_timestamp WHERE id = ?")
 public class Member {
 
     @Id
