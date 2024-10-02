@@ -1,5 +1,6 @@
 package poomasi.domain.farm._schedule.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ public class FarmScheduleFarmerController {
     private final FarmScheduleService farmScheduleService;
 
     @PostMapping("/schedule")
-    public ResponseEntity<?> addFarmSchedule(@RequestBody FarmScheduleUpdateRequest request) {
+    public ResponseEntity<?> addFarmSchedule(@Valid @RequestBody FarmScheduleUpdateRequest request) {
         farmScheduleService.addFarmSchedule(request);
         return ResponseEntity.ok().build();
     }
