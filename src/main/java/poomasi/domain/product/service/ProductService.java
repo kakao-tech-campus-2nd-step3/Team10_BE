@@ -1,9 +1,9 @@
-package poomasi.domain.product.dto;
+package poomasi.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.product.repository.ProductRepository;
-import poomasi.domain.product.service.ProductResponse;
+import poomasi.domain.product.dto.ProductResponse;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
 

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import poomasi.domain.product.dto.ProductService;
-import poomasi.domain.product.service.ProductResponse;
+import poomasi.domain.product.service.ProductService;
+import poomasi.domain.product.dto.ProductResponse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package poomasi.domain.product.service;
+package poomasi.domain.product.dto;
 
 import lombok.Builder;
 import poomasi.domain.product.entity.Product;
