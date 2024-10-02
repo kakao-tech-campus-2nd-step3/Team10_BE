@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static poomasi.global.error.BusinessError.FARM_SCHEDULE_ALREADY_EXISTS;
+import static poomasi.global.error.BusinessError.START_DATE_SHOULD_BE_BEFORE_END_DATE;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,10 @@ public class FarmScheduleService {
 
     public void addFarmSchedule(FarmScheduleUpdateRequest request) {
         List<FarmSchedule> existingSchedules = farmScheduleRepository.findByFarmIdAndDateRange(request.farmId(), request.startDate(), request.endDate());
+
+        if (request.startDate().isAfter(request.endDate())) {
+            throw new BusinessException(START_DATE_SHOULD_BE_BEFORE_END_DATE);
+        }
 
         Set<LocalDate> existingDates = existingSchedules.stream()
                 .map(FarmSchedule::getDate)
