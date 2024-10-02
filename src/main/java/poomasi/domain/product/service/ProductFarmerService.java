@@ -43,8 +43,10 @@ public class ProductFarmerService {
 
     @Transactional
     public void addQuantity(Long productId, UpdateProductQuantityRequest request) {
-        //TODO: 주인인지 혹은 관리자인지 알아보기
-        getProductByProductId(productId).addQuantity(request.quantity());
+        Product productByProductId = getProductByProductId(productId);
+        productByProductId.addQuantity(request.quantity());
+
+        productRepository.save(productByProductId);
     }
 
     private Product getProductByProductId(Long productId) {

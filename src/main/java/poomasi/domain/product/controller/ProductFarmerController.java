@@ -1,6 +1,7 @@
 package poomasi.domain.product.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import poomasi.domain.product.service.ProductFarmerService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
+@Slf4j
 public class ProductFarmerController {
 
     private final ProductFarmerService productFarmerService;
@@ -37,11 +39,14 @@ public class ProductFarmerController {
     }
 
 
-    @PatchMapping("/products/{productId}")
+    @PatchMapping("/{productId}")
     public ResponseEntity<?> updateProductQuantity(@PathVariable Long productId,
                                                    @RequestBody UpdateProductQuantityRequest request) {
+        log.debug("Product ID: {}", productId);
+        log.debug("Update Request: {}", request);
         productFarmerService.addQuantity(productId, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 }
