@@ -1,18 +1,23 @@
 package poomasi.domain.product.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
 import poomasi.domain.product.dto.ProductRegisterRequest;
+import poomasi.domain.review.entity.ProductReview;
 
 @Entity
 @Getter
@@ -53,6 +58,9 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<ProductReview> reviewList = new ArrayList<>();
+
 
     @Builder
     public Product(Long productId,
@@ -86,4 +94,7 @@ public class Product {
         this.quantity += quantity;
     }
 
+    public void addReview(ProductReview pReview) {
+        this.reviewList.add(pReview);
+    }
 }

@@ -17,6 +17,4 @@ public class ProductAdminService {
                 .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
     }
 
-    public void openProduct(Long productId) {
-    }
 }
