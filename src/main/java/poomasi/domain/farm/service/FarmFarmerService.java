@@ -1,6 +1,7 @@
 package poomasi.domain.farm.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm.dto.FarmRegisterRequest;
 import poomasi.domain.farm.dto.FarmUpdateRequest;
@@ -12,7 +13,7 @@ import static poomasi.global.error.BusinessError.FARM_NOT_FOUND;
 import static poomasi.global.error.BusinessError.FARM_OWNER_MISMATCH;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FarmFarmerService {
     private final FarmRepository farmRepository;
 
