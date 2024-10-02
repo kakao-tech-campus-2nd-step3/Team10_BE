@@ -1,16 +1,16 @@
 package poomasi.domain.category.controller;
 
-import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import poomasi.domain.category.dto.CategoryResponse;
 import poomasi.domain.category.service.CategoryService;
 
-@Controller
-@AllArgsConstructor
+import java.util.List;
+@RestController
+@RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;

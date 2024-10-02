@@ -4,36 +4,49 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLSelect;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
-@SQLSelect(sql = "SELECT * FROM farm WHERE status = ProductStatus.OPEN")
-
+@SQLDelete(sql = "UPDATE farm SET deletedAt = current_timestamp WHERE id = ?")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Comment("카테고리 ID")
     private Long categoryId;
+
+    @Comment("등록한 사람")
     private Long farmerId; //등록한 사람
+
+    @Comment("상품명")
     private String name;
+
+    @Comment("상품 설명")
     private String description;
+
+    @Comment("이미지 URL")
     private String imageUrl;
+
+    @Comment("수량")
     private int quantity;
+
+    @Comment("가격")
     private String price;
-    private boolean deleted = Boolean.FALSE;
+
+    @Comment("삭제 일시")
+    private LocalDateTime deletedAt;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -44,13 +57,13 @@ public class Product {
 
     @Builder
     public Product(Long productId,
-            Long categoryId,
-            Long farmerId, //등록한 사람
-            String name,
-            String description,
-            String imageUrl,
-            int quantity,
-            String price) {
+                   Long categoryId,
+                   Long farmerId, //등록한 사람
+                   String name,
+                   String description,
+                   String imageUrl,
+                   int quantity,
+                   String price) {
         this.categoryId = categoryId;
         this.farmerId = farmerId;
         this.name = name;
@@ -73,4 +86,5 @@ public class Product {
     public void addQuantity(Integer quantity) {
         this.quantity += quantity;
     }
+
 }

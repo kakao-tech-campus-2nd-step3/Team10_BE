@@ -1,6 +1,6 @@
 package poomasi.domain.product.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.product.dto.ProductRegisterRequest;
@@ -10,11 +10,10 @@ import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductFarmerService {
 
     private final ProductRepository productRepository;
-    //private final MemberRepository memberRepository;
 
     public Long registerProduct(ProductRegisterRequest product) {
         //token이 farmer인지 확인하기
