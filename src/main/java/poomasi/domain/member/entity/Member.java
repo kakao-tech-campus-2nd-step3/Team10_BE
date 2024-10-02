@@ -5,16 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLSelect;
+
+import java.time.LocalDateTime;
 
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 
 @Getter
 @Entity
-@Table(name="member")
+@Table(name = "member")
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE member SET deleted = true WHERE id = ?")
-@SQLSelect(sql = "SELECT * FROM member WHERE deleted = false")
+@SQLDelete(sql = "UPDATE member SET deletedAt = current_timestamp WHERE id = ?")
 public class Member {
 
     @Id
@@ -43,6 +43,8 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile profile;
 
+    private LocalDateTime deletedAt;
+
     public Member(String email, String password, LoginType loginType, Role role) {
         this.email = email;
         this.password = password;
@@ -57,9 +59,12 @@ public class Member {
         }
     }
 
-    public void kakaoToLocal(String password){
+    public void kakaoToLocal(String password) {
         this.password = password;
         this.loginType = LOCAL;
     }
 
+    public boolean isFarmer() {
+        return role == Role.ROLE_FARMER;
+    }
 }
