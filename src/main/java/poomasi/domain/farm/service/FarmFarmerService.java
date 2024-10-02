@@ -18,7 +18,7 @@ public class FarmFarmerService {
     public Long registerFarm(FarmRegisterRequest request) {
         // TODO: 판매자 인가?
 
-        farmRepository.getFarmByOwnerIdAndDeletedAtIsNull(request.userId()).ifPresent(farm -> {
+        farmRepository.getFarmByOwnerIdAndDeletedAtIsNull(request.memberId()).ifPresent(farm -> {
             throw new BusinessException(FARM_ALREADY_EXISTS);
         });
 
