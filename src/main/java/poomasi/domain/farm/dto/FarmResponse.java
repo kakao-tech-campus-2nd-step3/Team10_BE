@@ -10,8 +10,9 @@ public record FarmResponse( // FIXME: 사용자 정보 추가 및 설명/전화�
                             String addressDetail,
                             Double latitude,
                             Double longitude,
-                            String description
-                            ) {
+                            String description,
+                            Long experiencePrice
+) {
     public static FarmResponse fromEntity(Farm farm) {
         return new FarmResponse(
                 farm.getId(),
@@ -20,7 +21,8 @@ public record FarmResponse( // FIXME: 사용자 정보 추가 및 설명/전화�
                 farm.getAddressDetail(),
                 farm.getLatitude(),
                 farm.getLongitude(),
-                farm.getDescription()
+                farm.getDescription(),
+                farm.getExperiencePrice()
         );
     }
 }

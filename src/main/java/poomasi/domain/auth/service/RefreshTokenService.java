@@ -4,48 +4,67 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.entity.RefreshToken;
+import poomasi.domain.member.entity.Member;
+import poomasi.domain.member.entity.Role;
+import poomasi.domain.member.repository.MemberRepository;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtProvider;
+import poomasi.global.util.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
+import static poomasi.global.error.BusinessError.*;
 
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private final JwtProvider jwtProvider;
+    private final JwtUtil jwtUtil;
     private final RefreshToken refreshTokenManager;
+    private final MemberRepository memberRepository;
 
+    // 토큰 리프레시
     public TokenResponse refreshToken(final String refreshToken) {
+        String email = jwtUtil.getEmailFromToken(refreshToken);
 
-        checkRefreshToken(refreshToken);
+        Member member = getMemberByEmail(email);
+        Long memberId = member.getId();
 
-        Long MemberId = refreshTokenManager.getRefreshToken(refreshToken);
+        checkRefreshToken(refreshToken, memberId);
 
-        String email = jwtProvider.getSubjectFromToken(refreshToken);
+        Map<String, Object> claims = createClaims(email, member.getRole());
 
-        return getTokenResponse(MemberId, email, jwtProvider, refreshTokenManager);
+        return getTokenResponse(memberId, claims);
     }
 
-    public static TokenResponse getTokenResponse(Long memberId, String email, JwtProvider jwtProvider, RefreshToken refreshTokenManager) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("id", memberId);
-        String newAccessToken = jwtProvider.generateAccessToken(email, claims);
-
+    public TokenResponse getTokenResponse(Long memberId, Map<String, Object> claims) {
+        String newAccessToken = jwtUtil.generateAccessToken(String.valueOf(memberId), claims);
         refreshTokenManager.removeMemberRefreshToken(memberId);
 
-        String newRefreshToken = jwtProvider.generateRefreshToken(email);
+        String newRefreshToken = jwtUtil.generateRefreshToken(String.valueOf(memberId), claims);
         refreshTokenManager.putRefreshToken(newRefreshToken, memberId);
 
         return new TokenResponse(newAccessToken, newRefreshToken);
     }
 
+    public void removeRefreshTokenById(Long memberId) {
+        refreshTokenManager.removeMemberRefreshToken(memberId);
+    }
 
-    private void checkRefreshToken(final String refreshToken) {
-        if(Boolean.FALSE.equals(jwtProvider.validateToken(refreshToken)))
-            throw new BusinessException(REFRESH_TOKEN_NOT_FOUND);
+    private void checkRefreshToken(final String refreshToken, Long memberId) {
+        if(!jwtUtil.validateRefreshToken(refreshToken, memberId))
+            throw new BusinessException(REFRESH_TOKEN_NOT_VALID);
+    }
+
+    public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
+    }
+
+    public Map<String, Object> createClaims(String email, Role role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
+        claims.put("role", role);
+        return claims;
     }
 }
