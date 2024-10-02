@@ -52,6 +52,12 @@ public class Member {
         this.role = role;
     }
 
+    public Member(String email, Role role){
+        this.email = email;
+        this.role = role;
+    }
+
+
     public void setProfile(MemberProfile profile) {
         this.profile = profile;
         if (profile != null) {
