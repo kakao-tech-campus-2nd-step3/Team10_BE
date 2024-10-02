@@ -1,24 +1,23 @@
 package poomasi.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.auth.entity.RefreshToken;
 import poomasi.domain.auth.dto.request.LoginRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtProvider;
+import poomasi.global.redis.service.RedisService;
+import poomasi.global.util.JwtUtil;
 
+import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
 
-import static poomasi.domain.auth.service.RefreshTokenService.getTokenResponse;
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
-import static poomasi.domain.member.entity.Role.ROLE_FARMER;
 import static poomasi.global.error.BusinessError.*;
 
 @Service
@@ -26,64 +25,36 @@ import static poomasi.global.error.BusinessError.*;
 @Transactional(readOnly = true)
 public class AuthService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+    private final JwtUtil jwtUtil;
+    private final RedisService redisService;
+    private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
 
-    private final JwtProvider jwtProvider;
-
-    private RefreshToken refreshTokenManager;
-
-    // 할거: 카카오 로그인
-    // 카카오 로그인과 같은 이메일로 일반 회원가입 할 경우 계정 통합
-    // 일반 회원가입 한 것과 같은 이메일로 카카오 로그인 할 경우 계정 통합
-    // 통합시 로그인 타입은 LOCAL
+    // 카카오 로그인 일단 계정 분리 및 계정 연동 보류
 
     // 사업자 등록 번호 검사 로직은 추후 논의 필요
 
     @Transactional
     public TokenResponse signUp(LoginRequest loginRequest, LoginType loginType) {
-
-        Optional<Member> existingMember = memberRepository.findByEmail(loginRequest.email());
-
-        // 기존 로컬 계정이 있는 경우
-        if (existingMember.isPresent()) {
-            // 로그인 타입이 카카오인 경우, 계정 통합
-            if (loginType != LoginType.LOCAL) {
-                Member member = existingMember.get();
-                member.kakaoToLocal(loginRequest.password());
-                memberRepository.save(member);
-                return getTokenResponse(member.getId(), member.getEmail(), jwtProvider, refreshTokenManager);
-            } else {
-                throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
-            }
+        // 이메일 중복 되어도 로그인 타입 다르면 중복 x
+        if (memberRepository.findByEmailAndLoginType(loginRequest.email(), loginType).isPresent()) {
+            throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
         }
 
-        Member newMember = new Member(loginRequest.email(), new BCryptPasswordEncoder().encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
+        Member newMember = new Member(loginRequest.email(), passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
-        return getTokenResponse(newMember.getId(), newMember.getEmail(), jwtProvider, refreshTokenManager);
+
+        Map<String, Object> claims = refreshTokenService.createClaims(loginRequest.email(), ROLE_CUSTOMER);
+
+        return refreshTokenService.getTokenResponse(newMember.getId(), claims);
     }
 
     @Transactional
-    public void upgradeToFarmer(Long memberId, Boolean hasFarmerQualification) {
-        Member member = findMemberById(memberId);
+    public void logout(Long memberId, String accessToken) {
+        refreshTokenService.removeRefreshTokenById(memberId);
 
-        if (!hasFarmerQualification) {
-            throw new BusinessException(INVALID_FARMER_QUALIFICATION);
-        }
-
-        member.setRole(ROLE_FARMER);
-        memberRepository.save(member);
+        redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtUtil.getAccessTokenExpiration()));
     }
-
-    @Transactional
-    public void logout(Long memberId) {
-        refreshTokenManager.removeMemberRefreshToken(memberId);
-    }
-
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
-    }
-
 
 }

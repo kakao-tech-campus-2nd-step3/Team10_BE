@@ -32,10 +32,6 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
 
-        // Hash Key-Value 형태로 직렬화
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-
         redisTemplate.setDefaultSerializer(new StringRedisSerializer());
 
         return redisTemplate;

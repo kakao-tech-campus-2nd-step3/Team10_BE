@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poomasi.domain.member.entity.Role;
+import poomasi.global.redis.service.RedisService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -16,7 +18,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JwtProvider {
+public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
@@ -29,25 +31,28 @@ public class JwtProvider {
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRATION_TIME;
 
+    private final RedisService redisService;
+
     @PostConstruct
     public void init() {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     // 토큰 생성
-    public String generateAccessToken(final String email, final Map<String, Object> claims) {
+    public String generateAccessToken(final String memberId, final Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(email)
+                .setSubject(memberId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(final String email) {
+    public String generateRefreshToken(final String memberId, final Map<String, Object> claims) {
         return Jwts.builder()
-                .setSubject(email)
+                .setClaims(claims)
+                .setSubject(memberId)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -55,9 +60,21 @@ public class JwtProvider {
     }
 
     // 토큰에서 정보 추출
-    // subject는 email
     public String getSubjectFromToken(final String token) {
         return getAllClaimsFromToken(token).getSubject();
+    }
+
+    public String getEmailFromToken(final String token) {
+        return getClaimFromToken(token, "email", String.class);
+    }
+
+    public Role getRoleFromToken(final String token) {
+        return getClaimFromToken(token, "role", Role.class);
+    }
+
+    public <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
+        Claims claims = getAllClaimsFromToken(token);
+        return claims.get(claimKey, claimType);
     }
 
     public Date getExpirationDateFromToken(final String token) {
@@ -73,6 +90,32 @@ public class JwtProvider {
     }
 
     // 토큰 유효성 검사
+    public Boolean validateAccessToken(final String accessToken){
+        if (!validateToken(accessToken)) {
+            return false;
+        }
+        if (redisService.hasKeyBlackList(accessToken)){
+            log.warn("로그아웃한 JWT token입니다.");
+            return false;
+        }
+        return true;
+    }
+
+    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
+        if (!validateToken(refreshToken)) {
+            return false;
+        }
+        String storedMemberId = redisService.getValues(refreshToken)
+                .orElse(null);
+
+        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
+            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
     public Boolean validateToken(final String token) {
         try {
             Jwts.parserBuilder()
@@ -80,8 +123,16 @@ public class JwtProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            log.warn("유효하지 않은 JWT token입니다");
+        } catch (SecurityException e) {
+            log.error("잘못된 JWT 서명입니다.");
+        } catch (MalformedJwtException e) {
+            log.error("잘못된 JWT token입니다.");
+        } catch (ExpiredJwtException e) {
+            log.error("만료된 JWT token입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.error("지원되지 않는 JWT token입니다.");
+        } catch (IllegalArgumentException e) {
+            log.error("JWT token이 비어있습니다.");
         }
 
         return false;
@@ -95,5 +146,9 @@ public class JwtProvider {
         } catch (ExpiredJwtException e) {
             return true;
         }
+    }
+
+    public long getAccessTokenExpiration() {
+        return ACCESS_TOKEN_EXPIRATION_TIME;
     }
 }
