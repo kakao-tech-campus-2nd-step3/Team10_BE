@@ -1,4 +1,4 @@
-package poomasi.domain.category.entity;
+package poomasi.domain.product._category.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import poomasi.domain.category.dto.CategoryRequest;
+import poomasi.domain.product._category.dto.CategoryRequest;
 
 @Entity
 @Getter

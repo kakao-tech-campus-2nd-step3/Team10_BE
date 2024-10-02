@@ -1,12 +1,12 @@
-package poomasi.domain.category.controller;
+package poomasi.domain.product._category.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import poomasi.domain.category.dto.CategoryResponse;
-import poomasi.domain.category.service.CategoryService;
+import poomasi.domain.product._category.dto.CategoryResponse;
+import poomasi.domain.product._category.service.CategoryService;
 
 import java.util.List;
 @RestController
