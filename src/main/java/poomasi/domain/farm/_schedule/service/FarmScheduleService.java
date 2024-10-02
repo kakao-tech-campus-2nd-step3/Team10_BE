@@ -11,6 +11,8 @@ import poomasi.global.error.BusinessException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static poomasi.global.error.BusinessError.FARM_SCHEDULE_ALREADY_EXISTS;
 
@@ -20,12 +22,17 @@ public class FarmScheduleService {
     private final FarmScheduleRepository farmScheduleRepository;
 
     public void addFarmSchedule(FarmScheduleUpdateRequest request) {
+        List<FarmSchedule> existingSchedules = farmScheduleRepository.findByFarmIdAndDateRange(request.farmId(), request.startDate(), request.endDate());
+
+        Set<LocalDate> existingDates = existingSchedules.stream()
+                .map(FarmSchedule::getDate)
+                .collect(Collectors.toSet());
+
         for (LocalDate date = request.startDate(); !date.isAfter(request.endDate()); date = date.plusDays(1)) {
             if (request.availableDays().contains(date.getDayOfWeek())) {
-                farmScheduleRepository.findByFarmIdAndDate(request.farmId(), date)
-                        .ifPresent(schedule -> {
-                            throw new BusinessException(FARM_SCHEDULE_ALREADY_EXISTS);
-                        });
+                if (existingDates.contains(date)) {
+                    throw new BusinessException(FARM_SCHEDULE_ALREADY_EXISTS);
+                }
 
                 FarmSchedule newSchedule = request.toEntity(date);
                 farmScheduleRepository.save(newSchedule);
