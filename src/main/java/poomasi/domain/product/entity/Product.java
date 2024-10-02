@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE product SET deletedAt = current_timestamp WHERE id = ?")
+@SQLDelete(sql = "UPDATE product SET deleted_at = current_timestamp WHERE id = ?")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

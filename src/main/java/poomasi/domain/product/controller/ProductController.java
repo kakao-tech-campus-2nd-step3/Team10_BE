@@ -3,10 +3,7 @@ package poomasi.domain.product.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import poomasi.domain.product.service.ProductService;
 import poomasi.domain.product.dto.ProductResponse;
 
@@ -25,7 +22,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<?> getProduct(@RequestParam Long productId) {
-        return ResponseEntity.ok(productService.getProductByProductId(productId));
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId) {
+        ProductResponse product = productService.getProductByProductId(productId);
+        return ResponseEntity.ok(product);
     }
 }
