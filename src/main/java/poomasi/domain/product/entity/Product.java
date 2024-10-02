@@ -39,11 +39,11 @@ public class Product {
     @Comment("이미지 URL")
     private String imageUrl;
 
-    @Comment("수량")
-    private int quantity;
+    @Comment("재고")
+    private int stock;
 
     @Comment("가격")
-    private String price;
+    private Long price;
 
     @Comment("삭제 일시")
     private LocalDateTime deletedAt;
@@ -62,14 +62,14 @@ public class Product {
                    String name,
                    String description,
                    String imageUrl,
-                   int quantity,
-                   String price) {
+                   int stock,
+                   Long price) {
         this.categoryId = categoryId;
         this.farmerId = farmerId;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.quantity = quantity;
+        this.stock = stock;
         this.price = price;
     }
 
@@ -78,13 +78,13 @@ public class Product {
         this.name = productRegisterRequest.name();
         this.description = productRegisterRequest.description();
         this.imageUrl = productRegisterRequest.imageUrl();
-        this.quantity = productRegisterRequest.quantity();
+        this.stock = productRegisterRequest.stock();
         this.price = productRegisterRequest.price();
         return this;
     }
 
-    public void addQuantity(Integer quantity) {
-        this.quantity += quantity;
+    public void addQuantity(int stock) {
+        this.stock += stock;
     }
 
 }
