@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.product.dto.ProductRegisterRequest;
+import poomasi.domain.product.dto.UpdateProductQuantityRequest;
 import poomasi.domain.product.service.ProductFarmerService;
 
 @RestController
@@ -29,14 +30,18 @@ public class ProductFarmerController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long productId) {
+        // TODO: farmerId를 SecurityContextHolder에서 가져와서 비교해야함.
+
         productFarmerService.deleteProduct(productId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/{productId}/count/{quantity}") // FIXME: ResponseBody로 수정해야할듯.
-    public ResponseEntity<?> addQuantity(@PathVariable Long productId,
-                                         @PathVariable Integer quantity) {
-        productFarmerService.addQuantity(productId, quantity);
+
+    @PatchMapping("/products/{productId}")
+    public ResponseEntity<?> updateProductQuantity(@PathVariable Long productId,
+                                                   @RequestBody UpdateProductQuantityRequest request) {
+        productFarmerService.addQuantity(productId, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

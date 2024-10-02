@@ -3,10 +3,10 @@ package poomasi.domain.product.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.service.MemberService;
 import poomasi.domain.product._category.service.CategoryService;
 import poomasi.domain.product.dto.ProductRegisterRequest;
+import poomasi.domain.product.dto.UpdateProductQuantityRequest;
 import poomasi.domain.product.entity.Product;
 import poomasi.domain.product.repository.ProductRepository;
 import poomasi.global.error.BusinessError;
@@ -29,22 +29,22 @@ public class ProductFarmerService {
     }
 
     public void modifyProduct(ProductRegisterRequest productRequest, Long productId) {
-        //주인인지 알아보기
+        // TODO: 주인인지 알아보기
         Product product = getProductByProductId(productId);
         productRepository.save(product.modify(productRequest));
     }
 
     @Transactional
     public void deleteProduct(Long productId) {
-        //주인인지 알아보기
+        //TODO: 주인인지 알아보기
         Product product = getProductByProductId(productId);
         productRepository.delete(product);
     }
 
     @Transactional
-    public void addQuantity(Long productId, Integer quantity) {
-        //주인인지 알아보기
-        getProductByProductId(productId).addQuantity(quantity);
+    public void addQuantity(Long productId, UpdateProductQuantityRequest request) {
+        //TODO: 주인인지 혹은 관리자인지 알아보기
+        getProductByProductId(productId).addQuantity(request.quantity());
     }
 
     private Product getProductByProductId(Long productId) {
