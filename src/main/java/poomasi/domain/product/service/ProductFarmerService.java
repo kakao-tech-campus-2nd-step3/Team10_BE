@@ -3,6 +3,9 @@ package poomasi.domain.product.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import poomasi.domain.member.entity.Member;
+import poomasi.domain.member.service.MemberService;
+import poomasi.domain.product._category.service.CategoryService;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.product.entity.Product;
 import poomasi.domain.product.repository.ProductRepository;
@@ -14,11 +17,14 @@ import poomasi.global.error.BusinessException;
 public class ProductFarmerService {
 
     private final ProductRepository productRepository;
+    private final CategoryService categoryService;
+    private final MemberService memberService;
 
-    public Long registerProduct(ProductRegisterRequest product) {
-        //token이 farmer인지 확인하기
+    public Long registerProduct(ProductRegisterRequest request) {
+        memberService.isFarmer(request.farmerId());
+        categoryService.getCategory(request.categoryId());
 
-        Product saveProduct = productRepository.save(product.toEntity());
+        Product saveProduct = productRepository.save(request.toEntity());
         return saveProduct.getId();
     }
 
