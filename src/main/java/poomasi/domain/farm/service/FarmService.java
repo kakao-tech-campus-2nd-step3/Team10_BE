@@ -1,6 +1,5 @@
 package poomasi.domain.farm.service;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,14 +17,14 @@ public class FarmService {
     private final FarmRepository farmRepository;
 
     public FarmResponse getFarmByFarmId(Long farmId) {
-        return farmRepository.findById(farmId)
+        return farmRepository.findByIdAndDeletedAtIsNull(farmId)
                 .map(FarmResponse::fromEntity)
                 .orElseThrow(() -> new BusinessException(BusinessError.FARM_NOT_FOUND));
     }
 
 
     public List<FarmResponse> getFarmList(Pageable pageable) {
-        return farmRepository.findAll(pageable).stream()
+        return farmRepository.findByDeletedAtIsNull(pageable).stream()
                 .map(FarmResponse::fromEntity)
                 .collect(Collectors.toList());
     }
