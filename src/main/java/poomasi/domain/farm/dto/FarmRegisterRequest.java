@@ -10,7 +10,8 @@ public record FarmRegisterRequest(
         Double latitude,
         Double longitude,
         String phoneNumber,
-        String description
+        String description,
+        Long experiencePrice
 ) {
     public Farm toEntity() {
         return Farm.builder()
@@ -21,6 +22,7 @@ public record FarmRegisterRequest(
                 .latitude(latitude)
                 .longitude(longitude)
                 .description(description)
+                .experiencePrice(experiencePrice)
                 .build();
     }
 }

@@ -50,6 +50,9 @@ public class Farm {
     @Enumerated(EnumType.STRING)
     private FarmStatus status = FarmStatus.OPEN;
 
+    @Comment("체험 비용")
+    private Long experiencePrice;
+
     @Comment("삭제 일시")
     private LocalDateTime deletedAt;
 
@@ -62,7 +65,7 @@ public class Farm {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description) {
+    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description, Long experiencePrice) {
         this.name = name;
         this.ownerId = ownerId;
         this.address = address;
@@ -70,6 +73,7 @@ public class Farm {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.experiencePrice = experiencePrice;
     }
 
     public Farm updateFarm(FarmUpdateRequest farmUpdateRequest) {
