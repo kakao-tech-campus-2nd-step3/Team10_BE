@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import poomasi.domain.auth.dto.request.TokenRequest;
 import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.service.AuthService;
-import poomasi.domain.auth.dto.request.LoginRequest;
+import poomasi.domain.auth.dto.request.SignUpRequest;
 
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 
@@ -20,8 +20,8 @@ public class AuthController {
 
     // 일반, 구매자 회원 가입
     @PostMapping("/sign-up")
-    public ResponseEntity<TokenResponse> signUp(@RequestBody LoginRequest loginRequest) {
-        TokenResponse responseBody = authService.signUp(loginRequest, LOCAL);
+    public ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+        TokenResponse responseBody = authService.signUp(signUpRequest, LOCAL);
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + responseBody.accessToken())
                 .body(responseBody);

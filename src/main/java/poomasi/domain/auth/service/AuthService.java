@@ -5,7 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.auth.dto.request.LoginRequest;
+import poomasi.domain.auth.dto.request.SignUpRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
@@ -15,7 +15,6 @@ import poomasi.global.util.JwtUtil;
 
 import java.time.Duration;
 import java.util.Map;
-import java.util.Optional;
 
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
 import static poomasi.global.error.BusinessError.*;
@@ -36,16 +35,16 @@ public class AuthService {
     // 사업자 등록 번호 검사 로직은 추후 논의 필요
 
     @Transactional
-    public TokenResponse signUp(LoginRequest loginRequest, LoginType loginType) {
+    public TokenResponse signUp(SignUpRequest signUpRequest, LoginType loginType) {
         // 이메일 중복 되어도 로그인 타입 다르면 중복 x
-        if (memberRepository.findByEmailAndLoginType(loginRequest.email(), loginType).isPresent()) {
+        if (memberRepository.findByEmailAndLoginType(signUpRequest.email(), loginType).isPresent()) {
             throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
         }
 
-        Member newMember = new Member(loginRequest.email(), passwordEncoder.encode(loginRequest.password()), loginType, ROLE_CUSTOMER);
+        Member newMember = new Member(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
 
-        Map<String, Object> claims = refreshTokenService.createClaims(loginRequest.email(), ROLE_CUSTOMER);
+        Map<String, Object> claims = refreshTokenService.createClaims(signUpRequest.email(), ROLE_CUSTOMER);
 
         return refreshTokenService.getTokenResponse(newMember.getId(), claims);
     }
