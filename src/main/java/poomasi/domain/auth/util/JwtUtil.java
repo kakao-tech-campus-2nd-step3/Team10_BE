@@ -7,13 +7,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poomasi.domain.auth.entity.TokenType;
+import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
+import poomasi.domain.member.service.MemberService;
 import poomasi.global.redis.service.RedisService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+
+import static poomasi.domain.auth.entity.TokenType.ACCESS;
+import static poomasi.domain.auth.entity.TokenType.REFRESH;
 
 @Component
 @RequiredArgsConstructor
@@ -32,6 +39,7 @@ public class JwtUtil {
     private long REFRESH_TOKEN_EXPIRATION_TIME;
 
     private final RedisService redisService;
+    private final MemberService memberService;
 
     @PostConstruct
     public void init() {
@@ -39,29 +47,32 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String generateAccessToken(final String memberId, final Map<String, Object> claims) {
+    public String generateAccessTokenById(final Long memberId) {
+        Map<String, Object> claims = createClaims(memberId);
+        claims.put("type", ACCESS);
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(memberId)
+                .setSubject(String.valueOf(memberId))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(final String memberId, final Map<String, Object> claims) {
+    public String generateRefreshTokenById(final Long memberId) {
+        Map<String, Object> claims = createClaims(memberId);
+        claims.put("type", REFRESH);
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(memberId)
+                .setSubject(String.valueOf(memberId))
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // 토큰에서 정보 추출
-    public String getSubjectFromToken(final String token) {
-        return getAllClaimsFromToken(token).getSubject();
+    public Long getIdFromToken(final String token) {
+        return getClaimFromToken(token, "id", Long.class);
     }
 
     public String getEmailFromToken(final String token) {
@@ -72,13 +83,14 @@ public class JwtUtil {
         return getClaimFromToken(token, "role", Role.class);
     }
 
+    public TokenType getTypeFromToken(final String token) {
+        return getClaimFromToken(token, "type", TokenType.class);
+    }
+
+
     public <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
         Claims claims = getAllClaimsFromToken(token);
         return claims.get(claimKey, claimType);
-    }
-
-    public Date getExpirationDateFromToken(final String token) {
-        return getAllClaimsFromToken(token).getExpiration();
     }
 
     private Claims getAllClaimsFromToken(final String token) {
@@ -87,6 +99,25 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public Map<String, Object> createClaims(Long memberId) {
+        Map<String, Object> claims = new HashMap<>();
+        Member member = memberService.findMemberById(memberId);
+
+        claims.put("id", memberId);
+        claims.put("email", member.getEmail());
+        claims.put("role", member.getRole());
+
+        return claims;
+    }
+
+    public Date getExpirationDateFromToken(final String token) {
+        return getAllClaimsFromToken(token).getExpiration();
+    }
+
+    public long getAccessTokenExpiration() {
+        return ACCESS_TOKEN_EXPIRATION_TIME;
     }
 
     // 토큰 유효성 검사
@@ -148,7 +179,4 @@ public class JwtUtil {
         }
     }
 
-    public long getAccessTokenExpiration() {
-        return ACCESS_TOKEN_EXPIRATION_TIME;
-    }
 }
