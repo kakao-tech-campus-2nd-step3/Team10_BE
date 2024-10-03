@@ -1,4 +1,4 @@
-package poomasi.global.util;
+package poomasi.domain.auth.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

@@ -8,7 +8,7 @@ import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtUtil;
+import poomasi.domain.auth.util.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
