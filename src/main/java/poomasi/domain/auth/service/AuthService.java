@@ -4,17 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.dto.request.SignUpRequest;
 import poomasi.domain.member.entity.LoginType;
 import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
-import poomasi.global.redis.service.RedisService;
-import poomasi.global.util.JwtUtil;
-
-import java.time.Duration;
-import java.util.Map;
 
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
 import static poomasi.global.error.BusinessError.*;
@@ -25,10 +19,7 @@ import static poomasi.global.error.BusinessError.*;
 public class AuthService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
-    private final RedisService redisService;
     private final PasswordEncoder passwordEncoder;
-    private final RefreshTokenService refreshTokenService;
 
     // 카카오 로그인 일단 계정 분리 및 계정 연동 보류
 
@@ -43,13 +34,6 @@ public class AuthService {
 
         Member newMember = new Member(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
-    }
-
-    @Transactional
-    public void logout(Long memberId, String accessToken) {
-        refreshTokenService.removeRefreshTokenById(memberId);
-
-        redisService.setBlackList(accessToken, "accessToken", Duration.ofMillis(jwtUtil.getAccessTokenExpiration()));
     }
 
 }

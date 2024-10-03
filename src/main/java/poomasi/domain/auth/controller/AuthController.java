@@ -1,10 +1,8 @@
 package poomasi.domain.auth.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import poomasi.domain.auth.dto.request.TokenRequest;
 import poomasi.domain.auth.service.AuthService;
 import poomasi.domain.auth.dto.request.SignUpRequest;
 
@@ -22,12 +20,6 @@ public class AuthController {
     public ResponseEntity<Void> SignUp(@RequestBody SignUpRequest signUpRequest) {
         authService.signUp(signUpRequest, LOCAL);
         return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/logout/{memberId}")
-    public ResponseEntity<Void> logout(@PathVariable Long memberId, @RequestBody TokenRequest tokenRequest) {
-        authService.logout(memberId, tokenRequest.accessToken());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
