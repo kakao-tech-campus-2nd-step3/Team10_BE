@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import poomasi.domain.review.dto.ProductReviewRequest;
 import poomasi.domain.review.service.ProductReviewCustomerService;
@@ -28,6 +29,12 @@ public class ProductReviewCustomerController {
     @DeleteMapping("/api/reviews/{reviewId}")
     public ResponseEntity<?> deleteProductReview(@PathVariable long reviewId) {
         productReviewCustomerService.deleteReview(reviewId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/api/reviews/{reviewId}")
+    public ResponseEntity<?> modifyProductReview(@PathVariable long reviewId, @RequestBody ProductReviewRequest productReviewRequest){
+        productReviewCustomerService.modifyReview(reviewId, productReviewRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

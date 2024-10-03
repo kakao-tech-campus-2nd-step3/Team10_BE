@@ -17,6 +17,7 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.product.entity.Product;
+import poomasi.domain.review.dto.ProductReviewRequest;
 
 @Entity
 @Getter
@@ -60,5 +61,10 @@ public class ProductReview {
         productReviewPhoto.setReview(this);
         imageUrl.add(productReviewPhoto);
         return productReviewPhoto;
+    }
+
+    public void modifyReview(ProductReviewRequest productReviewRequest) {
+        this.rating = productReviewRequest.rating();
+        this.content = productReviewRequest.content();
     }
 }

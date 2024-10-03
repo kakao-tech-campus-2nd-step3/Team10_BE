@@ -21,6 +21,7 @@ public class ProductReviewCustomerService {
     private final ProductRepository productRepository;
     private final ProductReviewPhotoRepository productReviewPhotoRepository;
 
+    @Transactional
     public long registerReview(long productId, ProductReviewRequest productReviewRequest) {
         //이미지 저장하고 주소 받아와서 review에 추가해주기
         String url1 = "test1";
@@ -57,5 +58,11 @@ public class ProductReviewCustomerService {
     private ProductReview getReviewById(long reviewId) {
         return productReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new BusinessException(BusinessError.REVIEW_NOT_FOUND));
+    }
+
+    @Transactional
+    public void modifyReview(long reviewId, ProductReviewRequest productReviewRequest) {
+        ProductReview pReview = getReviewById(reviewId);
+        pReview.modifyReview(productReviewRequest);
     }
 }

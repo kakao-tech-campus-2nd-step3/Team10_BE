@@ -66,6 +66,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ProductReview> reviewList = new ArrayList<>();
 
+    @Comment("평균 평점")
+    private double averageRating=0.0;
+
     @Builder
     public Product(Long productId,
             Category category,
@@ -100,6 +103,10 @@ public class Product {
 
     public void addReview(ProductReview pReview) {
         this.reviewList.add(pReview);
+        this.averageRating = reviewList.stream()
+                .mapToDouble(ProductReview::getRating) // 각 리뷰의 평점을 double로 변환
+                .average() // 평균 계산
+                .orElse(0.0);
     }
 
 }
