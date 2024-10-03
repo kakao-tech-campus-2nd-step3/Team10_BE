@@ -2,10 +2,12 @@ package poomasi.domain.product.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.*;
+import poomasi.domain.category.entity.Category;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.review.entity.ProductReview;
 
@@ -29,7 +32,8 @@ public class Product {
     private Long id;
 
     @Comment("카테고리 ID")
-    private Long categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 
     @Comment("등록한 사람")
     private Long farmerId; //등록한 사람
@@ -47,7 +51,7 @@ public class Product {
     private int quantity;
 
     @Comment("가격")
-    private String price;
+    private int price;
 
     @Comment("삭제 일시")
     private LocalDateTime deletedAt;
@@ -58,20 +62,19 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "product_review", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<ProductReview> reviewList = new ArrayList<>();
-
 
     @Builder
     public Product(Long productId,
-                   Long categoryId,
+                   Category category,
                    Long farmerId, //등록한 사람
                    String name,
                    String description,
                    String imageUrl,
                    int quantity,
-                   String price) {
-        this.categoryId = categoryId;
+                   int price) {
+        this.category = category;
         this.farmerId = farmerId;
         this.name = name;
         this.description = description;
@@ -80,8 +83,8 @@ public class Product {
         this.price = price;
     }
 
-    public Product modify(ProductRegisterRequest productRegisterRequest) {
-        this.categoryId = productRegisterRequest.categoryId();
+    public Product modify(Category category, ProductRegisterRequest productRegisterRequest) {
+        this.category = category;
         this.name = productRegisterRequest.name();
         this.description = productRegisterRequest.description();
         this.imageUrl = productRegisterRequest.imageUrl();
@@ -97,4 +100,5 @@ public class Product {
     public void addReview(ProductReview pReview) {
         this.reviewList.add(pReview);
     }
+
 }
