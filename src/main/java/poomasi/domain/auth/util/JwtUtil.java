@@ -83,7 +83,7 @@ public class JwtUtil {
         return getClaimFromToken(token, "role", Role.class);
     }
 
-    public TokenType getTypeFromToken(final String token) {
+    public TokenType getTokenTypeFromToken(final String token) {
         return getClaimFromToken(token, "type", TokenType.class);
     }
 
@@ -147,7 +147,7 @@ public class JwtUtil {
         return true;
     }
 
-    public Boolean validateToken(final String token) {
+    private Boolean validateToken(final String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
