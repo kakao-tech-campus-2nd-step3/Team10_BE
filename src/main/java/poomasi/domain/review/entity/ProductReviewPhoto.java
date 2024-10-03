@@ -1,6 +1,7 @@
 package poomasi.domain.review.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,10 +20,18 @@ public class ProductReviewPhoto {
     private long id;
 
     @Comment("리뷰")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ProductReview productReview;
 
     @Comment("사진 경로")
     private String url;
 
+    public ProductReviewPhoto(ProductReview productReview, String url) {
+        this.productReview = productReview;
+        this.url = url;
+    }
+
+    public void setReview(ProductReview productReview) {
+        this.productReview = productReview;
+    }
 }

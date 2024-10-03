@@ -42,7 +42,7 @@ public class ProductReview {
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "productReview", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductReviewPhoto> imageUrl = new ArrayList<>();
 
 //    @Comment("작성자")
@@ -53,5 +53,12 @@ public class ProductReview {
         this.rating = rating;
         this.content = content;
         this.product = product;
+    }
+
+    public ProductReviewPhoto addPhoto(String url) {
+        ProductReviewPhoto productReviewPhoto = new ProductReviewPhoto(this, url);
+        productReviewPhoto.setReview(this);
+        imageUrl.add(productReviewPhoto);
+        return productReviewPhoto;
     }
 }
