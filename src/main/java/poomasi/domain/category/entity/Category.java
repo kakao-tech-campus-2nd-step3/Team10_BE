@@ -17,6 +17,7 @@ import poomasi.domain.product.entity.Product;
 @Getter
 @NoArgsConstructor
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

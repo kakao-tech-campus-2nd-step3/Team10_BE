@@ -10,6 +10,7 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class ProductAdminService {
+
     private final ProductRepository productRepository;
 
     private Product getProductByProductId(Long productId) {

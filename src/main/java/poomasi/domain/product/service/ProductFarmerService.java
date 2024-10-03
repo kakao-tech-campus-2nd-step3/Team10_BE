@@ -16,7 +16,8 @@ import poomasi.global.error.BusinessException;
 public class ProductFarmerService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository  categoryRepository;
+    private final CategoryRepository categoryRepository;
+
     public Long registerProduct(ProductRegisterRequest productRequest) {
         //token이 farmer인지 확인하기
         Category category = getCategory(productRequest);

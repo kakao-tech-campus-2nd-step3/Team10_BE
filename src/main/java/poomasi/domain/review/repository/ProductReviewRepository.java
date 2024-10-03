@@ -8,6 +8,7 @@ import poomasi.domain.review.entity.ProductReview;
 
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
+
     @Query("select r from ProductReview r where r.product.id = :productId")
     List<ProductReview> findByProductId(long productId);
 }

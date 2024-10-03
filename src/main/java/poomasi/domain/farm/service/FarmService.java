@@ -1,6 +1,7 @@
 package poomasi.domain.farm.service;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,12 +10,10 @@ import poomasi.domain.farm.repository.FarmRepository;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 public class FarmService {
+
     private final FarmRepository farmRepository;
 
     public FarmResponse getFarmByFarmId(Long farmId) {

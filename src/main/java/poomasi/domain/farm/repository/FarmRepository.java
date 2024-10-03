@@ -8,5 +8,6 @@ import poomasi.domain.farm.entity.Farm;
 
 @Repository
 public interface FarmRepository extends JpaRepository<Farm, Long> {
+
     Page<Farm> findAll(Pageable pageable);
 }

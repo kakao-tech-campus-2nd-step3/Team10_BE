@@ -13,6 +13,7 @@ import poomasi.domain.review.service.ProductReviewService;
 @Controller
 @RequiredArgsConstructor
 public class ProductReviewController {
+
     private final ProductReviewService productReviewService;
 
     @GetMapping("/api/products/{productId}/reviews")

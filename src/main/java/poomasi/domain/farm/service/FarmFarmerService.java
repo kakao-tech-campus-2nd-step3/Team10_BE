@@ -1,6 +1,8 @@
 package poomasi.domain.farm.service;
 
-import lombok.AllArgsConstructor;
+import static poomasi.global.error.BusinessError.FARM_NOT_FOUND;
+import static poomasi.global.error.BusinessError.FARM_OWNER_MISMATCH;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm.dto.FarmRegisterRequest;
@@ -9,12 +11,10 @@ import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.repository.FarmRepository;
 import poomasi.global.error.BusinessException;
 
-import static poomasi.global.error.BusinessError.FARM_NOT_FOUND;
-import static poomasi.global.error.BusinessError.FARM_OWNER_MISMATCH;
-
 @Service
 @RequiredArgsConstructor
 public class FarmFarmerService {
+
     private final FarmRepository farmRepository;
 
     public Long registerFarm(FarmRegisterRequest request) {
@@ -38,7 +38,8 @@ public class FarmFarmerService {
     }
 
     public Farm getFarmByFarmId(Long farmId) {
-        return farmRepository.findById(farmId).orElseThrow(() -> new BusinessException(FARM_NOT_FOUND));
+        return farmRepository.findById(farmId)
+                .orElseThrow(() -> new BusinessException(FARM_NOT_FOUND));
     }
 
 }

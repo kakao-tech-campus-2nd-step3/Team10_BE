@@ -1,7 +1,6 @@
 package poomasi.domain.review.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.product.entity.Product;
@@ -15,6 +14,7 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class ProductReviewCustomerService {
+
     private final ProductReviewRepository productReviewRepository;
     private final ProductRepository productRepository;
 
@@ -40,6 +40,7 @@ public class ProductReviewCustomerService {
     }
 
     private ProductReview getReviewById(long reviewId) {
-        return productReviewRepository.findById(reviewId).orElseThrow(()-> new BusinessException(BusinessError.REVIEW_NOT_FOUND));
+        return productReviewRepository.findById(reviewId)
+                .orElseThrow(() -> new BusinessException(BusinessError.REVIEW_NOT_FOUND));
     }
 }

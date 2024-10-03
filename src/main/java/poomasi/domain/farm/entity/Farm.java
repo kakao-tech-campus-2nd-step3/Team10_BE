@@ -1,6 +1,12 @@
 package poomasi.domain.farm.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,8 +17,6 @@ import org.hibernate.annotations.SQLSelect;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.farm.dto.FarmUpdateRequest;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Table(name = "farm")
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
 @SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
 @SQLSelect(sql = "SELECT * FROM farm WHERE deleted = false")
 public class Farm {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,7 +56,8 @@ public class Farm {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description) {
+    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude,
+            Double longitude, String description) {
         this.name = name;
         this.ownerId = ownerId;
         this.address = address;

@@ -12,6 +12,7 @@ public record FarmRegisterRequest(
         String phoneNumber,
         String description
 ) {
+
     public Farm toEntity() {
         return Farm.builder()
                 .name(name)

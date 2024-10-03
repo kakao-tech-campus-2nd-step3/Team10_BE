@@ -6,18 +6,18 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.category.entity.Category;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.review.entity.ProductReview;
@@ -27,6 +27,7 @@ import poomasi.domain.review.entity.ProductReview;
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE product SET deletedAt = current_timestamp WHERE id = ?")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -67,13 +68,13 @@ public class Product {
 
     @Builder
     public Product(Long productId,
-                   Category category,
-                   Long farmerId, //등록한 사람
-                   String name,
-                   String description,
-                   String imageUrl,
-                   int quantity,
-                   int price) {
+            Category category,
+            Long farmerId, //등록한 사람
+            String name,
+            String description,
+            String imageUrl,
+            int quantity,
+            int price) {
         this.category = category;
         this.farmerId = farmerId;
         this.name = name;

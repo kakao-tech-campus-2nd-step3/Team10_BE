@@ -15,6 +15,7 @@ import poomasi.domain.farm.service.FarmFarmerService;
 @AllArgsConstructor
 @RequestMapping("/api/farm")
 public class FarmFarmerController {
+
     private final FarmFarmerService farmFarmerService;
 
     // TODO: 판매자만 접근가능하도록 인증/인가 annotation 추가

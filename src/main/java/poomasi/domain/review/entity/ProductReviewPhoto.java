@@ -13,6 +13,7 @@ import org.hibernate.annotations.Comment;
 @NoArgsConstructor
 @Getter
 public class ProductReviewPhoto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

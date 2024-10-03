@@ -12,6 +12,7 @@ public record FarmUpdateRequest(
         Double latitude,
         Double longitude
 ) {
+
     public Farm toEntity(Farm farm) {
         return farm.updateFarm(this);
     }

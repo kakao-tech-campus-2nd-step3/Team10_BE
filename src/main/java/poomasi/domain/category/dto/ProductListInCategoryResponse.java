@@ -11,6 +11,7 @@ public record ProductListInCategoryResponse(
         int quantity,
         int price
 ) {
+
     public static ProductListInCategoryResponse fromEntity(Product product) {
         return new ProductListInCategoryResponse(
                 product.getCategory().getId(),

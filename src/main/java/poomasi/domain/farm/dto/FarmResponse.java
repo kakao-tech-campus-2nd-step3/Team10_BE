@@ -11,7 +11,8 @@ public record FarmResponse( // FIXME: 사용자 정보 추가 및 설명/전화�
                             Double latitude,
                             Double longitude,
                             String description
-                            ) {
+) {
+
     public static FarmResponse fromEntity(Farm farm) {
         return new FarmResponse(
                 farm.getId(),

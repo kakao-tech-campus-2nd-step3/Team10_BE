@@ -14,6 +14,7 @@ import poomasi.domain.farm.service.FarmService;
 @RequiredArgsConstructor
 @RequestMapping("/api/farm")
 public class FarmController {
+
     private final FarmService farmService;
 
     @GetMapping("/{farmId}")

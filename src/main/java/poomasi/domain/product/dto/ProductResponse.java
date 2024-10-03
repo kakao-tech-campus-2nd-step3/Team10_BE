@@ -4,7 +4,7 @@ import java.util.List;
 import poomasi.domain.product.entity.Product;
 import poomasi.domain.review.entity.ProductReview;
 
-public record ProductResponse (
+public record ProductResponse(
         long id,
         long categoryId,
         long farmerId,
@@ -14,7 +14,8 @@ public record ProductResponse (
         int quantity,
         int price,
         List<ProductReview> reviewList
-){
+) {
+
     public ProductResponse fromEntity(Product product) {
         return new ProductResponse(
                 product.getId(),

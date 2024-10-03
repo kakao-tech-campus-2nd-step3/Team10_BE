@@ -13,6 +13,7 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     public List<CategoryResponse> getAllCategories() {
@@ -28,8 +29,8 @@ public class CategoryService {
                 .map(ProductListInCategoryResponse::fromEntity).toList();
     }
 
-    private Category getCategory(long categoryId){
+    private Category getCategory(long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(()->new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
     }
 }

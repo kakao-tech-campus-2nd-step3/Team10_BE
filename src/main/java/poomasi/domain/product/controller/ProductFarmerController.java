@@ -1,6 +1,5 @@
 package poomasi.domain.product.controller;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class ProductFarmerController {
 
     @PutMapping("/api/products/{productId}")
     public ResponseEntity<?> modifyProduct(@RequestBody ProductRegisterRequest product,
-                                           @PathVariable Long productId) {
+            @PathVariable Long productId) {
         productFarmerService.modifyProduct(product, productId);
         return new ResponseEntity<>(productId, HttpStatus.OK);
     }
@@ -41,7 +40,7 @@ public class ProductFarmerController {
 
     @PatchMapping("/api/products/{productId}/count/{quantity}")
     public ResponseEntity<?> addQuantity(@PathVariable Long productId,
-                                         @PathVariable Integer quantity) {
+            @PathVariable Integer quantity) {
         productFarmerService.addQuantity(productId, quantity);
         return new ResponseEntity<>(HttpStatus.OK);
     }
