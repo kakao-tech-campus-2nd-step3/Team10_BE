@@ -35,7 +35,7 @@ public class AuthService {
     // 사업자 등록 번호 검사 로직은 추후 논의 필요
 
     @Transactional
-    public TokenResponse signUp(SignUpRequest signUpRequest, LoginType loginType) {
+    public void signUp(SignUpRequest signUpRequest, LoginType loginType) {
         // 이메일 중복 되어도 로그인 타입 다르면 중복 x
         if (memberRepository.findByEmailAndLoginType(signUpRequest.email(), loginType).isPresent()) {
             throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
@@ -43,10 +43,6 @@ public class AuthService {
 
         Member newMember = new Member(signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()), loginType, ROLE_CUSTOMER);
         memberRepository.save(newMember);
-
-        Map<String, Object> claims = refreshTokenService.createClaims(signUpRequest.email(), ROLE_CUSTOMER);
-
-        return refreshTokenService.getTokenResponse(newMember.getId(), claims);
     }
 
     @Transactional
