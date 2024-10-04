@@ -1,12 +1,15 @@
 package poomasi.domain.member.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 
@@ -38,10 +41,10 @@ public class Member {
     private Role role;
 
     @Column(nullable = true)
-    private String kakaoAuthId;
+    private String provideId;
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private MemberProfile profile;
+    private MemberProfile memberProfile;
 
     private LocalDateTime deletedAt;
 
@@ -57,17 +60,25 @@ public class Member {
         this.role = role;
     }
 
-
-    public void setProfile(MemberProfile profile) {
-        this.profile = profile;
-        if (profile != null) {
-            profile.setMember(this);
+    public void setMemberProfile(MemberProfile memberProfile) {
+        this.memberProfile = memberProfile;
+        if (memberProfile != null) {
+            memberProfile.setMember(this);
         }
     }
 
     public void kakaoToLocal(String password) {
         this.password = password;
         this.loginType = LOCAL;
+    }
+
+    @Builder
+    public Member(String email, Role role, LoginType loginType, String provideId, MemberProfile memberProfile) {
+        this.email = email;
+        this.role = role;
+        this.loginType = loginType;
+        this.provideId = provideId;
+        this.memberProfile = memberProfile;
     }
 
     public boolean isFarmer() {
