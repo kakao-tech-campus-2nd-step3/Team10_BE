@@ -1,26 +1,25 @@
-package poomasi.domain.auth.service;
+
+
+package poomasi.domain.auth.reissue.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.auth.entity.RefreshToken;
+import poomasi.domain.auth.reissue.manager.RefreshTokenManager;
 import poomasi.domain.member.entity.Member;
-import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.repository.MemberRepository;
+import poomasi.domain.auth.util.JwtUtil;
 import poomasi.global.error.BusinessException;
-import poomasi.global.util.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static poomasi.global.error.BusinessError.*;
-
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService {
-
+public class ReissueTokenService {
+    /*
     private final JwtUtil jwtUtil;
-    private final RefreshToken refreshTokenManager;
+    private final RefreshTokenManager refreshTokenManager;
     private final MemberRepository memberRepository;
 
     // 토큰 리프레시
@@ -66,5 +65,19 @@ public class RefreshTokenService {
         claims.put("email", email);
         claims.put("role", role);
         return claims;
-    }
+    }*/
+
 }
+
+
+
+/*
+* import poomasi.global.error.BusinessException;
+
+public Member getMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(MEMBER_NOT_FOUND));
+    }
+
+* */
+
