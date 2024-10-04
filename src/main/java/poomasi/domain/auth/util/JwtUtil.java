@@ -1,4 +1,4 @@
-package poomasi.global.util;
+package poomasi.domain.auth.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -6,13 +6,16 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import poomasi.domain.member.entity.Role;
 import poomasi.global.redis.service.RedisService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -38,6 +41,46 @@ public class JwtUtil {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+
+    public String generateTokenInFilter(String email, String role , String tokenType, Long memberId){
+        Map<String, Object> claims = this.createClaims(email, role, tokenType);
+        String memberIdString = memberId.toString();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(memberIdString)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
+    private Map<String, Object> createClaims(String email, String role, String tokenType) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
+        claims.put("role", role);
+        claims.put("tokenType" , tokenType);
+        return claims;
+    }
+
+    //subject 추출하기
+    public String getSubjectFromToken(final String token) {
+        return getAllClaimsFromToken(token).getSubject();
+    }
+
+    public String getEmailFromToken(final String token) {
+        return getClaimFromToken(token, "email", String.class);
+    }
+
+    public String getRoleFromToken(final String token) {
+        return getClaimFromToken(token, "role", String.class);
+    }
+
+    public String getTokenTypeFromToken(final String token) {
+        return getClaimFromToken(token, "tokenType", String.class);
+    }
+
     // 토큰 생성
     public String generateAccessToken(final String memberId, final Map<String, Object> claims) {
         return Jwts.builder()
@@ -59,19 +102,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    // 토큰에서 정보 추출
-    public String getSubjectFromToken(final String token) {
-        return getAllClaimsFromToken(token).getSubject();
-    }
-
-    public String getEmailFromToken(final String token) {
-        return getClaimFromToken(token, "email", String.class);
-    }
-
-    public Role getRoleFromToken(final String token) {
-        return getClaimFromToken(token, "role", Role.class);
-    }
-
     public <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
         Claims claims = getAllClaimsFromToken(token);
         return claims.get(claimKey, claimType);
@@ -87,33 +117,6 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    // 토큰 유효성 검사
-    public Boolean validateAccessToken(final String accessToken){
-        if (!validateToken(accessToken)) {
-            return false;
-        }
-        if (redisService.hasKeyBlackList(accessToken)){
-            log.warn("로그아웃한 JWT token입니다.");
-            return false;
-        }
-        return true;
-    }
-
-    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
-        if (!validateToken(refreshToken)) {
-            return false;
-        }
-        String storedMemberId = redisService.getValues(refreshToken)
-                .orElse(null);
-
-        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
-            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
-            return false;
-        }
-
-        return true;
     }
 
     public Boolean validateToken(final String token) {
