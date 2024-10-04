@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface FarmRepository extends JpaRepository<Farm, Long> {
-
     Page<Farm> findAll(Pageable pageable);
 
     Page<Farm> findByDeletedAtIsNull(Pageable pageable);

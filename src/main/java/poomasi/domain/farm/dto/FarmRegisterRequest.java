@@ -13,7 +13,6 @@ public record FarmRegisterRequest(
         String description,
         Long experiencePrice
 ) {
-
     public Farm toEntity() {
         return Farm.builder()
                 .name(name)

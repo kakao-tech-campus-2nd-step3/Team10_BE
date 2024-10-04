@@ -13,7 +13,6 @@ import poomasi.domain.farm._schedule.service.FarmScheduleService;
 @RequiredArgsConstructor
 @RequestMapping("/api/farm")
 public class FarmFarmerController {
-
     private final FarmFarmerService farmFarmerService;
     private final FarmScheduleService farmScheduleService;
 

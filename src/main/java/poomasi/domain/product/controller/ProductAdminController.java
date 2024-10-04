@@ -13,7 +13,6 @@ import poomasi.domain.product.service.ProductAdminService;
 @RequiredArgsConstructor
 @RequestMapping("/api/product")
 public class ProductAdminController {
-
     private final ProductAdminService productAdminService;
 
     @PutMapping("/{productId}/open")
