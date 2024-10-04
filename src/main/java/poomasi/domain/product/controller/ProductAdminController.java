@@ -18,7 +18,8 @@ public class ProductAdminController {
 
     @PutMapping("/{productId}/open")
     ResponseEntity<?> openProduct(@PathVariable Long productId) {
-        productAdminService.openProduct(productId);
+        // FIXME: 2024-10-04
+//        productAdminService.openProduct(productId);
         return new ResponseEntity<>(productId, HttpStatus.OK);
     }
 }

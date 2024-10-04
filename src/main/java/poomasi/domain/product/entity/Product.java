@@ -1,9 +1,6 @@
 package poomasi.domain.product.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +9,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.product.dto.ProductRegisterRequest;
+import poomasi.domain.review.entity.ProductReview;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -58,12 +58,12 @@ public class Product {
     List<ProductReview> reviewList = new ArrayList<>();
 
     @Comment("평균 평점")
-    private double averageRating=0.0;
+    private double averageRating = 0.0;
 
     @Builder
     public Product(Long productId,
                    Long categoryId,
-                   Long farmerId, //등록한 사람
+                   Long farmerId,
                    String name,
                    String description,
                    String imageUrl,

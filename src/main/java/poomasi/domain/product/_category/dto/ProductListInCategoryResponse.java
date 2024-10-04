@@ -1,25 +1,26 @@
-package poomasi.domain.category.dto;
+package poomasi.domain.product._category.dto;
 
+import lombok.Builder;
 import poomasi.domain.product.entity.Product;
 
+@Builder
 public record ProductListInCategoryResponse(
         Long categoryId,
-        //Long farmerId, //등록한 사람
         String name,
         String description,
         String imageUrl,
         int quantity,
-        int price
+        Long price
 ) {
 
     public static ProductListInCategoryResponse fromEntity(Product product) {
-        return new ProductListInCategoryResponse(
-                product.getCategory().getId(),
-                product.getName(),
-                product.getDescription(),
-                product.getImageUrl(),
-                product.getQuantity(),
-                product.getPrice()
-        );
+        return ProductListInCategoryResponse.builder()
+                .categoryId(product.getCategoryId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .imageUrl(product.getImageUrl())
+                .quantity(product.getStock())
+                .price(product.getPrice())
+                .build();
     }
 }

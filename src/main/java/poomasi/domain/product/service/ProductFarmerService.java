@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.member.service.MemberService;
+import poomasi.domain.product._category.entity.Category;
 import poomasi.domain.product._category.service.CategoryService;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.product.dto.UpdateProductQuantityRequest;
@@ -28,28 +29,28 @@ public class ProductFarmerService {
         return saveProduct.getId();
     }
 
-    private Category getCategory(ProductRegisterRequest product) {
-        return categoryRepository.findById(product.categoryId())
-                .orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
-    }
 
     @Transactional
     public void modifyProduct(ProductRegisterRequest productRequest, Long productId) {
         // TODO: 주인인지 알아보기
         Product product = getProductByProductId(productId);
 
-        product.getCategory().deleteProduct(product); //원래 카테고리에서 상품 삭제
+
+        // FIXME: 이거 수정해야할듯?
+    /*    product.getCategory().deleteProduct(product); //원래 카테고리에서 상품 삭제
         product = productRepository.save(product.modify(category, productRequest)); //상품 갱신
-        category.addProduct(product);//새로운 카테고리에 추가
+        category.addProduct(product);//새로운 카테고리에 추가*/
     }
 
     @Transactional
     public void deleteProduct(Long productId) {
         //TODO: 주인인지 알아보기
         Product product = getProductByProductId(productId);
-        Category category = product.getCategory();
 
-        category.deleteProduct(product);
+        // FIXME: 이거 수정해야할듯?
+    /*    Category category = product.getCategory();
+
+        category.deleteProduct(product);*/
         productRepository.delete(product);
     }
 
