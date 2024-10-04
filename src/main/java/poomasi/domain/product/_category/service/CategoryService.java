@@ -1,16 +1,14 @@
-package poomasi.domain.category.service;
+package poomasi.domain.product._category.service;
 
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.category.dto.CategoryResponse;
-import poomasi.domain.category.entity.Category;
-import poomasi.domain.category.repository.CategoryRepository;
+import poomasi.domain.product._category.dto.CategoryResponse;
+import poomasi.domain.product._category.entity.Category;
+import poomasi.domain.product._category.repository.CategoryRepository;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
-import poomasi.domain.category.dto.ProductListInCategoryResponse;
-
-
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +23,9 @@ public class CategoryService {
                 .toList();
     }
 
-    public List<ProductListInCategoryResponse> getProductInCategory(long categoryId) {
-        Category category = getCategory(categoryId);
-        return category.getProducts().stream()
-                .map(ProductListInCategoryResponse::fromEntity).toList();
-    }
-
-    private Category getCategory(long categoryId) {
-        return categoryRepository.findById(categoryId)
+    public Category getCategory(Long categoryId) {
+         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
+
     }
 }

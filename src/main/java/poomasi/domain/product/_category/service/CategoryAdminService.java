@@ -1,11 +1,11 @@
-package poomasi.domain.category.service;
+package poomasi.domain.product._category.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.category.dto.CategoryRequest;
-import poomasi.domain.category.entity.Category;
-import poomasi.domain.category.repository.CategoryRepository;
+import poomasi.domain.product._category.dto.CategoryRequest;
+import poomasi.domain.product._category.entity.Category;
+import poomasi.domain.product._category.repository.CategoryRepository;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
 

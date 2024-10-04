@@ -3,9 +3,10 @@ package poomasi.domain.product.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.category.entity.Category;
-import poomasi.domain.category.repository.CategoryRepository;
+import poomasi.domain.member.service.MemberService;
+import poomasi.domain.product._category.service.CategoryService;
 import poomasi.domain.product.dto.ProductRegisterRequest;
+import poomasi.domain.product.dto.UpdateProductQuantityRequest;
 import poomasi.domain.product.entity.Product;
 import poomasi.domain.product.repository.ProductRepository;
 import poomasi.global.error.BusinessError;
@@ -16,15 +17,14 @@ import poomasi.global.error.BusinessException;
 public class ProductFarmerService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
+    private final MemberService memberService;
 
-    public Long registerProduct(ProductRegisterRequest productRequest) {
-        //token이 farmer인지 확인하기
-        Category category = getCategory(productRequest);
-        Product saveProduct = productRepository.save(productRequest.toEntity(category));
-        category.addProduct(saveProduct);
+    public Long registerProduct(ProductRegisterRequest request) {
+        memberService.isFarmer(request.farmerId());
+        categoryService.getCategory(request.categoryId());
 
-        System.out.println(category.getProducts().size());
+        Product saveProduct = productRepository.save(request.toEntity());
         return saveProduct.getId();
     }
 
@@ -35,8 +35,7 @@ public class ProductFarmerService {
 
     @Transactional
     public void modifyProduct(ProductRegisterRequest productRequest, Long productId) {
-        //주인인지 알아보기
-        Category category = getCategory(productRequest);
+        // TODO: 주인인지 알아보기
         Product product = getProductByProductId(productId);
 
         product.getCategory().deleteProduct(product); //원래 카테고리에서 상품 삭제
@@ -46,7 +45,7 @@ public class ProductFarmerService {
 
     @Transactional
     public void deleteProduct(Long productId) {
-        //주인인지 알아보기
+        //TODO: 주인인지 알아보기
         Product product = getProductByProductId(productId);
         Category category = product.getCategory();
 
@@ -55,9 +54,11 @@ public class ProductFarmerService {
     }
 
     @Transactional
-    public void addQuantity(Long productId, Integer quantity) {
-        //주인인지 알아보기
-        getProductByProductId(productId).addQuantity(quantity);
+    public void addQuantity(Long productId, UpdateProductQuantityRequest request) {
+        Product productByProductId = getProductByProductId(productId);
+        productByProductId.addQuantity(request.quantity());
+
+        productRepository.save(productByProductId);
     }
 
     private Product getProductByProductId(Long productId) {

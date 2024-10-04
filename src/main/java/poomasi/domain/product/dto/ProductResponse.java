@@ -1,35 +1,27 @@
 package poomasi.domain.product.dto;
 
-import java.util.List;
+import lombok.Builder;
 import poomasi.domain.product.entity.Product;
-import poomasi.domain.review.dto.ProductReviewResponse;
 
+@Builder
 public record ProductResponse(
         long id,
-        long categoryId,
-        //long farmerId,
         String name,
+        Long price,
+        int stock,
         String description,
         String imageUrl,
-        int quantity,
-        int price,
-        List<ProductReviewResponse> reviewList,
-        double averageRating
+        long categoryId
 ) {
-
     public static ProductResponse fromEntity(Product product) {
-
-        return new ProductResponse(
-                product.getId(),
-                product.getCategory().getId(),
-                //product.getFarmerId(),
-                product.getName(),
-                product.getDescription(),
-                product.getImageUrl(),
-                product.getQuantity(),
-                product.getPrice(),
-                product.getReviewList().stream().map(ProductReviewResponse::fromEntity).toList(),
-                product.getAverageRating()
-        );
+        return ProductResponse.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .description(product.getDescription())
+                .imageUrl(product.getImageUrl())
+                .categoryId(product.getCategoryId())
+                .build();
     }
 }

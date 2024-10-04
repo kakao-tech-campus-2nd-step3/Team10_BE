@@ -1,4 +1,4 @@
-package poomasi.domain.category.entity;
+package poomasi.domain.product._category.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -10,14 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import poomasi.domain.category.dto.CategoryRequest;
-import poomasi.domain.product.entity.Product;
+import poomasi.domain.product._category.dto.CategoryRequest;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class Category {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

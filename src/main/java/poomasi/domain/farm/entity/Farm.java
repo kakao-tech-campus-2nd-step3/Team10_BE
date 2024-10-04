@@ -1,30 +1,25 @@
 package poomasi.domain.farm.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLSelect;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.farm.dto.FarmUpdateRequest;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "farm")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE farm SET deleted = true WHERE id = ?")
-@SQLSelect(sql = "SELECT * FROM farm WHERE deleted = false")
+@SQLDelete(sql = "UPDATE farm SET deleted_at=current_timestamp WHERE id = ?")
 public class Farm {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,20 +27,34 @@ public class Farm {
     private String name;
 
     // FIXME: owner_id는 Member의 id를 참조해야 합니다.
+    @Comment("농장 소유자 ID")
     @Column(name = "owner_id")
     private Long ownerId;
 
+    @Comment("농장 간단 설명")
     private String description;
 
-    private String address; // 도로명 주소
-    private String addressDetail; // 상세 주소
+    @Comment("도로명 주소")
+    private String address;
 
+    @Comment("상세 주소")
+    private String addressDetail;
+
+    @Comment("위도")
     private Double latitude;
+
+    @Comment("경도")
     private Double longitude;
 
-    private FarmStatus status = FarmStatus.WAITING;
+    @Comment("농장 상태")
+    @Enumerated(EnumType.STRING)
+    private FarmStatus status = FarmStatus.OPEN;
 
-    private boolean deleted = false;
+    @Comment("체험 비용")
+    private Long experiencePrice;
+
+    @Comment("삭제 일시")
+    private LocalDateTime deletedAt;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -56,8 +65,7 @@ public class Farm {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Builder
-    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude,
-            Double longitude, String description) {
+    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description, Long experiencePrice) {
         this.name = name;
         this.ownerId = ownerId;
         this.address = address;
@@ -65,6 +73,7 @@ public class Farm {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.experiencePrice = experiencePrice;
     }
 
     public Farm updateFarm(FarmUpdateRequest farmUpdateRequest) {

@@ -1,6 +1,5 @@
 package poomasi.domain.product.dto;
 
-import poomasi.domain.category.entity.Category;
 import poomasi.domain.product.entity.Product;
 
 public record ProductRegisterRequest(
@@ -9,18 +8,18 @@ public record ProductRegisterRequest(
         String name,
         String description,
         String imageUrl,
-        int quantity,
-        int price
+        int stock,
+        Long price
 ) {
 
-    public Product toEntity(Category category) {
+    public Product toEntity() {
         return Product.builder()
-                .category(category)
+                .categoryId(categoryId)
                 .farmerId(farmerId)
                 .name(name)
                 .description(description)
                 .imageUrl(imageUrl)
-                .quantity(quantity)
+                .stock(stock)
                 .price(price)
                 .build();
     }

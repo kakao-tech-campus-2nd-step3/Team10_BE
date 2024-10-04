@@ -2,25 +2,28 @@ package poomasi.domain.product.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.product.dto.ProductResponse;
-import poomasi.domain.product.entity.Product;
 import poomasi.domain.product.repository.ProductRepository;
+import poomasi.domain.product.dto.ProductResponse;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
     private final ProductRepository productRepository;
 
-    private Product getProductById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAllByDeletedAtIsNull()
+                .stream()
+                .map(ProductResponse::fromEntity)
+                .toList();
     }
 
-    public ProductResponse getProductDetail(long productId) {
-        Product product = getProductById(productId);
-        return ProductResponse.fromEntity(product);
+    public ProductResponse getProductByProductId(Long productId) {
+        return productRepository.findByIdAndDeletedAtIsNull(productId)
+                .map(ProductResponse::fromEntity)
+                .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
     }
 }

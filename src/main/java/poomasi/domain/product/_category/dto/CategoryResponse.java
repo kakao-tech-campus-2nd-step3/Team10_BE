@@ -1,6 +1,6 @@
-package poomasi.domain.category.dto;
+package poomasi.domain.product._category.dto;
 
-import poomasi.domain.category.entity.Category;
+import poomasi.domain.product._category.entity.Category;
 
 public record CategoryResponse(long id, String name) {
 
