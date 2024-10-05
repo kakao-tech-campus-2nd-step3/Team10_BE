@@ -136,7 +136,7 @@ public class JwtUtil {
         if (!validateToken(refreshToken)) {
             return false;
         }
-        String storedMemberId = tokenRedisService.getValues(refreshToken)
+        String storedMemberId = tokenRedisService.getValues(refreshToken, memberId.toString())
                 .orElse(null);
 
         if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
