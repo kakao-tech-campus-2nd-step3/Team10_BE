@@ -12,8 +12,6 @@ import poomasi.domain.member.repository.MemberRepository;
 import poomasi.domain.member.entity.Member;
 import poomasi.global.error.BusinessException;
 
-import java.util.Optional;
-
 import static poomasi.domain.member.entity.Role.ROLE_CUSTOMER;
 import static poomasi.global.error.BusinessError.*;
 

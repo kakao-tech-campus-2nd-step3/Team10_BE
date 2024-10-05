@@ -1,14 +1,10 @@
 package poomasi.domain.auth.signup.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.auth.signup.service.SignupService;
 import poomasi.domain.auth.signup.dto.request.SignupRequest;
-
-import static poomasi.domain.member.entity.LoginType.LOCAL;
-
 
 @RestController
 @RequiredArgsConstructor
@@ -24,3 +20,5 @@ public class SignupController {
     }
 
 }
+
+
