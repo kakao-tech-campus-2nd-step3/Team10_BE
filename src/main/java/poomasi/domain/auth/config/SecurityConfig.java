@@ -50,7 +50,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET, "/api/farm/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
-                .requestMatchers("/api/login", "/", "/api/sign-up").permitAll()
+                .requestMatchers("/login/**", "/", "/api/sign-up").permitAll()
                 .anyRequest().
                 authenticated()
         );
