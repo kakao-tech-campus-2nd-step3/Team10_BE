@@ -1,4 +1,4 @@
-package poomasi.domain.auth.util;
+package poomasi.domain.auth.token.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import poomasi.domain.auth.entity.TokenType;
+import poomasi.domain.auth.token.entity.TokenType;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.service.MemberService;
@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static poomasi.domain.auth.entity.TokenType.ACCESS;
-import static poomasi.domain.auth.entity.TokenType.REFRESH;
+import static poomasi.domain.auth.token.entity.TokenType.ACCESS;
+import static poomasi.domain.auth.token.entity.TokenType.REFRESH;
 
 @Component
 @RequiredArgsConstructor

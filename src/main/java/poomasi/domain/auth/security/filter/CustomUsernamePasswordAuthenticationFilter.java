@@ -11,13 +11,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
-import poomasi.domain.auth.util.JwtUtil;
-import poomasi.domain.member.entity.Role;
-
-import java.util.Collection;
+import poomasi.domain.auth.token.util.JwtUtil;
 
 @RequiredArgsConstructor
 public class CustomUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

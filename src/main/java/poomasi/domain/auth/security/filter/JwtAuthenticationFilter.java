@@ -9,17 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
-import poomasi.domain.auth.util.JwtUtil;
+import poomasi.domain.auth.token.util.JwtUtil;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 
 @Description("access token을 검증하는 필터")
 @AllArgsConstructor

@@ -1,4 +1,4 @@
-package poomasi.domain.auth.reissue.repository;
+package poomasi.domain.auth.token.refreshtoken.repository;
 
 import java.util.List;
 

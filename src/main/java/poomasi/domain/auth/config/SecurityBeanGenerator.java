@@ -2,7 +2,6 @@ package poomasi.domain.auth.config;
 
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -11,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-import poomasi.domain.auth.util.JwtUtil;
+import poomasi.domain.auth.token.util.JwtUtil;
 import poomasi.global.redis.service.RedisService;
 
 @RequiredArgsConstructor

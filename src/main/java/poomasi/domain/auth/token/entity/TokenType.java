@@ -1,4 +1,4 @@
-package poomasi.domain.auth.entity;
+package poomasi.domain.auth.token.entity;
 
 public enum TokenType {
     ACCESS,

@@ -1,11 +1,12 @@
-package poomasi.domain.auth.service;
+package poomasi.domain.auth.token.reissue.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.auth.dto.response.TokenResponse;
-import poomasi.domain.auth.entity.RefreshToken;
+import poomasi.domain.auth.token.dto.response.TokenResponse;
+import poomasi.domain.auth.token.reissue.dto.ReissueRequest;
+import poomasi.domain.auth.token.refreshtoken.service.RefreshTokenService;
 import poomasi.global.error.BusinessException;
-import poomasi.domain.auth.util.JwtUtil;
+import poomasi.domain.auth.token.util.JwtUtil;
 
 import static poomasi.global.error.BusinessError.*;
 
@@ -14,10 +15,11 @@ import static poomasi.global.error.BusinessError.*;
 public class ReissueTokenService {
 
     private final JwtUtil jwtUtil;
-    private final RefreshToken refreshTokenManager;
+    private final RefreshTokenService refreshTokenService;
 
-    // 토큰 리프레시
-    public TokenResponse refreshToken(final String refreshToken) {
+    // 토큰 재발급
+    public TokenResponse reissueToken(ReissueRequest reissueRequest) {
+        String refreshToken = reissueRequest.refreshToken();
         Long memberId = jwtUtil.getIdFromToken(refreshToken);
 
         checkRefreshToken(refreshToken, memberId);
@@ -27,16 +29,12 @@ public class ReissueTokenService {
 
     public TokenResponse getTokenResponse(Long memberId) {
         String newAccessToken = jwtUtil.generateAccessTokenById(memberId);
-        refreshTokenManager.removeMemberRefreshToken(memberId);
+        refreshTokenService.removeMemberRefreshToken(memberId);
 
         String newRefreshToken = jwtUtil.generateRefreshTokenById(memberId);
-        refreshTokenManager.putRefreshToken(newRefreshToken, memberId);
+        refreshTokenService.putRefreshToken(newRefreshToken, memberId);
 
         return new TokenResponse(newAccessToken, newRefreshToken);
-    }
-
-    public void removeRefreshTokenById(Long memberId) {
-        refreshTokenManager.removeMemberRefreshToken(memberId);
     }
 
     private void checkRefreshToken(final String refreshToken, Long memberId) {
