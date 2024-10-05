@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import poomasi.domain.auth.token.util.JwtUtil;
-import poomasi.global.redis.service.RedisService;
+import poomasi.domain.auth.token.redis.service.TokenRedisService;
 
 @RequiredArgsConstructor
 @Configuration
@@ -20,7 +20,7 @@ public class SecurityBeanGenerator {
     private final RedisTemplate<String, Object> redisTemplate;
     private final RedisTemplate<String, Object> redisBlackListTemplate;
     private final RedisConnectionFactory redisConnectionFactory;
-    private final RedisService redisService;
+    private final TokenRedisService tokenRedisService;
 
     @Bean
     @Description("AuthenticationProvider를 위한 Spring bean")
@@ -40,7 +40,7 @@ public class SecurityBeanGenerator {
     <String, Object>
     @Bean
     JwtUtil jwtUtil(){
-        return new JwtUtil(redisService);
+        return new JwtUtil(tokenRedisService);
     }
 
 }

@@ -1,12 +1,11 @@
 package poomasi.domain.auth.token.refreshtoken.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import poomasi.domain.auth.token.refreshtoken.entity.RefreshToken;
 
-public interface RefreshTokenRepository {
+import java.util.Optional;
 
-    void save();
-    String findById();
-    List<String> findAll();
-    void delete(String id);
-
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+    Optional<RefreshToken> findByKey(String key);
+    void deleteAllByData(String Data);
 }

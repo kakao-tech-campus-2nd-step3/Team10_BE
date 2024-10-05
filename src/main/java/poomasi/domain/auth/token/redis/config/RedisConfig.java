@@ -1,4 +1,4 @@
-package poomasi.global.redis.config;
+package poomasi.domain.auth.token.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

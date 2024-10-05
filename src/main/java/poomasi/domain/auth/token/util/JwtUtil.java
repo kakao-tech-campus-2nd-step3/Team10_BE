@@ -11,7 +11,7 @@ import poomasi.domain.auth.token.entity.TokenType;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.service.MemberService;
-import poomasi.global.redis.service.RedisService;
+import poomasi.domain.auth.token.redis.service.TokenRedisService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +38,7 @@ public class JwtUtil {
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRATION_TIME;
 
-    private final RedisService redisService;
+    private final TokenRedisService tokenRedisService;
     private final MemberService memberService;
 
     @PostConstruct
@@ -125,7 +125,7 @@ public class JwtUtil {
         if (!validateToken(accessToken)) {
             return false;
         }
-        if (redisService.hasKeyBlackList(accessToken)){
+        if (tokenRedisService.hasKeyBlackList(accessToken)){
             log.warn("로그아웃한 JWT token입니다.");
             return false;
         }
@@ -136,7 +136,7 @@ public class JwtUtil {
         if (!validateToken(refreshToken)) {
             return false;
         }
-        String storedMemberId = redisService.getValues(refreshToken)
+        String storedMemberId = tokenRedisService.getValues(refreshToken)
                 .orElse(null);
 
         if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {

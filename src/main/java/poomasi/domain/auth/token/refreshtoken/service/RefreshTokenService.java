@@ -1,46 +1,37 @@
 package poomasi.domain.auth.token.refreshtoken.service;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import poomasi.global.error.BusinessException;
-import poomasi.global.redis.service.RedisService;
 
 import java.time.Duration;
-import java.util.List;
 
 import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
 
 @Component
-@RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private final RedisService redisService;
+    private final TokenStorageService tokenStorageService;
+
+    public RefreshTokenService(@Qualifier("tokenRedisService") TokenStorageService tokenStorageService) {
+        this.tokenStorageService = tokenStorageService;
+    }
 
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRE_TIME;
 
     public void putRefreshToken(final String refreshToken, Long memberId) {
-        String redisKey = generateKey(memberId, refreshToken);
-        redisService.setValues(redisKey, memberId.toString(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
+        tokenStorageService.setValues(refreshToken, memberId.toString(), Duration.ofSeconds(REFRESH_TOKEN_EXPIRE_TIME));
     }
 
     public Long getRefreshToken(final String refreshToken, Long memberId) {
-        String redisKey = generateKey(memberId, refreshToken);
-        String result = redisService.getValues(redisKey)
+        String result = tokenStorageService.getValues(refreshToken, memberId.toString())
                 .orElseThrow(() -> new BusinessException(REFRESH_TOKEN_NOT_FOUND));
         return Long.parseLong(result);
     }
 
     public void removeMemberRefreshToken(final Long memberId) {
-        List<String> keys = redisService.scanKeysByPattern(generateKey(memberId, "*"));
-        for (String key : keys) {
-            redisService.deleteValues(key);
-        }
+        tokenStorageService.removeRefreshTokenById(memberId);
     }
-
-    private String generateKey(Long memberId, String token) {
-        return "refreshToken:" + memberId + ":" + token;
-    }
-
 }
