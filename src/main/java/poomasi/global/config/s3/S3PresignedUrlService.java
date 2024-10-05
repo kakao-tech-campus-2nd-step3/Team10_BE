@@ -3,6 +3,7 @@ package poomasi.global.config.s3;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import poomasi.global.util.EncryptionUtil;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -12,6 +13,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequ
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Service
@@ -19,6 +22,10 @@ import java.util.Map;
 @Slf4j
 public class S3PresignedUrlService {
     private final S3Presigner s3Presigner;
+    private final EncryptionUtil encryptionUtil;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final Long SIGNATURE_DURATION = 10L;
+
 
     public String createPresignedGetUrl(String bucketName, String keyName) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
@@ -27,7 +34,7 @@ public class S3PresignedUrlService {
                 .build();
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofMinutes(SIGNATURE_DURATION))
                 .getObjectRequest(objectRequest)
                 .build();
 
@@ -39,7 +46,14 @@ public class S3PresignedUrlService {
 
     }
 
-    public String createPresignedPutUrl(String bucketName, String keyName, Map<String, String> metadata) {
+    public String createPresignedPutUrl(String bucketName, String keyPrefix, Map<String, String> metadata) {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.format(DATE_FORMATTER);
+        String encodedTime = encryptionUtil.encodeTime(now).substring(0, 10);
+
+        String keyName = String.format("%s/%s/%s.jpg", keyPrefix, date, encodedTime);
+
+
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
@@ -47,7 +61,7 @@ public class S3PresignedUrlService {
                 .build();
 
         PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10))
+                .signatureDuration(Duration.ofMinutes(SIGNATURE_DURATION))
                 .putObjectRequest(objectRequest)
                 .build();
 
@@ -59,6 +73,8 @@ public class S3PresignedUrlService {
 
         return presignedRequest.url().toExternalForm();
     }
+
+
 }
 
 // reference: https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/example_s3_Scenario_PresignedUrl_section.html
