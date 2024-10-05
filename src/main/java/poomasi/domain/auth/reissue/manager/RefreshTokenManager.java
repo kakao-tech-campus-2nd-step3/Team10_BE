@@ -1,4 +1,4 @@
-package poomasi.domain.auth.entity;
+package poomasi.domain.auth.reissue.manager;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +13,7 @@ import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
-public class RefreshToken {
+public class RefreshTokenManager {
 
     private final RedisService redisService;
 

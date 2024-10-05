@@ -2,7 +2,6 @@ package poomasi.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "member_profile")
-@NoArgsConstructor
 public class MemberProfile {
 
     @Id
@@ -44,6 +42,10 @@ public class MemberProfile {
         this.isBanned = false;
         this.createdAt = LocalDateTime.now();
         this.member = member;
+    }
+
+    public MemberProfile() {
+        this.createdAt = LocalDateTime.now();
     }
 
 }

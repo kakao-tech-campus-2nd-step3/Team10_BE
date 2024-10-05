@@ -1,3 +1,5 @@
+
+/*
 package poomasi.domain.auth.security.filter;
 
 import jakarta.servlet.FilterChain;
@@ -14,5 +16,9 @@ public class CustomLogoutFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // access token 블랙리스트 저장해야 함
         // refresh token 삭제해야 함
+        //blacklist에 access token, refresh token 추가 (만료기간까지 저장해야 함)
+        filterChain.doFilter(request, response);
     }
 }
+
+*/
