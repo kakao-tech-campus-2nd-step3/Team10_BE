@@ -4,7 +4,6 @@ package poomasi.domain.auth.reissue.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.auth.dto.response.TokenResponse;
 import poomasi.domain.auth.reissue.manager.RefreshTokenManager;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.repository.MemberRepository;
