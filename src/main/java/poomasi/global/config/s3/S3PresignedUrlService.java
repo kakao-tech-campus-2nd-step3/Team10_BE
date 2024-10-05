@@ -26,7 +26,6 @@ public class S3PresignedUrlService {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Long SIGNATURE_DURATION = 10L;
 
-
     public String createPresignedGetUrl(String bucketName, String keyName) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
@@ -53,7 +52,6 @@ public class S3PresignedUrlService {
 
         String keyName = String.format("%s/%s/%s.jpg", keyPrefix, date, encodedTime);
 
-
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(keyName)
@@ -73,8 +71,6 @@ public class S3PresignedUrlService {
 
         return presignedRequest.url().toExternalForm();
     }
-
-
 }
 
 // reference: https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/example_s3_Scenario_PresignedUrl_section.html
