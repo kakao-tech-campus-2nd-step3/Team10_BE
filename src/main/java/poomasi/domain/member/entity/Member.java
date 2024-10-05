@@ -6,12 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.time.LocalDateTime;
-import java.util.Collection;
-
-import static poomasi.domain.member.entity.LoginType.LOCAL;
 
 @Getter
 @Entity
@@ -65,11 +60,6 @@ public class Member {
         if (memberProfile != null) {
             memberProfile.setMember(this);
         }
-    }
-
-    public void kakaoToLocal(String password) {
-        this.password = password;
-        this.loginType = LOCAL;
     }
 
     @Builder
