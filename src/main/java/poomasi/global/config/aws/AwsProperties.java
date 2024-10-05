@@ -1,4 +1,4 @@
-package poomasi.global.config.s3;
+package poomasi.global.config.aws;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
