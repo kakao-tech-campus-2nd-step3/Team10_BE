@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties("aws")
-public class AwsS3Properties {
+public class AwsProperties {
     private String access;
     private String secret;
     private S3Properties s3;

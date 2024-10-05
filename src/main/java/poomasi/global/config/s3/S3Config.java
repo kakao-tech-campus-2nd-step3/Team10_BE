@@ -15,7 +15,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 @RequiredArgsConstructor
 public class S3Config {
 
-    private final AwsS3Properties awsS3Properties;
+    private final AwsProperties awsProperties;
 
     @Bean("awsCredentials")
     public AwsCredentialsProvider awsCredentials() {
@@ -27,7 +27,7 @@ public class S3Config {
         return S3Presigner
                 .builder()
                 .credentialsProvider(awsCredentials)
-                .region(Region.of(awsS3Properties.getS3().getRegion()))
+                .region(Region.of(awsProperties.getS3().getRegion()))
                 .build();
     }
 
@@ -36,7 +36,7 @@ public class S3Config {
         return S3AsyncClient
                 .builder()
                 .credentialsProvider(awsCredentials)
-                .region(Region.of(awsS3Properties.getS3().getRegion()))
+                .region(Region.of(awsProperties.getS3().getRegion()))
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class S3Config {
         return S3Client
                 .builder()
                 .credentialsProvider(awsCredentials)
-                .region(Region.of(awsS3Properties.getS3().getRegion()))
+                .region(Region.of(awsProperties.getS3().getRegion()))
                 .build();
     }
 }
