@@ -11,7 +11,7 @@ import static poomasi.global.error.BusinessError.*;
 
 @Service
 @RequiredArgsConstructor
-public class RefreshTokenService {
+public class ReissueTokenService {
 
     private final JwtUtil jwtUtil;
     private final RefreshToken refreshTokenManager;
