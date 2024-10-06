@@ -1,7 +1,6 @@
 package poomasi.domain.auth.token.refreshtoken.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.token.refreshtoken.entity.RefreshToken;
@@ -30,8 +29,7 @@ public class TokenJpaService implements TokenStorageService {
 
     @Override
     public Optional<String> getValues(String key, String data) {
-        return tokenRepository.findByKey(key)
-                .filter(token -> token.getExpireAt().isAfter(LocalDateTime.now()))  // 만료 시간이 현재보다 이후일 때만 반환
+        return tokenRepository.findByKeyAndExpireAtAfter(key, LocalDateTime.now())
                 .map(RefreshToken::getData);
     }
 
@@ -41,10 +39,8 @@ public class TokenJpaService implements TokenStorageService {
         tokenRepository.deleteAllByData(String.valueOf(memberId));
     }
 
-    @Scheduled(cron = "0 0 * * * *") // 매시간 정각에 실행
     @Transactional
     public void removeExpiredTokens() {
-        LocalDateTime now = LocalDateTime.now();
-        tokenRepository.deleteByExpireAtBefore(now);
+        tokenRepository.deleteAllByExpireAtBefore(LocalDateTime.now());
     }
 }

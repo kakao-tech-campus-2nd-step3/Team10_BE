@@ -31,7 +31,8 @@ public class BlacklistJpaService implements TokenBlacklistService{
 
     @Override
     public Optional<String> getBlackList(String key) {
-        return blacklistRepository.findByKey(key).map(Blacklist::getData);
+        return blacklistRepository.findByKeyAndExpireAtAfter(key, LocalDateTime.now())
+                .map(Blacklist::getData);
     }
 
     @Override
@@ -42,6 +43,11 @@ public class BlacklistJpaService implements TokenBlacklistService{
 
     @Override
     public boolean hasKeyBlackList(String key) {
-        return blacklistRepository.existsByKey(key);
+        return blacklistRepository.existsByKeyAndExpireAtAfter(key, LocalDateTime.now());
+    }
+
+    @Transactional
+    public void removeExpiredTokens() {
+        blacklistRepository.deleteAllByExpireAtBefore(LocalDateTime.now());
     }
 }

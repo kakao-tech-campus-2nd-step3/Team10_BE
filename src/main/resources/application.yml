@@ -3,3 +3,5 @@ spring:
     name: team10-poomasi
   config:
     import: optional:application-secret.yml
+  profiles:
+#    active: token-jpa
