@@ -5,3 +5,4 @@ spring:
     import: optional:application-secret.yml
   profiles:
 #    active: token-jpa
+     active: token-redis

@@ -1,4 +1,4 @@
-package poomasi.domain.auth.token.redis.service;
+package poomasi.domain.auth.token.blacklist.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,7 +6,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.auth.token.blacklist.service.TokenBlacklistService;
 
 import java.time.Duration;
 import java.util.*;

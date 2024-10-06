@@ -8,10 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import poomasi.domain.auth.token.entity.TokenType;
+import poomasi.domain.auth.token.refreshtoken.service.TokenStorageService;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.service.MemberService;
-import poomasi.domain.auth.token.redis.service.TokenRedisService;
+import poomasi.domain.auth.token.refreshtoken.service.TokenRedisService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +39,7 @@ public class JwtUtil {
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRATION_TIME;
 
-    private final TokenRedisService tokenRedisService;
+    private final TokenStorageService tokenStorageService;
     private final MemberService memberService;
 
     @PostConstruct

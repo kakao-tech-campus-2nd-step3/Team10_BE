@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import poomasi.domain.auth.token.util.JwtUtil;
-import poomasi.domain.auth.token.redis.service.TokenRedisService;
+import poomasi.domain.auth.token.refreshtoken.service.TokenRedisService;
 
 @RequiredArgsConstructor
 @Configuration
