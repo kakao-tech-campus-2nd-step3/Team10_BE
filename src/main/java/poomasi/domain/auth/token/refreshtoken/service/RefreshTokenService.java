@@ -1,5 +1,6 @@
 package poomasi.domain.auth.token.refreshtoken.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,10 @@ import static poomasi.global.error.BusinessError.REFRESH_TOKEN_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class RefreshTokenService {
 
     private final TokenStorageService tokenStorageService;
-
-    public RefreshTokenService(@Qualifier("tokenRedisService") TokenStorageService tokenStorageService) {
-        this.tokenStorageService = tokenStorageService;
-    }
 
     @Value("${jwt.refresh-token-expiration-time}")
     private long REFRESH_TOKEN_EXPIRE_TIME;
