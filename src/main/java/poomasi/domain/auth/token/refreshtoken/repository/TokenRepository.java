@@ -1,6 +1,5 @@
 package poomasi.domain.auth.token.refreshtoken.repository;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import poomasi.domain.auth.token.refreshtoken.entity.RefreshToken;
@@ -12,5 +11,5 @@ import java.util.Optional;
 public interface TokenRepository extends JpaRepository<RefreshToken, Long> {
     void deleteAllByData(String Data);
     void deleteAllByExpireAtBefore(LocalDateTime now);
-    Optional<RefreshToken> findByKeyAndExpireAtAfter(String key, LocalDateTime now);
+    Optional<RefreshToken> findByTokenKeyAndExpireAtAfter(String key, LocalDateTime now);
 }

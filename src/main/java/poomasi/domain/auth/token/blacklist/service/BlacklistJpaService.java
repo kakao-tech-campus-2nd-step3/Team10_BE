@@ -22,7 +22,7 @@ public class BlacklistJpaService implements TokenBlacklistService{
         LocalDateTime expireAt = LocalDateTime.now().plusSeconds(duration.getSeconds());
 
         Blacklist blacklist = new Blacklist();
-        blacklist.setKey(key);
+        blacklist.setTokenKey(key);
         blacklist.setData(data);
         blacklist.setExpireAt(expireAt);
 
@@ -31,19 +31,19 @@ public class BlacklistJpaService implements TokenBlacklistService{
 
     @Override
     public Optional<String> getBlackList(String key) {
-        return blacklistRepository.findByKeyAndExpireAtAfter(key, LocalDateTime.now())
+        return blacklistRepository.findByTokenKeyAndExpireAtAfter(key, LocalDateTime.now())
                 .map(Blacklist::getData);
     }
 
     @Override
     @Transactional
     public void deleteBlackList(String key) {
-        blacklistRepository.deleteByKey(key);
+        blacklistRepository.deleteByTokenKey(key);
     }
 
     @Override
     public boolean hasKeyBlackList(String key) {
-        return blacklistRepository.existsByKeyAndExpireAtAfter(key, LocalDateTime.now());
+        return blacklistRepository.existsByTokenKeyAndExpireAtAfter(key, LocalDateTime.now());
     }
 
     @Transactional

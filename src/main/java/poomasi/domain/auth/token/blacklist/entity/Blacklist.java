@@ -18,7 +18,7 @@ public class Blacklist {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String key;
+    private String tokenKey;
 
     @Column(nullable = false)
     private String data;

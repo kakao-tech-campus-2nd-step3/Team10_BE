@@ -29,7 +29,7 @@ public class TokenJpaService implements TokenStorageService {
 
     @Override
     public Optional<String> getValues(String key, String data) {
-        return tokenRepository.findByKeyAndExpireAtAfter(key, LocalDateTime.now())
+        return tokenRepository.findByTokenKeyAndExpireAtAfter(key, LocalDateTime.now())
                 .map(RefreshToken::getData);
     }
 

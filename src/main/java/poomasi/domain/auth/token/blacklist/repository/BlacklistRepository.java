@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface BlacklistRepository extends JpaRepository<Blacklist, Long> {
-    void deleteByKey(String key);
-    Optional<Blacklist> findByKeyAndExpireAtAfter(String key, LocalDateTime now);
-    boolean existsByKeyAndExpireAtAfter(String key, LocalDateTime now);
+    void deleteByTokenKey(String key);
+    Optional<Blacklist> findByTokenKeyAndExpireAtAfter(String key, LocalDateTime now);
+    boolean existsByTokenKeyAndExpireAtAfter(String key, LocalDateTime now);
     void deleteAllByExpireAtBefore(LocalDateTime now);
 
 }
