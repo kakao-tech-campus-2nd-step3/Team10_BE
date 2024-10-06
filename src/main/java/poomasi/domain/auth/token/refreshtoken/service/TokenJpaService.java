@@ -21,7 +21,7 @@ public class TokenJpaService implements TokenStorageService {
     @Transactional
     public void setValues(String key, String data, Duration duration) {
         RefreshToken tokenEntity = new RefreshToken();
-        tokenEntity.setKey(key);
+        tokenEntity.setTokenKey(key);
         tokenEntity.setData(data);
         tokenEntity.setExpireAt(LocalDateTime.now().plusSeconds(duration.getSeconds()));
         tokenRepository.save(tokenEntity);
