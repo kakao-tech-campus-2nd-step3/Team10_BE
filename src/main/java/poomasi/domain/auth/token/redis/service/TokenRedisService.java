@@ -10,13 +10,13 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.auth.token.redis.error.RedisConnectionException;
 import poomasi.domain.auth.token.redis.error.RedisOperationException;
 import poomasi.domain.auth.token.refreshtoken.service.TokenStorageService;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Supplier;
+
+import static poomasi.domain.auth.token.redis.error.RedisExceptionHandler.handleRedisException;
 
 @Slf4j
 @Service
@@ -84,18 +84,6 @@ public class TokenRedisService implements TokenStorageService {
     public List<String> getKeysByPattern(String pattern) {
         Set<String> keys = redisTemplate.keys(pattern);
         return keys != null ? new ArrayList<>(keys) : Collections.emptyList();
-    }
-
-    private <T> T handleRedisException(Supplier<T> action, String errorMessage) {
-        try {
-            return action.get();
-        } catch (RedisConnectionException e) {
-            log.error(errorMessage, e);
-            throw new RedisConnectionException(errorMessage);
-        } catch (Exception e) {
-            log.error(errorMessage, e);
-            throw new RedisOperationException(errorMessage);
-        }
     }
 
     private String generateKey(String memberId, String token) {

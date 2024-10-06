@@ -7,12 +7,11 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.token.blacklist.service.TokenBlacklistService;
-import poomasi.domain.auth.token.redis.error.RedisConnectionException;
-import poomasi.domain.auth.token.redis.error.RedisOperationException;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Supplier;
+
+import static poomasi.domain.auth.token.redis.error.RedisExceptionHandler.handleRedisException;
 
 @Slf4j
 @Service
@@ -45,18 +44,6 @@ public class BlacklistRedisService implements TokenBlacklistService {
 
     public boolean hasKeyBlackList(String key) {
         return handleRedisException(() -> Boolean.TRUE.equals(redisBlackListTemplate.hasKey(key)), "블랙리스트에서 키 존재 여부 확인 중 오류 발생: " + key);
-    }
-
-    private <T> T handleRedisException(Supplier<T> action, String errorMessage) {
-        try {
-            return action.get();
-        } catch (RedisConnectionException e) {
-            log.error(errorMessage, e);
-            throw new RedisConnectionException(errorMessage);
-        } catch (Exception e) {
-            log.error(errorMessage, e);
-            throw new RedisOperationException(errorMessage);
-        }
     }
 
 }
