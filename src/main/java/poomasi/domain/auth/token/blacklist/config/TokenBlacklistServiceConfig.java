@@ -11,14 +11,14 @@ import poomasi.domain.auth.token.blacklist.service.BlacklistRedisService;
 public class TokenBlacklistServiceConfig {
 
     // token-redis 프로파일이 활성화된 경우 Redis 기반의 블랙리스트 서비스 사용
-    @Bean
+    @Bean(name = "TokenRedisBlacklistService")
     @Profile("token-redis")
     public TokenBlacklistService tokenRedisBlacklistService(BlacklistRedisService blacklistRedisService) {
         return blacklistRedisService;
     }
 
     // token-jpa 프로파일이 활성화된 경우 JPA 기반의 블랙리스트 서비스 사용
-    @Bean
+    @Bean(name = "TokenJpaBlacklistService")
     @Profile("token-jpa")
     public TokenBlacklistService tokenJpaBlacklistService(BlacklistJpaService blacklistJpaService) {
         return blacklistJpaService;
