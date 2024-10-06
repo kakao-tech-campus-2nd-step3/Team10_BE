@@ -3,6 +3,8 @@ package poomasi.domain.auth.token.refreshtoken.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "refresh_tokens")
 @Getter
@@ -19,4 +21,7 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private String data;
+
+    @Column(nullable = false)
+    private LocalDateTime expireAt;
 }
