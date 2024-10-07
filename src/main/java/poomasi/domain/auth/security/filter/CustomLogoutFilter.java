@@ -8,11 +8,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class CustomLogoutFilter extends OncePerRequestFilter {
+//extends OncePerRequestFilter
+public class CustomLogoutFilter {
 
-    @Override
+    /*@Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // access token 블랙리스트 저장해야 함
         // refresh token 삭제해야 함
     }
+*/
 }
+

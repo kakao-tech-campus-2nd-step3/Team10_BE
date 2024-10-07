@@ -17,12 +17,13 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import poomasi.domain.auth.security.filter.CustomLogoutFilter;
 import poomasi.domain.auth.security.filter.CustomUsernamePasswordAuthenticationFilter;
 import poomasi.domain.auth.security.filter.JwtAuthenticationFilter;
-import poomasi.domain.auth.util.JwtUtil;
+import poomasi.global.util.JwtUtil;
+
 
 @AllArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true) // 인가 처리에 대한 annotation
+@EnableMethodSecurity(securedEnabled = false, prePostEnabled = false) // 인가 처리에 대한 annotation
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
@@ -40,8 +41,8 @@ public class SecurityConfig {
         // TODO : 나중에 허용될 endpoint가 많아지면 whiteList로 관리 예정
         // 임시로 GET : [api/farms, api/products, api/login, api/signup, /]은 열어둠
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(HttpMethod.GET, "/api/farms/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/farm/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
                 .requestMatchers("/api/login", "/", "/api/signup").permitAll()
                 .anyRequest().
                 authenticated()
@@ -74,7 +75,7 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         //log out filter 추가
-        http.addFilterBefore(new CustomLogoutFilter(), CustomLogoutFilter.class);
+        //http.addFilterBefore(new CustomLogoutFilter(), CustomLogoutFilter.class);
         return http.build();
 
     }
