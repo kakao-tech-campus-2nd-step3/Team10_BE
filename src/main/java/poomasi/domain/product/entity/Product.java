@@ -1,6 +1,15 @@
 package poomasi.domain.product.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,15 +20,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.review.entity.Review;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE product SET deleted_at = current_timestamp WHERE id = ?")
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,13 +69,13 @@ public class Product {
 
     @Builder
     public Product(Long productId,
-                   Long categoryId,
-                   Long farmerId,
-                   String name,
-                   String description,
-                   String imageUrl,
-                   Integer stock,
-                   Long price) {
+            Long categoryId,
+            Long farmerId,
+            String name,
+            String description,
+            String imageUrl,
+            Integer stock,
+            Long price) {
         this.categoryId = categoryId;
         this.farmerId = farmerId;
         this.name = name;
@@ -89,7 +95,7 @@ public class Product {
         return this;
     }
 
-    public void addStock (Integer stock) {
+    public void addStock(Integer stock) {
         this.stock += stock;
     }
 

@@ -69,7 +69,8 @@ public class ProductFarmerService {
                 .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
     }
 
-    private Category getCategory(Long categoryId){
-        return categoryRepository.findById(categoryId).orElseThrow(()->new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
+    private Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new BusinessException(BusinessError.CATEGORY_NOT_FOUND));
     }
 }

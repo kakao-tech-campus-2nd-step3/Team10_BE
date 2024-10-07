@@ -12,6 +12,7 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
 
     @Transactional

@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.repository.FarmRepository;
-import poomasi.domain.product.entity.Product;
-import poomasi.domain.product.repository.ProductRepository;
 import poomasi.domain.review.dto.ReviewRequest;
 import poomasi.domain.review.dto.ReviewResponse;
 import poomasi.domain.review.entity.EntityType;
@@ -19,6 +17,7 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class FarmReviewService {
+
     private final ReviewRepository reviewRepository;
     private final FarmRepository farmRepository;
 

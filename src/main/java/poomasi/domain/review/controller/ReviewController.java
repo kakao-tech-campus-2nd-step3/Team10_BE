@@ -14,7 +14,9 @@ import poomasi.domain.review.service.ReviewService;
 @Controller
 @RequiredArgsConstructor
 public class ReviewController {
+
     private final ReviewService reviewService;
+
     @DeleteMapping("/api/reviews/{reviewId}")
     public ResponseEntity<?> deleteProductReview(@PathVariable Long reviewId) {
         reviewService.deleteReview(reviewId);
@@ -22,7 +24,8 @@ public class ReviewController {
     }
 
     @PutMapping("/api/reviews/{reviewId}")
-    public ResponseEntity<?> modifyProductReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest){
+    public ResponseEntity<?> modifyProductReview(@PathVariable Long reviewId,
+            @RequestBody ReviewRequest reviewRequest) {
         reviewService.modifyReview(reviewId, reviewRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }

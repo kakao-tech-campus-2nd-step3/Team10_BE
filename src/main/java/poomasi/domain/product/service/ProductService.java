@@ -1,17 +1,17 @@
 package poomasi.domain.product.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.product.repository.ProductRepository;
 import poomasi.domain.product.dto.ProductResponse;
+import poomasi.domain.product.repository.ProductRepository;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
+
     private final ProductRepository productRepository;
 
     public List<ProductResponse> getAllProducts() {

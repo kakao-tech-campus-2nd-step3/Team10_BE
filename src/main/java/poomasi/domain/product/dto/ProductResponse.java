@@ -1,9 +1,7 @@
 package poomasi.domain.product.dto;
 
-import java.util.List;
 import lombok.Builder;
 import poomasi.domain.product.entity.Product;
-import poomasi.domain.review.dto.ReviewResponse;
 
 @Builder
 public record ProductResponse(
@@ -15,6 +13,7 @@ public record ProductResponse(
         String imageUrl,
         Long categoryId
 ) {
+
     public static ProductResponse fromEntity(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())

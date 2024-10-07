@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import poomasi.domain.review.dto.ReviewRequest;
 import poomasi.domain.review.dto.ReviewResponse;
-import poomasi.domain.review.entity.EntityType;
 import poomasi.domain.review.service.farm.FarmReviewService;
 
 @Controller
 @RequiredArgsConstructor
 public class FarmReviewController {
+
     private final FarmReviewService farmReviewService;
 
     @GetMapping("/api/farm/{farmId}/reviews")

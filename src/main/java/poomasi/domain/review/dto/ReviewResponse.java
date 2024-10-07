@@ -1,6 +1,5 @@
 package poomasi.domain.review.dto;
 
-import java.util.List;
 import poomasi.domain.review.entity.Review;
 
 public record ReviewResponse
