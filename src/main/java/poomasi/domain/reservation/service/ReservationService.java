@@ -29,4 +29,8 @@ public class ReservationService {
     public Reservation createReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
+
+    public Reservation getReservationById(Long reservationId) {
+        return reservationRepository.findById(reservationId).orElseThrow(() -> new BusinessException(BusinessError.RESERVATION_NOT_FOUND));
+    }
 }
