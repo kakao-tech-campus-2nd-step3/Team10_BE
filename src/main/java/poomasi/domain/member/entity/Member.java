@@ -52,7 +52,7 @@ public class Member {
         this.role = role;
     }
 
-    public Member(String email, Role role){
+    public Member(String email, Role role) {
         this.email = email;
         this.role = role;
     }
@@ -72,5 +72,9 @@ public class Member {
 
     public boolean isFarmer() {
         return role == Role.ROLE_FARMER;
+    }
+
+    public boolean isAdmin() {
+        return role == Role.ROLE_ADMIN;
     }
 }
