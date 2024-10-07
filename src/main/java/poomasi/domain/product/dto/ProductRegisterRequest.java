@@ -8,7 +8,7 @@ public record ProductRegisterRequest(
         String name,
         String description,
         String imageUrl,
-        int stock,
+        Integer stock,
         Long price
 ) {
 
@@ -17,6 +17,7 @@ public record ProductRegisterRequest(
                 .categoryId(categoryId)
                 .farmerId(farmerId)
                 .name(name)
+                .stock(stock)
                 .description(description)
                 .imageUrl(imageUrl)
                 .stock(stock)
