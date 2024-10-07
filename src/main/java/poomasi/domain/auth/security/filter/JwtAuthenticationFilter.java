@@ -8,9 +8,9 @@ import jdk.jfr.Description;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.filter.OncePerRequestFilter;
-import poomasi.domain.auth.util.JwtUtil;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.entity.Role;
+import poomasi.global.util.JwtUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // access token 추출하기
-        String tokenType = jwtUtil.getTokenTypeFromToken(accessToken);
+        String tokenType = "";//jwtUtil.getTokenTypeFromToken(accessToken);
 
         if(!tokenType.equals("access")){
             log.info("[인증 실패] - 위조된 토큰입니다.");
@@ -64,13 +64,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = jwtUtil.getEmailFromToken(accessToken);
-        String role = jwtUtil.getRoleFromToken(accessToken);
+        //String username = jwtUtil.getEmailFromToken(accessToken);
+        //String role = jwtUtil.getRoleFromToken(accessToken);
 
         //TODO : Object, Object, Collection 형태 ..처리 해야 함
         //TODO : userDetailsImpl(), null(password)
         //TODO : security context에 저장해야 함.
-        Member member = new Member(username, Role.valueOf(role));
+        //Member member = new Member(username, Role.valueOf(role));
 
 
 

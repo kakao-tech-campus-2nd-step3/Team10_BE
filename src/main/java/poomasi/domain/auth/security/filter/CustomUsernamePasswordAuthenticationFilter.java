@@ -13,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
-import poomasi.domain.auth.util.JwtUtil;
+import poomasi.global.util.JwtUtil;
 
 @RequiredArgsConstructor
 public class CustomUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -37,8 +37,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
         String username = customUserDetails.getUsername();
         String role = customUserDetails.getAuthority();
 
-        String accessToken = jwtUtil.generateAccessToken(username, role);
-        String refreshToken = jwtUtil.generateRefreshToken(username, role);
+        String accessToken = "";//jwtUtil.generateAccessToken(username, role);
+        String refreshToken = "";//jwtUtil.generateRefreshToken(username, role);
 
         response.setHeader("access", accessToken);
         response.addCookie(createCookie("refresh", refreshToken));
