@@ -1,7 +1,6 @@
 package poomasi.domain.product._category.service;
 
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.product._category.dto.CategoryResponse;

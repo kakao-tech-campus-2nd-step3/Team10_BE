@@ -4,7 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.product.dto.UpdateProductQuantityRequest;
 import poomasi.domain.product.service.ProductFarmerService;
@@ -25,7 +32,7 @@ public class ProductFarmerController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<?> modifyProduct(@RequestBody ProductRegisterRequest product,
-                                           @PathVariable Long productId) {
+            @PathVariable Long productId) {
         productFarmerService.modifyProduct(product, productId);
         return new ResponseEntity<>(productId, HttpStatus.OK);
     }
@@ -41,7 +48,7 @@ public class ProductFarmerController {
 
     @PatchMapping("/{productId}")
     public ResponseEntity<?> updateProductQuantity(@PathVariable Long productId,
-                                                   @RequestBody UpdateProductQuantityRequest request) {
+            @RequestBody UpdateProductQuantityRequest request) {
         log.debug("Product ID: {}", productId);
         log.debug("Update Request: {}", request);
         productFarmerService.addQuantity(productId, request);

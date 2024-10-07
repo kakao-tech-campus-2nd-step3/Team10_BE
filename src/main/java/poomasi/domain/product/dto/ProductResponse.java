@@ -13,6 +13,7 @@ public record ProductResponse(
         String imageUrl,
         long categoryId
 ) {
+
     public static ProductResponse fromEntity(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
