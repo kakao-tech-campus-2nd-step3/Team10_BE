@@ -5,13 +5,13 @@ import poomasi.domain.product.entity.Product;
 
 @Builder
 public record ProductResponse(
-        long id,
+        Long id,
         String name,
         Long price,
-        int stock,
+        Integer stock,
         String description,
         String imageUrl,
-        long categoryId
+        Long categoryId
 ) {
 
     public static ProductResponse fromEntity(Product product) {

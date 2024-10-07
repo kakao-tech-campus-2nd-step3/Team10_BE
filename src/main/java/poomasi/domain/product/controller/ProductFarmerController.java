@@ -54,6 +54,4 @@ public class ProductFarmerController {
         productFarmerService.addQuantity(productId, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 }

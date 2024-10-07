@@ -1,9 +1,15 @@
 package poomasi.domain.product._category.dto;
 
+import lombok.Builder;
 import poomasi.domain.product._category.entity.Category;
 
-public record CategoryResponse(long id, String name) {
+@Builder
+public record CategoryResponse(Long id, String name) {
+
     public static CategoryResponse fromEntity(Category category) {
-        return new CategoryResponse(category.getId(), category.getName());
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
     }
 }
