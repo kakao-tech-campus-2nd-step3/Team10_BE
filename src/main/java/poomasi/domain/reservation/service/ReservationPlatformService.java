@@ -3,6 +3,7 @@ package poomasi.domain.reservation.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import poomasi.domain.farm._schedule.entity.FarmSchedule;
+import poomasi.domain.farm._schedule.entity.ScheduleStatus;
 import poomasi.domain.farm._schedule.service.FarmScheduleService;
 import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.service.FarmService;
@@ -21,6 +22,8 @@ public class ReservationPlatformService {
     private final MemberService memberService;
     private final FarmService farmService;
     private final FarmScheduleService farmScheduleService;
+
+    private final int RESERVATION_CANCELLATION_PERIOD = 3;
 
     public ReservationResponse createReservation(ReservationRequest request) {
         Member member = memberService.findMemberById(request.memberId());
@@ -42,5 +45,25 @@ public class ReservationPlatformService {
         }
 
         return reservation.toResponse();
+    }
+
+    public void cancelReservation(Long memberId, Long reservationId) {
+        Reservation reservation = reservationService.getReservationById(reservationId);
+
+        if (!reservation.getMember().getId().equals(memberId) || memberService.isAdmin(memberId)) {
+            throw new BusinessException(BusinessError.RESERVATION_NOT_ACCESSIBLE);
+        }
+
+        if (reservation.isCanceled()) {
+            throw new BusinessException(BusinessError.RESERVATION_ALREADY_CANCELED);
+        }
+
+        // 우리 아직 예약 취소 규정 정해놓지 않았으니까 일단은 3일 전에만 취소 가능하다고 가정
+        if (reservation.getReservationDate().isBefore(reservation.getReservationDate().minusDays(RESERVATION_CANCELLATION_PERIOD))) {
+            throw new BusinessException(BusinessError.RESERVATION_CANCELLATION_PERIOD_EXPIRED);
+        }
+
+        reservationService.cancelReservation(reservation);
+        farmScheduleService.updateFarmScheduleStatus(reservation.getScheduleId().getId(), ScheduleStatus.PENDING);
     }
 }

@@ -6,12 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.farm._schedule.entity.FarmSchedule;
 import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.reservation.dto.response.ReservationResponse;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,33 +31,46 @@ public class Reservation {
     @Comment("농장")
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "farm_id")
+    @Column(nullable = false)
     private Farm farm;
 
     @Comment("예약자")
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @Column(nullable = false)
     private Member member;
 
     @Comment("예약 시간")
-    @Column(name = "reservation_time")
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "schedule_id")
+    @Column(nullable = false)
     private FarmSchedule scheduleId;
 
     @Comment("예약 날짜")
-    @Column(name = "reservation_date")
+    @Column(nullable = false)
     private LocalDate reservationDate;
 
     @Comment("예약 인원")
-    @Column(name = "reservation_count")
+    @Column(nullable = false)
     private int reservationCount;
 
     @Comment("예약 상태")
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReservationStatus status;
 
     @Comment("요청 사항")
-    @Column(name = "request")
+    @Column(nullable = false)
     private String request;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @Comment("예약 취소 일자")
+    private LocalDateTime canceledAt;
 
 
     @Builder
@@ -78,5 +94,14 @@ public class Reservation {
                 .status(status)
                 .request(request)
                 .build();
+    }
+
+    public boolean isCanceled() {
+        return status == ReservationStatus.CANCELED;
+    }
+
+    public void cancel() {
+        this.status = ReservationStatus.CANCELED;
+        this.canceledAt = LocalDateTime.now();
     }
 }

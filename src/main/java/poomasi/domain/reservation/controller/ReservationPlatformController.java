@@ -27,4 +27,13 @@ public class ReservationPlatformController {
         return ResponseEntity.ok(reservation);
     }
 
+    @PostMapping("/cancel/{reservationId}")
+    public ResponseEntity<?> cancelReservation(@PathVariable Long reservationId) {
+        // FIXME: 로그인한 사용자의 ID를 가져오도록 수정
+        Long memberId = 1L;
+
+        reservationPlatformService.cancelReservation(memberId, reservationId);
+        return ResponseEntity.ok().build();
+    }
+
 }

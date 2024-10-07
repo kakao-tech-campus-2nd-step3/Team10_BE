@@ -68,4 +68,12 @@ public class FarmScheduleService {
 
         return farmSchedule;
     }
+
+    public void updateFarmScheduleStatus(Long farmScheduleId, ScheduleStatus status) {
+        FarmSchedule farmSchedule = farmScheduleRepository.findById(farmScheduleId)
+                .orElseThrow(() -> new BusinessException(FARM_SCHEDULE_NOT_FOUND));
+
+        farmSchedule.setStatus(status);
+        farmScheduleRepository.save(farmSchedule);
+    }
 }

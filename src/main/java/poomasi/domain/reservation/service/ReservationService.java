@@ -33,4 +33,9 @@ public class ReservationService {
     public Reservation getReservationById(Long reservationId) {
         return reservationRepository.findById(reservationId).orElseThrow(() -> new BusinessException(BusinessError.RESERVATION_NOT_FOUND));
     }
+
+    public void cancelReservation(Reservation reservation) {
+        reservation.cancel();
+        reservationRepository.save(reservation);
+    }
 }
