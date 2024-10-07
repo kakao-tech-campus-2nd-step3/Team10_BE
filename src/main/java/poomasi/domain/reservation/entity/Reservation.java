@@ -9,6 +9,7 @@ import org.hibernate.annotations.Comment;
 import poomasi.domain.farm._schedule.entity.FarmSchedule;
 import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.member.entity.Member;
+import poomasi.domain.reservation.dto.response.ReservationResponse;
 
 import java.time.LocalDate;
 
@@ -65,5 +66,17 @@ public class Reservation {
         this.reservationCount = reservationCount;
         this.status = status;
         this.request = request;
+    }
+
+    public ReservationResponse toResponse() {
+        return ReservationResponse.builder()
+                .farmId(farm.getId())
+                .memberId(member.getId())
+                .scheduleId(scheduleId.getId())
+                .reservationDate(reservationDate)
+                .reservationCount(reservationCount)
+                .status(status)
+                .request(request)
+                .build();
     }
 }

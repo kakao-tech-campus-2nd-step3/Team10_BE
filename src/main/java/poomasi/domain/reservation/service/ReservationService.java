@@ -14,19 +14,19 @@ import java.util.List;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
 
-    private Reservation getReservation(Long id) {
+    public Reservation getReservation(Long id) {
         return reservationRepository.findById(id).orElseThrow(() -> new BusinessException(BusinessError.RESERVATION_NOT_FOUND));
     }
 
-    private List<Reservation> getReservationsByMemberId(Long memberId) {
+    public List<Reservation> getReservationsByMemberId(Long memberId) {
         return reservationRepository.findAllByMemberId(memberId);
     }
 
-    private List<Reservation> getReservationsByFarmId(Long farmId) {
+    public List<Reservation> getReservationsByFarmId(Long farmId) {
         return reservationRepository.findAllByFarmId(farmId);
     }
 
-    private Reservation createReservation(Reservation reservation) {
+    public Reservation createReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 }

@@ -2,6 +2,7 @@ package poomasi.domain.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import poomasi.domain.farm._schedule.entity.FarmSchedule;
 import poomasi.domain.farm._schedule.service.FarmScheduleService;
 import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.service.FarmService;
@@ -9,6 +10,7 @@ import poomasi.domain.member.entity.Member;
 import poomasi.domain.member.service.MemberService;
 import poomasi.domain.reservation.dto.request.ReservationRequest;
 import poomasi.domain.reservation.dto.response.ReservationResponse;
+import poomasi.domain.reservation.entity.Reservation;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +21,15 @@ public class ReservationPlatformService {
     private final FarmScheduleService farmScheduleService;
 
     public ReservationResponse createReservation(ReservationRequest request) {
-        // 유효한 멤버를 가져온다.
         Member member = memberService.findMemberById(request.memberId());
+        Farm farm = farmService.getValidFarmByFarmId(request.farmId());
+        FarmSchedule farmSchedule = farmScheduleService.getValidFarmScheduleByFarmIdAndDate(request.farmId(), request.reservationDate());
 
-        // 유효한 농장을 가져온다.
-        Farm farm = farmService.getFarmByFarmId(request.farmId());
+        // TODO: 예약 가능한지 확인하는 로직 추가
 
-        // request가 가능한 날짜인가?
+        Reservation reservation = reservationService.createReservation(request.toEntity(member, farm, farmSchedule));
 
-        // 예약을 생성한다.
 
-        return null;
+        return reservation.toResponse();
     }
 }
