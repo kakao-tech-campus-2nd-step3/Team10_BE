@@ -24,7 +24,7 @@ public class CategoryService {
                 .toList();
     }
 
-    public List<ProductListInCategoryResponse> getProductInCategory(long categoryId) {
+    public List<ProductListInCategoryResponse> getProductInCategory(Long categoryId) {
         Category category = getCategory(categoryId);
         return category.getProducts()
                 .stream()

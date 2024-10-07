@@ -9,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.product.dto.ProductRegisterRequest;
-import poomasi.domain.review.entity.ProductReview;
+import poomasi.domain.review.entity.Review;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class Product {
     private String imageUrl;
 
     @Comment("재고")
-    private int stock;
+    private Integer stock;
 
     @Comment("가격")
     private Long price;
@@ -54,8 +54,9 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<ProductReview> reviewList = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "entityId")
+    List<Review> reviewList = new ArrayList<>();
 
     @Comment("평균 평점")
     private double averageRating = 0.0;
@@ -67,7 +68,7 @@ public class Product {
                    String name,
                    String description,
                    String imageUrl,
-                   int stock,
+                   Integer stock,
                    Long price) {
         this.categoryId = categoryId;
         this.farmerId = farmerId;
@@ -88,14 +89,14 @@ public class Product {
         return this;
     }
 
-    public void addQuantity(int stock) {
+    public void addStock (Integer stock) {
         this.stock += stock;
     }
 
-    public void addReview(ProductReview pReview) {
+    public void addReview(Review pReview) {
         this.reviewList.add(pReview);
         this.averageRating = reviewList.stream()
-                .mapToDouble(ProductReview::getRating) // 각 리뷰의 평점을 double로 변환
+                .mapToDouble(Review::getRating) // 각 리뷰의 평점을 double로 변환
                 .average() // 평균 계산
                 .orElse(0.0);
     }

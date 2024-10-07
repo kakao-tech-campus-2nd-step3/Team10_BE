@@ -9,7 +9,7 @@ public record ProductListInCategoryResponse(
         String name,
         String description,
         String imageUrl,
-        int quantity,
+        Integer quantity,
         Long price
 ) {
 

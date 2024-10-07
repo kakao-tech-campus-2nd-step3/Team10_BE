@@ -1,17 +1,19 @@
 package poomasi.domain.product.dto;
 
+import java.util.List;
 import lombok.Builder;
 import poomasi.domain.product.entity.Product;
+import poomasi.domain.review.dto.ReviewResponse;
 
 @Builder
 public record ProductResponse(
-        long id,
+        Long id,
         String name,
         Long price,
-        int stock,
+        Integer stock,
         String description,
         String imageUrl,
-        long categoryId
+        Long categoryId
 ) {
     public static ProductResponse fromEntity(Product product) {
         return ProductResponse.builder()

@@ -25,7 +25,7 @@ public class CategoryController {
     }
 
     @GetMapping("/api/categories/{categoryId}")
-    public ResponseEntity<?> getCategoryById(@PathVariable long categoryId) {
+    public ResponseEntity<?> getCategoryById(@PathVariable Long categoryId) {
         List<ProductListInCategoryResponse> productList = categoryService.getProductInCategory(
                 categoryId);
         return new ResponseEntity<>(productList, HttpStatus.OK);

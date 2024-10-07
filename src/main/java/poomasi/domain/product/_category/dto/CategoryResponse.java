@@ -4,7 +4,7 @@ import lombok.Builder;
 import poomasi.domain.product._category.entity.Category;
 
 @Builder
-public record CategoryResponse(long id, String name) {
+public record CategoryResponse(Long id, String name) {
 
     public static CategoryResponse fromEntity(Category category) {
         return CategoryResponse.builder()
