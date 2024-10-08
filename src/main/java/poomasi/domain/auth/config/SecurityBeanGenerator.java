@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
@@ -18,9 +19,7 @@ import poomasi.global.redis.service.RedisService;
 @Configuration
 public class SecurityBeanGenerator {
 
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final RedisTemplate<String, Object> redisBlackListTemplate;
-    private final RedisConnectionFactory redisConnectionFactory;
+
     private final RedisService redisService;
 
     @Bean
@@ -34,14 +33,13 @@ public class SecurityBeanGenerator {
     MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
         return new MvcRequestMatcher.Builder(introspector);
     }
-    
-    /*
-    * jwt util spring bean 등록해야 함
-    * */
-    <String, Object>
+
     @Bean
     JwtUtil jwtUtil(){
         return new JwtUtil(redisService);
     }
+
+
+
 
 }
