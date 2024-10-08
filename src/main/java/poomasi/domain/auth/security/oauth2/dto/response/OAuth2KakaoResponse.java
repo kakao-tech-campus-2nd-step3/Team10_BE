@@ -5,20 +5,22 @@ import poomasi.domain.member.entity.LoginType;
 
 import java.util.Map;
 
-public record OAuth2KakaoResponse(Map<String, Object> attribute) implements OAuth2Response {
+public record OAuth2KakaoResponse(String id, Map<String, Object> attribute) implements OAuth2Response {
 
-    public OAuth2KakaoResponse(Map<String, Object> attribute) {
-        this.attribute = (Map<String, Object>) attribute.get("response");
+
+    public OAuth2KakaoResponse(String id, Map<String, Object> attribute) {
+        this.id = id;
+        this.attribute =  attribute;
     }
 
     @Override
     public String getProviderId() {
-        return attribute.get("id").toString();
+        return id;
     }
 
     @Override
     public String getEmail() {
-        return attribute.get("email").toString();
+        return String.valueOf(attribute.get("email"));
     }
 
     @Override
