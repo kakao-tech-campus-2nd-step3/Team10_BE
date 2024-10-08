@@ -41,7 +41,6 @@ public class JwtUtil {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-
     public String generateTokenInFilter(String email, String role , String tokenType, Long memberId){
         Map<String, Object> claims = this.createClaims(email, role, tokenType);
         String memberIdString = memberId.toString();
@@ -55,7 +54,6 @@ public class JwtUtil {
                 .compact();
     }
 
-
     private Map<String, Object> createClaims(String email, String role, String tokenType) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
@@ -63,6 +61,25 @@ public class JwtUtil {
         claims.put("tokenType" , tokenType);
         return claims;
     }
+
+    public Boolean validateTokenInFilter(String token){
+
+        log.info("jwt util에서 토큰 검증을 진행합니다 . .");
+
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.info("jwt util에서 토큰 검증 하다가 exception 터졌습니다.");
+            log.info(e.getMessage());
+            return false;
+        }
+
+    }
+
+
+
+    ///////////////////////
 
     //subject 추출하기
     public String getSubjectFromToken(final String token) {
@@ -80,6 +97,10 @@ public class JwtUtil {
     public String getTokenTypeFromToken(final String token) {
         return getClaimFromToken(token, "tokenType", String.class);
     }
+
+
+
+
 
     // 토큰 생성
     public String generateAccessToken(final String memberId, final Map<String, Object> claims) {
@@ -120,6 +141,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(final String token) {
+
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
