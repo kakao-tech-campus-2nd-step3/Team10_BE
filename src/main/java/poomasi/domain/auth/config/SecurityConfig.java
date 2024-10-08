@@ -23,9 +23,7 @@ import poomasi.domain.auth.security.filter.CustomUsernamePasswordAuthenticationF
 import poomasi.domain.auth.security.filter.JwtAuthenticationFilter;
 import poomasi.domain.auth.security.handler.CustomSuccessHandler;
 import poomasi.domain.auth.security.userdetail.OAuth2UserDetailServiceImpl;
-import poomasi.domain.auth.util.JwtUtil;
-import poomasi.domain.auth.security.handler.*;
-
+import poomasi.domain.auth.token.util.JwtUtil;
 
 @AllArgsConstructor
 @Configuration
@@ -49,7 +47,7 @@ public class SecurityConfig {
     @Description("순서 : Oauth2 -> jwt -> login -> logout")
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        
+
         //form login disable
         http.formLogin(AbstractHttpConfigurer::disable);
 
@@ -110,12 +108,10 @@ public class SecurityConfig {
                                 .userService(oAuth2UserDetailServiceImpl))
                         .successHandler(customSuccessHandler)
                 );
-         */
-        http.oauth2Login(AbstractHttpConfigurer::disable);
 
-        CustomUsernamePasswordAuthenticationFilter customUsernameFilter =
-                new CustomUsernamePasswordAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil);
-        customUsernameFilter.setFilterProcessesUrl("/api/login");
+
+        //jwt 인증 필터 구현
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil), CustomUsernamePasswordAuthenticationFilter.class);
 
         http.addFilterAt(customUsernameFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
@@ -123,7 +119,7 @@ public class SecurityConfig {
 
         return http.build();
     }
-    
+
 }
 
 
