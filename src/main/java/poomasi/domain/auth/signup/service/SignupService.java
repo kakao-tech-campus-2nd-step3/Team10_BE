@@ -29,20 +29,16 @@ public class SignupService {
         String email = signupRequest.email();
         String password = signupRequest.password();
 
-        Member member = memberRepository.findByEmail(email).orElse(null);
-        // 회원 가입
-        // 대충 짰음.. 일단..
+        memberRepository.findByEmail(email)
+                .ifPresent(member -> { throw new BusinessException(DUPLICATE_MEMBER_EMAIL); });
 
-        if(member==null) {
-            Member newMember = new Member(email,
-                    passwordEncoder.encode(password),
-                    LoginType.LOCAL,
-                    ROLE_CUSTOMER);
-            memberRepository.save(newMember);
-            return new SignUpResponse(email, "회원 가입 성공");
-        }else{
-            throw new BusinessException(DUPLICATE_MEMBER_EMAIL);
-        }
+        Member newMember = new Member(email,
+                passwordEncoder.encode(password),
+                LoginType.LOCAL,
+                ROLE_CUSTOMER);
+
+        memberRepository.save(newMember);
+        return new SignUpResponse(email, "회원 가입 성공");
     }
 }
 
