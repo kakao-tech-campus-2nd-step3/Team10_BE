@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ApplicationError {
-    EXAMPLE_ERROR("애플리케이션 에러 예시입니다.");
+    ENCRYPT_ERROR("암호화 에러입니다.");
 
     private final String message;
 
