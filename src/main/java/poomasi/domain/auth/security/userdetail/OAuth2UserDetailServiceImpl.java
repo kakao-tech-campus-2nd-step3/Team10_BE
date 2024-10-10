@@ -15,6 +15,8 @@ import poomasi.domain.member.entity.MemberProfile;
 import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.repository.MemberRepository;
 
+import java.util.Map;
+
 @Service
 @Description("소셜 서비스와 로컬 계정 연동 할 것이라면 여기서 연동 해야 함")
 @Slf4j
@@ -33,8 +35,13 @@ public class OAuth2UserDetailServiceImpl extends DefaultOAuth2UserService {
         OAuth2Response oAuth2UserInfo = null;
 
         if(userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
-            oAuth2UserInfo = new OAuth2KakaoResponse(oAuth2User.getAttributes());
-        }else{
+
+            String providerId = String.valueOf(oAuth2User.getAttributes().get("id"));
+            oAuth2UserInfo = new OAuth2KakaoResponse(
+                    providerId,
+                    (Map)oAuth2User.getAttributes().get("kakao_account")
+            );
+        } else{
             log.warn("지원하지 않은 로그인 서비스 입니다.");
         }
 
@@ -42,8 +49,8 @@ public class OAuth2UserDetailServiceImpl extends DefaultOAuth2UserService {
         String email = oAuth2UserInfo.getEmail();
         Role role = Role.ROLE_CUSTOMER;
         LoginType loginType = oAuth2UserInfo.getLoginType();
-        
-        
+
+
         //일단 없으면 가입시키는 쪽으로 구현ㄴ
         Member member = memberRepository.findByEmail(email).orElse(null);
         if(member == null) {
@@ -58,7 +65,7 @@ public class OAuth2UserDetailServiceImpl extends DefaultOAuth2UserService {
             memberRepository.save(member);
 
         }
-        
+
         //있다면 그냥 member 등록하기
 
         if(member.getLoginType()==LoginType.LOCAL){
