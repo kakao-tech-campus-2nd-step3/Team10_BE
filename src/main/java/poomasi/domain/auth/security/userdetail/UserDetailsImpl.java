@@ -2,7 +2,6 @@ package poomasi.domain.auth.security.userdetail;
 
 import jdk.jfr.Description;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -82,5 +81,7 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
         return null;
     }
 
-
+    public Member getMember(){
+        return member;
+    }
 }
