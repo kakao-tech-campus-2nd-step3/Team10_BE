@@ -21,6 +21,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static poomasi.domain.auth.token.entity.TokenType.ACCESS;
+import static poomasi.domain.auth.token.entity.TokenType.REFRESH;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -48,7 +51,7 @@ public class JwtUtil {
 
 
     public String generateTokenInFilter(String email, String role , String tokenType, Long memberId){
-        Map<String, Object> claims = this.createClaims(email, role, tokenType);
+        Map<String, Object> claims = this.createClaimsInFilter(email, role, tokenType);
         String memberIdString = memberId.toString();
 
         return Jwts.builder()
@@ -60,7 +63,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    private Map<String, Object> createClaims(String email, String role, String tokenType) {
+    private Map<String, Object> createClaimsInFilter(String email, String role, String tokenType) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
         claims.put("role", role);
@@ -87,15 +90,37 @@ public class JwtUtil {
         return getClaimFromToken(token, "role", String.class);
     }
 
+    public String getEmailFromTokenInFilter(final String token) {
+        return getClaimFromToken(token, "email", String.class);
+    }
 
-    // <----------------->
+    // <-------------------------------------------->
     // 토큰 생성
+
+
+    public Long getIdFromToken(final String token) {
+        return getClaimFromToken(token, "id", Long.class);
+    }
+
+    public Map<String, Object> createClaims(Long memberId) {
+        Map<String, Object> claims = new HashMap<>();
+        Member member = memberService.findMemberById(memberId);
+
+        claims.put("id", memberId);
+        claims.put("email", member.getEmail());
+        claims.put("role", member.getRole());
+
+        return claims;
+    }
+
+
+
     public String generateAccessTokenById(final Long memberId) {
         Map<String, Object> claims = createClaims(memberId);
         claims.put("type", ACCESS);
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(memberId)
+                .setSubject(String.valueOf(memberId))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -159,6 +184,34 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             return true;
         }
+    }
+
+    public String generateRefreshTokenById(final Long memberId) {
+        Map<String, Object> claims = createClaims(memberId);
+        claims.put("type", REFRESH);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(String.valueOf(memberId))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
+    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
+        if (!validateToken(refreshToken)) {
+            return false;
+        }
+        String storedMemberId = tokenStorageService.getValues(refreshToken, memberId.toString())
+                .orElse(null);
+
+        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
+            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
     }
 
     public long getAccessTokenExpiration() {

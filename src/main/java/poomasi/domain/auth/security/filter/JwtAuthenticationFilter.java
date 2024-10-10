@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         log.info("토큰 검증 완료");
-        String username = jwtUtil.getEmailFromToken(accessToken);
+        String username = jwtUtil.getEmailFromTokenInFilter(accessToken);
         String role = jwtUtil.getRoleFromTokenInFilter(accessToken);
 
         Member member = new Member(username, Role.valueOf(role));
