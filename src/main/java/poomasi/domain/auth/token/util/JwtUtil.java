@@ -16,12 +16,10 @@ import poomasi.domain.member.service.MemberService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static poomasi.domain.auth.token.entity.TokenType.ACCESS;
-import static poomasi.domain.auth.token.entity.TokenType.REFRESH;
 
 @Component
 @RequiredArgsConstructor
@@ -97,45 +95,30 @@ public class JwtUtil {
         claims.put("type", ACCESS);
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(String.valueOf(memberId))
+                .setSubject(memberId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshTokenById(final Long memberId) {
-        Map<String, Object> claims = createClaims(memberId);
-        claims.put("type", REFRESH);
+    public String generateRefreshToken(final String memberId, final Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(String.valueOf(memberId))
+                .setSubject(memberId)
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Long getIdFromToken(final String token) {
-        return getClaimFromToken(token, "id", Long.class);
-    }
-
-    public String getEmailFromToken(final String token) {
-        return getClaimFromToken(token, "email", String.class);
-    }
-
-    public Role getRoleFromToken(final String token) {
-        return getClaimFromToken(token, "role", Role.class);
-    }
-
-    public TokenType getTokenTypeFromToken(final String token) {
-        return getClaimFromToken(token, "type", TokenType.class);
-    }
-
-
     public <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
         Claims claims = getAllClaimsFromToken(token);
         return claims.get(claimKey, claimType);
+    }
+
+    public Date getExpirationDateFromToken(final String token) {
+        return getAllClaimsFromToken(token).getExpiration();
     }
 
     private Claims getAllClaimsFromToken(final String token) {
@@ -146,53 +129,7 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public Map<String, Object> createClaims(Long memberId) {
-        Map<String, Object> claims = new HashMap<>();
-        Member member = memberService.findMemberById(memberId);
-
-        claims.put("id", memberId);
-        claims.put("email", member.getEmail());
-        claims.put("role", member.getRole());
-
-        return claims;
-    }
-
-    public Date getExpirationDateFromToken(final String token) {
-        return getAllClaimsFromToken(token).getExpiration();
-    }
-
-    public long getAccessTokenExpiration() {
-        return ACCESS_TOKEN_EXPIRATION_TIME;
-    }
-
-    // 토큰 유효성 검사
-    public Boolean validateAccessToken(final String accessToken){
-        if (!validateToken(accessToken)) {
-            return false;
-        }
-        if (tokenBlacklistService.hasKeyBlackList(accessToken)){
-            log.warn("로그아웃한 JWT token입니다.");
-            return false;
-        }
-        return true;
-    }
-
-    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
-        if (!validateToken(refreshToken)) {
-            return false;
-        }
-        String storedMemberId = tokenStorageService.getValues(refreshToken, memberId.toString())
-                .orElse(null);
-
-        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
-            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
-            return false;
-        }
-
-        return true;
-    }
-
-    private Boolean validateToken(final String token) {
+    public Boolean validateToken(final String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(secretKey)
@@ -224,4 +161,7 @@ public class JwtUtil {
         }
     }
 
+    public long getAccessTokenExpiration() {
+        return ACCESS_TOKEN_EXPIRATION_TIME;
+    }
 }
