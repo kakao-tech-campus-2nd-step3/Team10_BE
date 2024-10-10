@@ -48,6 +48,49 @@ public class JwtUtil {
         secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+
+    public String generateTokenInFilter(String email, String role , String tokenType, Long memberId){
+        Map<String, Object> claims = this.createClaims(email, role, tokenType);
+        String memberIdString = memberId.toString();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(memberIdString)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    private Map<String, Object> createClaims(String email, String role, String tokenType) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
+        claims.put("role", role);
+        claims.put("tokenType" , tokenType);
+        return claims;
+    }
+
+    public Boolean validateTokenInFilter(String token){
+
+        log.info("jwt util에서 토큰 검증을 진행합니다 . .");
+
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.info("jwt util에서 토큰 검증 하다가 exception 터졌습니다.");
+            log.info(e.getMessage());
+            return false;
+        }
+
+    }
+
+    public String getRoleFromTokenInFilter(final String token) {
+        return getClaimFromToken(token, "role", String.class);
+    }
+
+
+    // <----------------->
     // 토큰 생성
     public String generateAccessTokenById(final Long memberId) {
         Map<String, Object> claims = createClaims(memberId);
