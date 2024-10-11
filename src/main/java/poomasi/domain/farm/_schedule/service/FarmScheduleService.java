@@ -6,6 +6,7 @@ import poomasi.domain.farm._schedule.dto.FarmScheduleRequest;
 import poomasi.domain.farm._schedule.dto.FarmScheduleResponse;
 import poomasi.domain.farm._schedule.dto.FarmScheduleUpdateRequest;
 import poomasi.domain.farm._schedule.entity.FarmSchedule;
+import poomasi.domain.farm._schedule.entity.ScheduleStatus;
 import poomasi.domain.farm._schedule.repository.FarmScheduleRepository;
 import poomasi.global.error.BusinessException;
 
@@ -14,8 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static poomasi.global.error.BusinessError.FARM_SCHEDULE_ALREADY_EXISTS;
-import static poomasi.global.error.BusinessError.START_DATE_SHOULD_BE_BEFORE_END_DATE;
+import static poomasi.global.error.BusinessError.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,5 +54,26 @@ public class FarmScheduleService {
                 .toList();
     }
 
+    public FarmSchedule getFarmScheduleByFarmIdAndDate(Long farmId, LocalDate date) {
+        return farmScheduleRepository.findByFarmIdAndDate(farmId, date)
+                .orElseThrow(() -> new BusinessException(FARM_SCHEDULE_NOT_FOUND));
+    }
 
+    public FarmSchedule getValidFarmScheduleByFarmIdAndDate(Long farmId, LocalDate date) {
+        FarmSchedule farmSchedule = getFarmScheduleByFarmIdAndDate(farmId, date);
+
+        if (farmSchedule.getStatus() == ScheduleStatus.RESERVED) {
+            throw new BusinessException(FARM_SCHEDULE_ALREADY_RESERVED);
+        }
+
+        return farmSchedule;
+    }
+
+    public void updateFarmScheduleStatus(Long farmScheduleId, ScheduleStatus status) {
+        FarmSchedule farmSchedule = farmScheduleRepository.findById(farmScheduleId)
+                .orElseThrow(() -> new BusinessException(FARM_SCHEDULE_NOT_FOUND));
+
+        farmSchedule.setStatus(status);
+        farmScheduleRepository.save(farmSchedule);
+    }
 }
