@@ -17,7 +17,7 @@ import poomasi.domain.member.entity.Member;
 public class AuthTestController {
 
     @Secured("ROLE_CUSTOMER")
-    @GetMapping("/api/need-auth/customer")
+    @GetMapping("/api/auth-test/customer")
     public String customer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object impl = authentication.getPrincipal();

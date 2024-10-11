@@ -68,6 +68,7 @@ public class SecurityConfig {
         //기본 로그아웃 해제
         http.logout(AbstractHttpConfigurer::disable);
 
+        /*
         // 기본 경로 및 테스트 경로
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET, "/api/farm/**").permitAll()
@@ -77,6 +78,14 @@ public class SecurityConfig {
                 .requestMatchers("/api/need-auth/**").authenticated()
                 .anyRequest().
                 authenticated()
+        );*/
+
+
+        http.authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers("/**").permitAll()
+                .requestMatchers("/api/need-auth/**").authenticated()
+                .anyRequest()
+                .authenticated()
         );
 
         /*

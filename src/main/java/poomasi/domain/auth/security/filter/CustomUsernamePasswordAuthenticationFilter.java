@@ -35,21 +35,21 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        log.info("username - password 기반으로 인증을 시도 합니다 : CustomUsernamePasswordAuthenticationFilter");
+        log.info("email - password 기반으로 인증을 시도 합니다 : CustomUsernamePasswordAuthenticationFilter");
         ObjectMapper loginRequestMapper = new ObjectMapper();
-        String username = null;
+        String email = null;
         String password = null;
 
         try {
             BufferedReader reader = request.getReader();
             Map<String, String> credentials = loginRequestMapper.readValue(reader, Map.class);
-            username = credentials.get("username");
+            email = credentials.get("email");
             password = credentials.get("password");
-            log.info("유저 정보를 출력합니다. username : "+ username + "password : " + password);
+            log.info("유저 정보를 출력합니다. email : "+ email + "password : " + password);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password);
         log.info("CustomUsernamePasswordAuthenticationFilter : authentication token 생성 완료");
         return this.authenticationManager.authenticate(authToken);
 
