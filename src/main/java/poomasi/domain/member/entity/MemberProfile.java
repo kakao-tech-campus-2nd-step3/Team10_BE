@@ -2,7 +2,6 @@ package poomasi.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -10,23 +9,31 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "member_profile")
-@NoArgsConstructor
 public class MemberProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = true, length = 50)
     private String name;
 
-    @Column(length = 20)
+    @Column(nullable = true, length = 20)
     private String phoneNumber;
 
-    @Column(length = 255)
+    @Column(nullable = true, length = 255)
     private String address;
 
-    @Column(nullable = false)
+    @Column(nullable = true, length = 255)
+    private String addressDetail;
+
+    @Column(nullable=true, length=255)
+    private Long coordinateX;
+
+    @Column(nullable=true, length=255)
+    private Long coordinateY;
+
+    @Column(nullable = true, length = 50)
     private boolean isBanned;
 
     @Column(nullable = false)
@@ -44,6 +51,11 @@ public class MemberProfile {
         this.isBanned = false;
         this.createdAt = LocalDateTime.now();
         this.member = member;
+    }
+
+    public MemberProfile() {
+        this.name = "UNKNOWN"; // name not null 조건 때문에 임시로 넣었습니다. nullable도 true로 넣었는데 안 되네요
+        this.createdAt = LocalDateTime.now();
     }
 
 }
