@@ -1,4 +1,4 @@
-package poomasi.domain.auth.token.redis.error;
+package poomasi.global.config.redis.error;
 
 import lombok.extern.slf4j.Slf4j;
 

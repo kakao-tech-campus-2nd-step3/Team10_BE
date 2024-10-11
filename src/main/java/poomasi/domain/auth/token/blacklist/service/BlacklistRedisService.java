@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.util.*;
 
-import static poomasi.domain.auth.token.redis.error.RedisExceptionHandler.handleRedisException;
+import static poomasi.global.config.redis.error.RedisExceptionHandler.handleRedisException;
 
 @Slf4j
 @Service

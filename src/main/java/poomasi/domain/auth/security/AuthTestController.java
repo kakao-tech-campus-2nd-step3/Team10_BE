@@ -2,6 +2,7 @@ package poomasi.domain.auth.security;
 
 
 import jdk.jfr.Description;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
 import poomasi.domain.member.entity.Member;
 
+@Slf4j
 @Description("접근 제어 확인 controller")
 @RestController
 public class AuthTestController {
@@ -21,7 +23,7 @@ public class AuthTestController {
         Object impl = authentication.getPrincipal();
         Member member = ((UserDetailsImpl) impl).getMember();
 
-        System.out.println("email : " + member.getEmail());
+        log.info("email : " + member.getEmail());
 
         return "hi. customer";
     }

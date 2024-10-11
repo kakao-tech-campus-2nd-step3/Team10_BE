@@ -10,12 +10,12 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import poomasi.domain.auth.token.redis.error.RedisOperationException;
+import poomasi.global.config.redis.error.RedisOperationException;
 
 import java.time.Duration;
 import java.util.*;
 
-import static poomasi.domain.auth.token.redis.error.RedisExceptionHandler.handleRedisException;
+import static poomasi.global.config.redis.error.RedisExceptionHandler.handleRedisException;
 
 @Slf4j
 @Service
