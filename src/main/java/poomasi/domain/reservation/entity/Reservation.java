@@ -30,20 +30,17 @@ public class Reservation {
 
     @Comment("농장")
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "farm_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "farm_id", nullable = false)
     private Farm farm;
 
     @Comment("예약자")
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Comment("예약 시간")
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
-    @Column(nullable = false)
+    @JoinColumn(name = "schedule_id", nullable = false)
     private FarmSchedule scheduleId;
 
     @Comment("예약 날짜")

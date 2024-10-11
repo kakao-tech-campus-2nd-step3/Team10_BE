@@ -10,10 +10,14 @@ import lombok.Getter;
 public enum BusinessError {
     // Product
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
+    PRODUCT_STOCK_ZERO(HttpStatus.BAD_REQUEST, "재고가 없습니다."),
+
     // Category
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
+
     // Review
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+
     // Member
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),
     DUPLICATE_MEMBER_EMAIL(HttpStatus.CONFLICT, "중복된 이메일입니다."),
@@ -46,7 +50,6 @@ public enum BusinessError {
 
     // ETC
     START_DATE_SHOULD_BE_BEFORE_END_DATE(HttpStatus.BAD_REQUEST, "시작 날짜는 종료 날짜보다 이전이어야 합니다.");
-
 
     private final HttpStatus httpStatus;
 

@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
+import poomasi.domain.wishlist.entity.WishList;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,6 +43,9 @@ public class Member {
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile memberProfile;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WishList> wishLists;
 
     private LocalDateTime deletedAt;
 

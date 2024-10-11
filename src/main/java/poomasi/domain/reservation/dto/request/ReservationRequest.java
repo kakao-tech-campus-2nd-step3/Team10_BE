@@ -14,7 +14,7 @@ public record ReservationRequest(
         Long memberId,
         LocalDate reservationDate,
 
-        int reservationCount,
+        int memberCount,
         String request
 ) {
     public Reservation toEntity(Member member, Farm farm, FarmSchedule farmSchedule) {
@@ -23,7 +23,7 @@ public record ReservationRequest(
                 .farm(farm)
                 .scheduleId(farmSchedule)
                 .reservationDate(reservationDate)
-                .reservationCount(reservationCount)
+                .memberCount(memberCount)
                 .request(request)
                 .build();
     }
