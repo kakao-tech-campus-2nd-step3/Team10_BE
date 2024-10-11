@@ -11,7 +11,7 @@ public record ReservationResponse(
         Long memberId,
         Long scheduleId,
         LocalDate reservationDate,
-        int reservationCount,
+        int memberCount,
         ReservationStatus status,
         String request
 

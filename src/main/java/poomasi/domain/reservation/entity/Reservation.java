@@ -52,7 +52,7 @@ public class Reservation {
 
     @Comment("예약 인원")
     @Column(nullable = false)
-    private int reservationCount;
+    private int memberCount;
 
     @Comment("예약 상태")
     @Enumerated(EnumType.STRING)
@@ -74,12 +74,12 @@ public class Reservation {
 
 
     @Builder
-    public Reservation(Farm farm, Member member, FarmSchedule scheduleId, LocalDate reservationDate, int reservationCount, ReservationStatus status, String request) {
+    public Reservation(Farm farm, Member member, FarmSchedule scheduleId, LocalDate reservationDate, int memberCount, ReservationStatus status, String request) {
         this.farm = farm;
         this.member = member;
         this.scheduleId = scheduleId;
         this.reservationDate = reservationDate;
-        this.reservationCount = reservationCount;
+        this.memberCount = memberCount;
         this.status = status;
         this.request = request;
     }
@@ -90,7 +90,7 @@ public class Reservation {
                 .memberId(member.getId())
                 .scheduleId(scheduleId.getId())
                 .reservationDate(reservationDate)
-                .reservationCount(reservationCount)
+                .memberCount(memberCount)
                 .status(status)
                 .request(request)
                 .build();

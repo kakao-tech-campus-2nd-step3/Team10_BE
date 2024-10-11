@@ -2,6 +2,7 @@ package poomasi.domain.reservation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import poomasi.domain.reservation.dto.response.ReservationResponse;
 import poomasi.domain.reservation.entity.Reservation;
 import poomasi.domain.reservation.repository.ReservationRepository;
 import poomasi.global.error.BusinessError;
@@ -37,5 +38,11 @@ public class ReservationService {
     public void cancelReservation(Reservation reservation) {
         reservation.cancel();
         reservationRepository.save(reservation);
+    }
+
+    public List<ReservationResponse> getReservationsByFarmerId(Long farmerId) {
+        return reservationRepository.findAllByFarmId(farmerId).stream()
+                .map(Reservation::toResponse)
+                .toList();
     }
 }
