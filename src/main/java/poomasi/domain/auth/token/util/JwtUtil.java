@@ -8,15 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import poomasi.domain.auth.token.blacklist.service.TokenBlacklistService;
-import poomasi.domain.auth.token.entity.TokenType;
 import poomasi.domain.auth.token.refreshtoken.service.TokenStorageService;
 import poomasi.domain.member.entity.Member;
-import poomasi.domain.member.entity.Role;
 import poomasi.domain.member.service.MemberService;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -97,9 +94,28 @@ public class JwtUtil {
     // <-------------------------------------------->
     // 토큰 생성
 
+    public String generateAccessTokenById(final Long memberId) {
+        Map<String, Object> claims = createClaims(memberId);
+        claims.put("type", ACCESS);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(String.valueOf(memberId))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
-    public Long getIdFromToken(final String token) {
-        return getClaimFromToken(token, "id", Long.class);
+    public String generateRefreshTokenById(final Long memberId) {
+        Map<String, Object> claims = createClaims(memberId);
+        claims.put("type", REFRESH);
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(String.valueOf(memberId))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public Map<String, Object> createClaims(Long memberId) {
@@ -113,37 +129,18 @@ public class JwtUtil {
         return claims;
     }
 
-
-
-    public String generateAccessTokenById(final Long memberId) {
-        Map<String, Object> claims = createClaims(memberId);
-        claims.put("type", ACCESS);
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(String.valueOf(memberId))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public String generateRefreshToken(final String memberId, final Map<String, Object> claims) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(memberId)
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    public <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
-        Claims claims = getAllClaimsFromToken(token);
-        return claims.get(claimKey, claimType);
+    // 토큰 이용해서 추출
+    public Long getIdFromToken(final String token) {
+        return getClaimFromToken(token, "id", Long.class);
     }
 
     public Date getExpirationDateFromToken(final String token) {
         return getAllClaimsFromToken(token).getExpiration();
+    }
+
+    private <T> T getClaimFromToken(final String token, String claimKey, Class<T> claimType) {
+        Claims claims = getAllClaimsFromToken(token);
+        return claims.get(claimKey, claimType);
     }
 
     private Claims getAllClaimsFromToken(final String token) {
@@ -152,6 +149,33 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    // 토큰 유효성 검사
+    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
+        if (!validateToken(refreshToken)) {
+            return false;
+        }
+        String storedMemberId = tokenStorageService.getValues(refreshToken, memberId.toString())
+                .orElse(null);
+
+        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
+            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public Boolean validateAccessToken(final String accessToken){
+        if (!validateToken(accessToken)) {
+            return false;
+        }
+        if ( tokenBlacklistService.hasKeyBlackList(accessToken)){
+            log.warn("로그아웃한 JWT token입니다.");
+            return false;
+        }
+        return true;
     }
 
     public Boolean validateToken(final String token) {
@@ -184,34 +208,6 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             return true;
         }
-    }
-
-    public String generateRefreshTokenById(final Long memberId) {
-        Map<String, Object> claims = createClaims(memberId);
-        claims.put("type", REFRESH);
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(String.valueOf(memberId))
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-
-    public Boolean validateRefreshToken(final String refreshToken, final Long memberId) {
-        if (!validateToken(refreshToken)) {
-            return false;
-        }
-        String storedMemberId = tokenStorageService.getValues(refreshToken, memberId.toString())
-                .orElse(null);
-
-        if (storedMemberId == null || !storedMemberId.equals(memberId.toString())) {
-            log.warn("리프레시 토큰과 멤버 ID가 일치하지 않습니다.");
-            return false;
-        }
-
-        return true;
     }
 
     public long getAccessTokenExpiration() {
