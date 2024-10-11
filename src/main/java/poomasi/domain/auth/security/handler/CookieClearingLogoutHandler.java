@@ -20,7 +20,7 @@ public class CookieClearingLogoutHandler implements LogoutHandler {
                 cookie.setPath("/");  // 적용할 경로 설정
                 response.addCookie(cookie);
             }
-            System.out.println("Cookies cleared");
+            log.info("Cookies cleared");
         }
         log.info("[logout handler] - cookie 제거");
     }
