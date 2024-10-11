@@ -12,6 +12,7 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class CategoryAdminService {
+
     private final CategoryRepository categoryRepository;
 
     public Long registerCategory(CategoryRequest categoryRequest) {

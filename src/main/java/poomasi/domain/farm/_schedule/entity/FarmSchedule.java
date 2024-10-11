@@ -1,10 +1,7 @@
 package poomasi.domain.farm._schedule.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
@@ -24,6 +21,7 @@ public class FarmSchedule {
     @Comment("예약 가능 날짜")
     private LocalDate date;
 
+    @Setter
     @Comment("예약 가능 여부")
     @Enumerated(EnumType.STRING)
     private ScheduleStatus status;
@@ -38,4 +36,5 @@ public class FarmSchedule {
     public void updateStatus(ScheduleStatus status) {
         this.status = status;
     }
+
 }
