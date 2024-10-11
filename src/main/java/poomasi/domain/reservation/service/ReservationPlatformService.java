@@ -40,7 +40,7 @@ public class ReservationPlatformService {
 
     public ReservationResponse getReservation(Long memberId, Long reservationId) {
         Reservation reservation = reservationService.getReservationById(reservationId);
-        if (!reservation.getMember().getId().equals(memberId) || memberService.isAdmin(memberId)) {
+        if (!reservation.getMember().getId().equals(memberId) || !memberService.isAdmin(memberId)) {
             throw new BusinessException(BusinessError.RESERVATION_NOT_ACCESSIBLE);
         }
 
@@ -50,7 +50,7 @@ public class ReservationPlatformService {
     public void cancelReservation(Long memberId, Long reservationId) {
         Reservation reservation = reservationService.getReservationById(reservationId);
 
-        if (!reservation.getMember().getId().equals(memberId) || memberService.isAdmin(memberId)) {
+        if (!reservation.getMember().getId().equals(memberId) || !memberService.isAdmin(memberId)) {
             throw new BusinessException(BusinessError.RESERVATION_NOT_ACCESSIBLE);
         }
 
