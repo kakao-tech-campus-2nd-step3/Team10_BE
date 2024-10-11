@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
+import poomasi.domain.wishlist.entity.WishList;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static poomasi.domain.member.entity.LoginType.LOCAL;
 
@@ -43,6 +45,9 @@ public class Member {
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private MemberProfile profile;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WishList> wishLists;
+
     private LocalDateTime deletedAt;
 
     public Member(String email, String password, LoginType loginType, Role role) {
@@ -52,7 +57,7 @@ public class Member {
         this.role = role;
     }
 
-    public Member(String email, Role role){
+    public Member(String email, Role role) {
         this.email = email;
         this.role = role;
     }
