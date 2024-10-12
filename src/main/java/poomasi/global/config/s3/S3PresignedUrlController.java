@@ -21,7 +21,7 @@ public class S3PresignedUrlController {
         return ResponseEntity.ok(presignedGetUrl);
     }
 
-    @GetMapping("/presigned-url-put")
+    @PostMapping("/presigned-url-put")
     public ResponseEntity<?> presignedUrlPut(@RequestBody PresignedUrlPutRequest request) {
         String presignedPutUrl = s3PresignedUrlService.createPresignedPutUrl(bucket, request.keyPrefix(), request.metadata());
         return ResponseEntity.ok(presignedPutUrl);
