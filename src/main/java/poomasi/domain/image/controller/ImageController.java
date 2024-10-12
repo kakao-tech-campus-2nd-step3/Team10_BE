@@ -16,14 +16,14 @@ import java.util.List;
 public class ImageController {
     private final ImageService imageService;
 
-    // 이미지 업로드
+    // 이미지 정보 저장
     @PostMapping
     public ResponseEntity<?> saveImageInfo(@RequestBody ImageRequest imageRequest) {
             Image savedImage = imageService.saveImage(imageRequest);
             return ResponseEntity.ok(savedImage);
     }
 
-    // 여러 이미지 업로드
+    // 여러 이미지 정보 저장
     @PostMapping("/multiple")
     public ResponseEntity<List<Image>> saveMultipleImages(@RequestBody List<ImageRequest> imageRequests) {
         List<Image> savedImages = imageService.saveMultipleImages(imageRequests);
