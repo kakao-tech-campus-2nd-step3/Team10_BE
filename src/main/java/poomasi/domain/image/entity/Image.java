@@ -3,6 +3,7 @@ package poomasi.domain.image.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import poomasi.domain.image.dto.ImageRequest;
 
 import java.util.Date;
 
@@ -42,5 +43,12 @@ public class Image {
         this.imageUrl = imageUrl;
         this.type = type;
         this.referenceId = referenceId;
+    }
+
+    public void update(ImageRequest request) {
+        this.objectKey = request.objectKey();
+        this.imageUrl = request.imageUrl();
+        this.type = request.type();
+        this.referenceId = request.referenceId();
     }
 }

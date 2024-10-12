@@ -53,7 +53,8 @@ public enum BusinessError {
 
     // Image
     IMAGE_LIMIT_EXCEED(HttpStatus.BAD_REQUEST, "사진은 최대 5장까지 등록 가능합니다."),
-    IMAGE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 이미지가 존재합니다");
+    IMAGE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 이미지가 존재합니다"),
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "이미지를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
 
