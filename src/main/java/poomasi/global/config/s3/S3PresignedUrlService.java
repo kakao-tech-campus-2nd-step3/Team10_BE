@@ -50,6 +50,7 @@ public class S3PresignedUrlService {
         String date = now.format(DATE_FORMATTER);
         String encodedTime = encryptionUtil.encodeTime(now).substring(0, 10);
 
+        // jpg 말고 다른 형식 파일 들어오는 경우에 대해서도 따로 처리 필요
         String keyName = String.format("%s/%s/%s.jpg", keyPrefix, date, encodedTime);
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -62,7 +63,6 @@ public class S3PresignedUrlService {
                 .signatureDuration(Duration.ofMinutes(SIGNATURE_DURATION))
                 .putObjectRequest(objectRequest)
                 .build();
-
 
         PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
         String myURL = presignedRequest.url().toString();
