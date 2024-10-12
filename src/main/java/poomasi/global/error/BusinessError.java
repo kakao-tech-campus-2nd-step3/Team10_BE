@@ -49,7 +49,11 @@ public enum BusinessError {
     RESERVATION_CANCELLATION_PERIOD_EXPIRED(HttpStatus.BAD_REQUEST, "예약 취소 기간이 지났습니다."),
 
     // ETC
-    START_DATE_SHOULD_BE_BEFORE_END_DATE(HttpStatus.BAD_REQUEST, "시작 날짜는 종료 날짜보다 이전이어야 합니다.");
+    START_DATE_SHOULD_BE_BEFORE_END_DATE(HttpStatus.BAD_REQUEST, "시작 날짜는 종료 날짜보다 이전이어야 합니다."),
+
+    // Image
+    IMAGE_LIMIT_EXCEED(HttpStatus.BAD_REQUEST, "사진은 최대 5장까지 등록 가능합니다."),
+    IMAGE_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 이미지가 존재합니다");
 
     private final HttpStatus httpStatus;
 
