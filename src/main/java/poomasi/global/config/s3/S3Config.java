@@ -5,8 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import poomasi.global.config.aws.AwsProperties;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -20,7 +21,11 @@ public class S3Config {
 
     @Bean("awsCredentials")
     public AwsCredentialsProvider awsCredentials() {
-        return DefaultCredentialsProvider.create();
+        AwsBasicCredentials awsBasicCredentials = AwsBasicCredentials.create(
+                awsProperties.getAccess(),
+                awsProperties.getSecret()
+        );
+        return StaticCredentialsProvider.create(awsBasicCredentials);
     }
 
     @Bean
