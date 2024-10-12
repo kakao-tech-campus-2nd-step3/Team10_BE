@@ -13,17 +13,15 @@ public class S3PresignedUrlController {
     private final S3PresignedUrlService s3PresignedUrlService;
     private final AwsProperties awsProperties;
 
-    String bucket = awsProperties.getS3().getBucket();
-
     @GetMapping("/presigned-url-get")
     public ResponseEntity<?> presignedUrlGet(@RequestParam String keyname) {
-        String presignedGetUrl = s3PresignedUrlService.createPresignedGetUrl(bucket, keyname);
+        String presignedGetUrl = s3PresignedUrlService.createPresignedGetUrl(awsProperties.getS3().getBucket(), keyname);
         return ResponseEntity.ok(presignedGetUrl);
     }
 
     @PostMapping("/presigned-url-put")
     public ResponseEntity<?> presignedUrlPut(@RequestBody PresignedUrlPutRequest request) {
-        String presignedPutUrl = s3PresignedUrlService.createPresignedPutUrl(bucket, request.keyPrefix(), request.metadata());
+        String presignedPutUrl = s3PresignedUrlService.createPresignedPutUrl(awsProperties.getS3().getBucket(), request.keyPrefix(), request.metadata());
         return ResponseEntity.ok(presignedPutUrl);
     }
 }
