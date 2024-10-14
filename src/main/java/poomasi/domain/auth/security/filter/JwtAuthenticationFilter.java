@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
 import poomasi.domain.auth.token.util.JwtUtil;
@@ -28,7 +30,8 @@ import java.util.Collection;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    
+    private final UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -73,10 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         log.info("토큰 검증 완료");
         String username = jwtUtil.getEmailFromTokenInFilter(accessToken);
-        String role = jwtUtil.getRoleFromTokenInFilter(accessToken);
-
-        Member member = new Member(username, Role.valueOf(role));
-        UserDetailsImpl userDetailsImpl = new UserDetailsImpl(member);
+        UserDetailsImpl userDetailsImpl = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
 
         // (ID, password, auth)
         Authentication authToken = new UsernamePasswordAuthenticationToken(userDetailsImpl, null, userDetailsImpl.getAuthorities());
