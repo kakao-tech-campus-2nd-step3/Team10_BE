@@ -3,7 +3,6 @@ package poomasi.domain.product._category.service;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import poomasi.domain.member.entity.Member;
 import poomasi.domain.product._category.dto.CategoryResponse;
 import poomasi.domain.product._category.dto.ProductListInCategoryResponse;
 import poomasi.domain.product._category.entity.Category;

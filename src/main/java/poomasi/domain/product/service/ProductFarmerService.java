@@ -29,7 +29,8 @@ public class ProductFarmerService {
     }
 
     @Transactional
-    public void modifyProduct(Member member, ProductRegisterRequest productRequest, Long productId) {
+    public void modifyProduct(Member member, ProductRegisterRequest productRequest,
+            Long productId) {
         Product product = getProductByProductId(productId);
         checkAuth(member, product);
 
@@ -59,7 +60,7 @@ public class ProductFarmerService {
 
     @Transactional
     public void addQuantity(Member member, Long productId, UpdateProductQuantityRequest request) {
-        Product product= getProductByProductId(productId);
+        Product product = getProductByProductId(productId);
         checkAuth(member, product);
         product.addStock(request.quantity());
     }
@@ -75,7 +76,8 @@ public class ProductFarmerService {
     }
 
     private void checkAuth(Member member, Product product) {
-        if(!product.getFarmerId().equals(member.getId()))
+        if (!product.getFarmerId().equals(member.getId())) {
             throw new BusinessException(BusinessError.MEMBER_ID_MISMATCH);
+        }
     }
 }

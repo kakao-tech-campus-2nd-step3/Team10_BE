@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import poomasi.domain.member.entity.Member;
 import poomasi.domain.product.entity.Product;
 import poomasi.domain.product.repository.ProductRepository;
 import poomasi.domain.review.dto.ReviewRequest;
@@ -29,11 +30,9 @@ public class ProductReviewService {
     }
 
     @Transactional
-    public Long registerProductReview(Long entityId, ReviewRequest reviewRequest) {
+    public Long registerProductReview(Member member, Long entityId, ReviewRequest reviewRequest) {
         // s3 이미지 저장하고 주소 받아와서 review에 추가해주기
-
-        Review pReview = reviewRequest.toEntity(entityId);
-        pReview.setReviewType(EntityType.PRODUCT);
+        Review pReview = reviewRequest.toEntity(entityId, EntityType.PRODUCT, member);
         pReview = reviewRepository.save(pReview);
         return pReview.getId();
     }

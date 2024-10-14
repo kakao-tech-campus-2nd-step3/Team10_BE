@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.farm.entity.Farm;
 import poomasi.domain.farm.repository.FarmRepository;
+import poomasi.domain.member.entity.Member;
 import poomasi.domain.review.dto.ReviewRequest;
 import poomasi.domain.review.dto.ReviewResponse;
 import poomasi.domain.review.entity.EntityType;
@@ -29,11 +30,11 @@ public class FarmReviewService {
     }
 
     @Transactional
-    public Long registerFarmReview(Long entityId, ReviewRequest reviewRequest) {
+    public Long registerFarmReview(Member member, Long entityId, ReviewRequest reviewRequest) {
         // s3 이미지 저장하고 주소 받아와서 review에 추가해주기
 
-        Review pReview = reviewRequest.toEntity(entityId);
-        pReview.setReviewType(EntityType.FARM);
+        Review pReview = reviewRequest.toEntity(entityId, EntityType.FARM, member);
+        pReview.setEntityType(EntityType.FARM);
         pReview = reviewRepository.save(pReview);
 
         return pReview.getId();

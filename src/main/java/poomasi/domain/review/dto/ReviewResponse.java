@@ -5,7 +5,7 @@ import poomasi.domain.review.entity.Review;
 public record ReviewResponse
         (Long id,
          Long productId,
-         //Long reviewerId,
+         String reviewerName,
          Float rating,
          String content
          //List<String> imageUrls
@@ -15,7 +15,7 @@ public record ReviewResponse
         return new ReviewResponse(
                 review.getId(),
                 review.getEntityId(),
-                //productReview.getReviewer().getId(),
+                review.getReviewer().getMemberProfile().getName(),
                 review.getRating(),
                 review.getContent()
         );
