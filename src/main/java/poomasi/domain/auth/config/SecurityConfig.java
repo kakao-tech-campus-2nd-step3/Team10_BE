@@ -23,6 +23,7 @@ import poomasi.domain.auth.security.filter.JwtAuthenticationFilter;
 import poomasi.domain.auth.security.handler.CustomSuccessHandler;
 import poomasi.domain.auth.security.userdetail.OAuth2UserDetailServiceImpl;
 import poomasi.domain.auth.security.handler.*;
+import poomasi.domain.auth.security.userdetail.UserDetailsServiceImpl;
 import poomasi.domain.auth.token.util.JwtUtil;
 
 
@@ -36,6 +37,8 @@ public class SecurityConfig {
     private final JwtUtil jwtUtil;
     private final MvcRequestMatcher.Builder mvc;
     private final CustomSuccessHandler customSuccessHandler;
+    private final UserDetailsServiceImpl userDetailsService;
+
 
     @Autowired
     private OAuth2UserDetailServiceImpl oAuth2UserDetailServiceImpl;
@@ -83,7 +86,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/**").permitAll()
-                .requestMatchers("/api/need-auth/**").authenticated()
+                .requestMatchers("/api/auth-test/**", "/api/cart/**").authenticated()
                 .anyRequest()
                 .authenticated()
         );
@@ -126,7 +129,7 @@ public class SecurityConfig {
         customUsernameFilter.setFilterProcessesUrl("/api/login");
 
         http.addFilterAt(customUsernameFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
         //http.addFilterAfter(customLogoutFilter, JwtAuthenticationFilter.class);
 
         return http.build();
