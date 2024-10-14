@@ -35,7 +35,6 @@ public class ProductReviewService {
         Review pReview = reviewRequest.toEntity(entityId);
         pReview.setReviewType(EntityType.PRODUCT);
         pReview = reviewRepository.save(pReview);
-
         return pReview.getId();
     }
 
