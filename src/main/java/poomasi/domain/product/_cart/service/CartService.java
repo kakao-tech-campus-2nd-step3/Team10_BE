@@ -1,18 +1,15 @@
 package poomasi.domain.product._cart.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
 import poomasi.domain.member.entity.Member;
-import poomasi.domain.member.repository.MemberRepository;
+import poomasi.domain.product._cart.dto.CartRegisterRequest;
 import poomasi.domain.product._cart.dto.CartRequest;
 import poomasi.domain.product._cart.dto.CartResponse;
 import poomasi.domain.product._cart.entity.Cart;
@@ -25,24 +22,26 @@ import poomasi.global.error.BusinessException;
 @Service
 @RequiredArgsConstructor
 public class CartService {
+
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
 
     @Transactional
-    public Long addCart(CartRequest cartRequest) {
+    public Long addCart(CartRegisterRequest cartRequest) {
         Member member = getMember();
         Product product = getProductById(cartRequest.productId());
 
-        if(product.getStock()< cartRequest.count())
-            throw new BusinessException(BusinessError.PRODUCT_STOCK_ZERO);
-
-        Optional<Cart> cartOptional = cartRepository.findByMemberIdAndProductId(member.getId(),product.getId());
-        if(cartOptional.isPresent()){
+        Optional<Cart> cartOptional = cartRepository.findByMemberIdAndProductId(member.getId(),
+                product.getId());
+        if (cartOptional.isPresent()) {
             Cart cart = cartOptional.get();
             return cart.getId();
         }
 
         Cart cart = cartRequest.toEntity(member);
+        if (product.getStock() < cart.getCount()) {
+            throw new BusinessException(BusinessError.PRODUCT_STOCK_ZERO);
+        }
         cart = cartRepository.save(cart);
         return cart.getId();
 
@@ -57,7 +56,7 @@ public class CartService {
     }
 
     private void checkAuth(Member member, Cart cart) {
-        if(!member.getId().equals(cart.getMemberId())) {
+        if (!member.getId().equals(cart.getMemberId())) {
             throw new BusinessException(BusinessError.MEMBER_ID_MISMATCH);
         }
     }
@@ -66,8 +65,8 @@ public class CartService {
     public void addCount(CartRequest cartRequest) {
         Member member = getMember();
         Cart cart = getCartById(cartRequest.cartId());
-        Product product =getProductById(cartRequest.productId());
-        if(product.getStock().equals(cart.getCount())){
+        Product product = getProductById(cart.getProductId());
+        if (product.getStock().equals(cart.getCount())) {
             throw new BusinessException(BusinessError.PRODUCT_STOCK_ZERO);
         }
         checkAuth(member, cart);
@@ -83,24 +82,25 @@ public class CartService {
     }
 
     private Cart getCartById(Long cartId) {
-        return cartRepository.findById(cartId).orElseThrow(()->new BusinessException(BusinessError.CART_NOT_FOUND));
+        return cartRepository.findById(cartId)
+                .orElseThrow(() -> new BusinessException(BusinessError.CART_NOT_FOUND));
     }
 
     private Product getProductById(Long productId) {
-        return productRepository.findById(productId).orElseThrow(()->new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
     }
 
     public List<CartResponse> getCart() {
         Member member = getMember();
-        //System.out.println(member.getCarts().size());
         return cartRepository.findByMemberId(member.getId());
     }
 
-    private Member getMember(){
+    private Member getMember() {
         Authentication authentication = SecurityContextHolder
                 .getContext().getAuthentication();
         Object impl = authentication.getPrincipal();
-        Member member = ((UserDetailsImpl)impl).getMember();
+        Member member = ((UserDetailsImpl) impl).getMember();
         return member;
     }
 

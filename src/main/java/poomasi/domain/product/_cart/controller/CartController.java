@@ -4,17 +4,13 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
-import poomasi.domain.member.entity.Member;
+import poomasi.domain.product._cart.dto.CartRegisterRequest;
 import poomasi.domain.product._cart.dto.CartRequest;
 import poomasi.domain.product._cart.dto.CartResponse;
 import poomasi.domain.product._cart.service.CartService;
@@ -22,12 +18,13 @@ import poomasi.domain.product._cart.service.CartService;
 @Controller
 @RequiredArgsConstructor
 public class CartController {
+
     private final CartService cartService;
 
     //장바구니 정보
     @GetMapping("/api/cart")
     public ResponseEntity<?> getCart() {
-        List<CartResponse> cart =  cartService.getCart();
+        List<CartResponse> cart = cartService.getCart();
         return ResponseEntity.ok().body(cart);
     }
 
@@ -40,7 +37,7 @@ public class CartController {
 
     //장바구니 추가
     @PostMapping("/api/cart")
-    public ResponseEntity<?> addCart(@RequestBody CartRequest cartRequest) {
+    public ResponseEntity<?> addCart(@RequestBody CartRegisterRequest cartRequest) {
         Long cartId = cartService.addCart(cartRequest);
         return new ResponseEntity<>(cartId, HttpStatus.CREATED);
     }
@@ -59,7 +56,7 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
-    //장바구니 삭제
+    //장바구니 선택된거 삭제
     @DeleteMapping("/api/cart/selected")
     public ResponseEntity<?> removeSelected() {
         cartService.removeSelected();

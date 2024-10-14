@@ -1,14 +1,12 @@
 package poomasi.domain.product._cart.dto;
 
-import java.util.function.Function;
-import poomasi.domain.product._cart.entity.Cart;
-
-public record CartResponse (
+public record CartResponse(
+        Long cartId,
         String productName,
         Long productPrice,
         Integer productCount,
         Boolean isSelected,
         String farmName
-){
+) {
 
 }

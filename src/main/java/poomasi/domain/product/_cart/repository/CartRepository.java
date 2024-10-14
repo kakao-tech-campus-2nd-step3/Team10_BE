@@ -12,17 +12,19 @@ import poomasi.domain.product._cart.entity.Cart;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-    @Query("SELECT new poomasi.domain.product._cart.dto.CartResponse(p.name, p.price, c.count, c.selected,f.name) " +
+
+    @Query("SELECT new poomasi.domain.product._cart.dto.CartResponse(c.id, p.name, p.price, c.count, c.selected,f.name) "
+            +
             "FROM Cart c " +
             "INNER JOIN Product p ON c.productId = p.id " +
             "INNER JOIN Farm f ON f.ownerId = :memberId")
     List<CartResponse> findByMemberId(Long memberId);
 
-    @Query("select p.price * c.count from Cart c inner join Product p on c.productId = p.id where c.memberId = :memberId and c.selected = true")
+    @Query("select sum(p.price * c.count) from Cart c inner join Product p on c.productId = p.id where c.memberId = :memberId and c.selected = true")
     Integer getPrice(Long memberId);
 
     @Query("select c from Cart c where c.memberId = :memberId and c.productId = :productId")
-    Optional<Cart>findByMemberIdAndProductId(Long memberId, Long productId);
+    Optional<Cart> findByMemberIdAndProductId(Long memberId, Long productId);
 
     @Modifying
     @Transactional
@@ -32,9 +34,9 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Modifying
     @Transactional
     @Query("delete from Cart c where c.memberId = :memberId and c.selected = true")
-    void deleteByMemberIdAndSelected(Long id);
+    void deleteByMemberIdAndSelected(Long memberId);
 
     // order 만들 때 사용할 거
-    @Query("select c from Cart c where c.memberId = :id and c.selected = true")
-    List<Cart> findByMemberIdAndSelected(Long id);
+    @Query("select c from Cart c where c.memberId = :memberId and c.selected = true")
+    List<Cart> findByMemberIdAndSelected(Long memberId);
 }
