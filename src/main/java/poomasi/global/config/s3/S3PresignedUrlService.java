@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,6 @@ public class S3PresignedUrlService {
     private final EncryptionUtil encryptionUtil;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final Long SIGNATURE_DURATION = 10L;
-
 
     public String createPresignedGetUrl(String bucketName, String keyName) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
@@ -51,8 +51,12 @@ public class S3PresignedUrlService {
         String date = now.format(DATE_FORMATTER);
         String encodedTime = encryptionUtil.encodeTime(now).substring(0, 10);
 
-        String keyName = String.format("%s/%s/%s.jpg", keyPrefix, date, encodedTime);
+        // jpg 말고 다른 형식 파일 들어오는 경우에 대해서도 따로 처리 필요
+        // 주기적으로 s3 정리하는 스케줄러 구현 필요(사진 5개 이상이면 db에서 저장 안한것들은 지움)
+        // 극악의 확률로 url이 겹치면?? -> 그럴일 거의 없긴할텐데 생기면 s3 원래 파일 지워짐
 
+        String uniqueIdentifier = UUID.randomUUID().toString();
+        String keyName = String.format("%s/%s/%s_%s.jpg", keyPrefix, date, uniqueIdentifier, encodedTime);
 
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -65,7 +69,6 @@ public class S3PresignedUrlService {
                 .putObjectRequest(objectRequest)
                 .build();
 
-
         PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
         String myURL = presignedRequest.url().toString();
         log.info("Presigned URL to upload a file to: [{}]", myURL);
@@ -73,8 +76,6 @@ public class S3PresignedUrlService {
 
         return presignedRequest.url().toExternalForm();
     }
-
-
 }
 
 // reference: https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/example_s3_Scenario_PresignedUrl_section.html
