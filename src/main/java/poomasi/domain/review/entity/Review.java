@@ -3,15 +3,19 @@ package poomasi.domain.review.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import poomasi.domain.member.entity.Member;
 import poomasi.domain.review.dto.ReviewRequest;
 
 @Entity
@@ -42,14 +46,18 @@ public class Review {
     @Enumerated(EnumType.STRING)
     private EntityType entityType;
 
-//    @Comment("작성자")
-//    @ManyToOne
-//    private Member reviewer;
+    @Comment("작성자")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member reviewer;
 
-    public Review(Float rating, String content, Long entityId) {
+    @Builder
+    public Review(Float rating, String content, Long entityId, EntityType entityType,
+            Member reviewer) {
         this.rating = rating;
         this.content = content;
         this.entityId = entityId;
+        this.entityType = entityType;
+        this.reviewer = reviewer;
     }
 
     public void modifyReview(ReviewRequest reviewRequest) {
@@ -57,7 +65,7 @@ public class Review {
         this.content = reviewRequest.content();
     }
 
-    public void setReviewType(EntityType entityType) {
+    public void setEntityType(EntityType entityType) {
         this.entityType = entityType;
     }
 }

@@ -3,6 +3,7 @@ package poomasi.domain.product._category.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +19,14 @@ public class CategoryAdminController {
 
     private final CategoryAdminService categoryAdminService;
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/api/categories")
     public ResponseEntity<?> registerCategory(@RequestBody CategoryRequest categoryRequest) {
         Long categoryId = categoryAdminService.registerCategory(categoryRequest);
         return new ResponseEntity<>(categoryId, HttpStatus.CREATED);
     }
 
+    @Secured("ROLE_ADMIN")
     @PutMapping("/api/categories/{categoryId}")
     public ResponseEntity<?> modifyCategory(@PathVariable Long categoryId,
             @RequestBody CategoryRequest categoryRequest) {
@@ -31,6 +34,7 @@ public class CategoryAdminController {
         return new ResponseEntity<>(categoryId, HttpStatus.OK);
     }
 
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/api/categories/{categoryId}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
         categoryAdminService.deleteCategory(categoryId);

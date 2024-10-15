@@ -1,10 +1,10 @@
 package poomasi.domain.product.dto;
 
+import poomasi.domain.member.entity.Member;
 import poomasi.domain.product.entity.Product;
 
 public record ProductRegisterRequest(
         Long categoryId,
-        Long farmerId, //등록한 사람
         String name,
         String description,
         String imageUrl,
@@ -12,10 +12,10 @@ public record ProductRegisterRequest(
         Long price
 ) {
 
-    public Product toEntity() {
+    public Product toEntity(Member member) {
         return Product.builder()
                 .categoryId(categoryId)
-                .farmerId(farmerId)
+                .farmerId(member.getId())
                 .name(name)
                 .stock(stock)
                 .description(description)
