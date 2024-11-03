@@ -27,18 +27,12 @@ public class Order extends AbstractOrder{
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus = OrderStatus.PENDING;
-
     public Order(OrderDetails orderDetails) {
         this.orderDetails = orderDetails;
     }
 
     public void addOrderDetail(OrderProductDetails orderProductDetails) {
         this.orderProductDetails.add(orderProductDetails);
-    }
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus;
     }
 
     public void setTotalAmount(BigDecimal totalAmount) {

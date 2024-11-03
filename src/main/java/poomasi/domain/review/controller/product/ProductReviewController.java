@@ -31,11 +31,11 @@ public class ProductReviewController {
     @PostMapping("/api/products/{productId}/reviews")
     public ResponseEntity<?> registerProductReview(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long productId,
+            @PathVariable Long orderProductDetailId,
             @RequestBody ReviewRequest reviewRequest) {
         Member member = userDetails.getMember();
         Long reviewId = productReviewService.registerProductReview(
-                member, productId, reviewRequest);
+                member, orderProductDetailId, reviewRequest);
         return new ResponseEntity<>(reviewId, HttpStatus.CREATED);
     }
 }

@@ -17,6 +17,8 @@ public enum BusinessError {
 
     // Review
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+    ORDER_NOT_COMPLETED(HttpStatus.FORBIDDEN, "아직 배송이 완료되지 않았습니다."),
+    REVIEW_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"이미 리뷰를 작성했스빈다."),
 
     // Member
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),

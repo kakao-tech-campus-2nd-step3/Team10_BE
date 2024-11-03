@@ -50,9 +50,15 @@ public class OrderProductDetails implements Serializable {
     @Column(name = "invoice_number")
     private String invoiceNumber;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.PENDING;
+
+    @Column(name = "review_id")
+    Long reviewId;
+
     //private String sellerName;
-    //private OneToMany Review;
     //refund..
+
 
     @Builder
     public OrderProductDetails(Product product, Order order, String productDescription, String productName, BigDecimal price, Integer count) {
@@ -67,5 +73,11 @@ public class OrderProductDetails implements Serializable {
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
     }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public void setReviewId(Long reviewId){this.reviewId = reviewId;}
 }
 

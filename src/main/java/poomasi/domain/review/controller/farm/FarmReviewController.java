@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import poomasi.domain.auth.security.userdetail.UserDetailsImpl;
 import poomasi.domain.member.entity.Member;
+import poomasi.domain.order.entity.OrderProductDetails;
 import poomasi.domain.review.dto.ReviewRequest;
 import poomasi.domain.review.dto.ReviewResponse;
 import poomasi.domain.review.service.farm.FarmReviewService;
@@ -31,11 +32,11 @@ public class FarmReviewController {
     @PostMapping("/api/farm/{farmId}/reviews")
     public ResponseEntity<?> registerProductReview(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long farmId,
+            @PathVariable Long orderFarmDetailId,
             @RequestBody ReviewRequest reviewRequest) {
         Member member = userDetails.getMember();
         Long reviewId = farmReviewService.registerFarmReview(
-                member, farmId, reviewRequest);
+                member, orderFarmDetailId, reviewRequest);
         return new ResponseEntity<>(reviewId, HttpStatus.CREATED);
     }
 }
