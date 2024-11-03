@@ -61,7 +61,7 @@ public class Product {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "entityId")
     List<Review> reviewList = new ArrayList<>();
 
@@ -74,14 +74,8 @@ public class Product {
 
 
     @Builder
-    public Product(Long productId,
-            Long categoryId,
-            Long farmerId,
-            String name,
-            String description,
-            String imageUrl,
-            Integer stock,
-            Long price) {
+    public Product(Long productId, Long categoryId, Long farmerId, String name, String description,
+            String imageUrl, Integer stock, Long price) {
         this.categoryId = categoryId;
         this.farmerId = farmerId;
         this.name = name;
@@ -112,7 +106,6 @@ public class Product {
                 .average() // 평균 계산
                 .orElse(0.0);
     }
-
 
 
 }

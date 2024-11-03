@@ -1,7 +1,17 @@
 package poomasi.domain.farm.entity;
 
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -13,8 +23,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.farm.dto.FarmUpdateRequest;
-
-import java.time.LocalDateTime;
 import poomasi.domain.review.entity.Review;
 
 @Entity
@@ -23,6 +31,7 @@ import poomasi.domain.review.entity.Review;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE farm SET deleted_at=current_timestamp WHERE id = ?")
 public class Farm {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -67,12 +76,13 @@ public class Farm {
     @UpdateTimestamp
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "entityId")
     List<Review> reviewList = new ArrayList<>();
 
     @Builder
-    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description, Long experiencePrice) {
+    public Farm(String name, Long ownerId, String address, String addressDetail, Double latitude,
+            Double longitude, String description, Long experiencePrice) {
         this.name = name;
         this.ownerId = ownerId;
         this.address = address;

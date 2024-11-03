@@ -34,22 +34,26 @@ public class ProductReviewService {
     }
 
     @Transactional
-    public Long registerProductReview(Member member, Long orderProductDetailId, ReviewRequest reviewRequest) {
+    public Long registerProductReview(Member member, Long orderProductDetailId,
+            ReviewRequest reviewRequest) {
         // s3 이미지 저장하고 주소 받아와서 review에 추가해주기
-        OrderProductDetails orderProductDetails = orderProductDetailsRepository.findById(orderProductDetailId).orElseThrow(()-> new BusinessException(BusinessError.ORDER_PRODUCT_DETAILS_NOT_FOUND));
+        OrderProductDetails orderProductDetails = orderProductDetailsRepository.findById(
+                orderProductDetailId).orElseThrow(
+                () -> new BusinessException(BusinessError.ORDER_PRODUCT_DETAILS_NOT_FOUND));
 
         Product product = orderProductDetails.getProduct();
         Member orderMember = orderProductDetails.getOrder().getMember();
 
-        if(!orderMember.getId().equals(member.getId())) {
+        if (!orderMember.getId().equals(member.getId())) {
             throw new BusinessException(BusinessError.MEMBER_ID_MISMATCH);
         }
 
-        if(orderProductDetails.getReviewId()!=null)
+        if (orderProductDetails.getReviewId() != null) {
             throw new BusinessException(BusinessError.REVIEW_ALREADY_EXIST);
+        }
 
-        if(orderProductDetails.getOrderStatus() != OrderStatus.DELIVERED &&
-            orderProductDetails.getOrderStatus() != OrderStatus.ORDER_COMPLETE){
+        if (orderProductDetails.getOrderStatus() != OrderStatus.DELIVERED &&
+                orderProductDetails.getOrderStatus() != OrderStatus.ORDER_COMPLETE) {
             throw new BusinessException(BusinessError.ORDER_NOT_COMPLETED);
         }
 
