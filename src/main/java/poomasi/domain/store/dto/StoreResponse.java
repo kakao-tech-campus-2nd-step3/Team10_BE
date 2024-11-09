@@ -25,11 +25,6 @@ public record StoreResponse(
         @NotNull
         String businessNumber,
 
-        @Comment("배송비")
-        @NotNull
-        @Positive
-        Integer shipingFee,
-
         @NotNull
         String ownerName,
 
@@ -43,7 +38,6 @@ public record StoreResponse(
                 .phone(store.getPhone())
                 .ownerPhone(store.getOwnerPhone())
                 .businessNumber(store.getBusinessNumber())
-                .shipingFee(store.getShipingFee())
                 //TODO 나중에 삼항연산자 삭제
                 .ownerName( store.getOwner().getMemberProfile() == null ? ""
                                 : store.getOwner().getMemberProfile().getName())

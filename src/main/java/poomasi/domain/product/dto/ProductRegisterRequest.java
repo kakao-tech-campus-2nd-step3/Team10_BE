@@ -1,5 +1,7 @@
 package poomasi.domain.product.dto;
 
+import java.math.BigDecimal;
+import org.hibernate.annotations.Comment;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.store.entity.Store;
 import poomasi.domain.product.entity.Product;
@@ -10,7 +12,10 @@ public record ProductRegisterRequest(
         String description,
         String imageUrl,
         Integer stock,
-        Long price
+        BigDecimal price,
+        @Comment("재배 환경")
+        String growEnv,
+        BigDecimal shippingFee
 ) {
 
     public Product toEntity(Member member, Store store) {
@@ -24,6 +29,8 @@ public record ProductRegisterRequest(
                 .stock(stock)
                 .price(price)
                 .store(store)
+                .growEnv(growEnv)
+                .shippingFee(shippingFee)
                 .build();
     }
 }

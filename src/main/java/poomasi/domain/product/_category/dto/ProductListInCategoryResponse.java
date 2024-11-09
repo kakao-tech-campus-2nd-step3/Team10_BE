@@ -1,5 +1,6 @@
 package poomasi.domain.product._category.dto;
 
+import java.math.BigDecimal;
 import lombok.Builder;
 import poomasi.domain.product.entity.Product;
 
@@ -10,7 +11,7 @@ public record ProductListInCategoryResponse(
         String description,
         String imageUrl,
         Integer quantity,
-        Long price
+        BigDecimal price
 ) {
 
     public static ProductListInCategoryResponse fromEntity(Product product) {

@@ -74,7 +74,7 @@ public class OrderService {
             String productDescription = product.getDescription();
             Integer count = cart.getCount();
             String productName = product.getName();
-            BigDecimal price = BigDecimal.valueOf(product.getPrice());
+            BigDecimal price = product.getPrice();
             OrderProductDetails orderProductDetails = OrderProductDetails
                     .builder()
                     .product(product)

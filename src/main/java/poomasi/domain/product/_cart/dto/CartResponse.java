@@ -1,9 +1,11 @@
 package poomasi.domain.product._cart.dto;
 
+import java.math.BigDecimal;
+
 public record CartResponse(
         Long cartId,
         String productName,
-        Long productPrice,
+        BigDecimal productPrice,
         Integer productCount,
         Boolean isSelected,
         String farmName

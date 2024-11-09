@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,13 @@ public class Product {
     private Integer stock;
 
     @Comment("가격")
-    private Long price;
+    private BigDecimal price;
+
+    @Comment("재배 환경")
+    private String growEnv;
+
+    @Comment("배송비")
+    BigDecimal shippingFee;
 
     @Comment("삭제 일시")
     private LocalDateTime deletedAt;
@@ -98,8 +105,10 @@ public class Product {
             String description,
             String imageUrl,
             Integer stock,
-            Long price,
-            Store store) {
+            BigDecimal price,
+            Store store,
+            String growEnv,
+            BigDecimal shippingFee) {
         this.id = productId;
         this.categoryId = categoryId;
         this.farmerId = farmerId;
@@ -109,6 +118,8 @@ public class Product {
         this.stock = stock;
         this.price = price;
         this.store = store;
+        this.growEnv = growEnv;
+        this.shippingFee = shippingFee;
     }
 
     public Product modify(ProductRegisterRequest productRegisterRequest) {
@@ -118,6 +129,8 @@ public class Product {
         this.imageUrl = productRegisterRequest.imageUrl();
         this.stock = productRegisterRequest.stock();
         this.price = productRegisterRequest.price();
+        this.growEnv = productRegisterRequest.growEnv();
+        this.shippingFee = productRegisterRequest.shippingFee();
         return this;
     }
 

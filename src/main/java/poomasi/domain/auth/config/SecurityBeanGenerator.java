@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,9 +22,9 @@ import poomasi.domain.member.service.MemberService;
 @Configuration
 public class SecurityBeanGenerator {
 
-    private final TokenStorageService tokenStorageService;
-    private final MemberService memberService;
-    private final TokenBlacklistService tokenBlacklistService;
+//    private final TokenStorageService tokenStorageService;
+//    private final MemberService memberService;
+//    private final TokenBlacklistService tokenBlacklistService;
 
     @Bean
     @Description("AuthenticationProvider를 위한 Spring bean")
@@ -37,11 +38,11 @@ public class SecurityBeanGenerator {
         return new MvcRequestMatcher.Builder(introspector);
     }
 
-    @Bean
-    JwtUtil jwtUtil(){
-        return new JwtUtil(tokenBlacklistService,
-                tokenStorageService,
-                memberService);
-    }
+//    @Bean
+//    JwtUtil jwtUtil(){
+//        return new JwtUtil(tokenBlacklistService,
+//                tokenStorageService,
+//                memberService);
+//    }
 
 }

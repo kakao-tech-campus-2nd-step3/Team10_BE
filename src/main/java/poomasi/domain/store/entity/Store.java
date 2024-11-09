@@ -36,15 +36,13 @@ public class Store {
     private String ownerPhone;
     @Comment("사업자 번호")
     private String businessNumber;
-    @Comment("배송비")
-    private Integer shipingFee;
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
     List<Product> products = new ArrayList<>();
 
     @Builder
     public Store(Long id, String name, String address, String phone, Member owner,
-            String ownerPhone, String businessNumber, Integer shipingFee) {
+            String ownerPhone, String businessNumber) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -52,7 +50,6 @@ public class Store {
         this.owner = owner;
         this.ownerPhone = ownerPhone;
         this.businessNumber = businessNumber;
-        this.shipingFee = shipingFee;
     }
 
     public void updateStore(StoreRegisterRequest storeRegisterRequest) {
@@ -61,7 +58,6 @@ public class Store {
         this.phone = storeRegisterRequest.phone();
         this.ownerPhone = storeRegisterRequest.ownerPhone();
         this.businessNumber = storeRegisterRequest.businessNumber();
-        this.shipingFee = storeRegisterRequest.shipingFee();
     }
 
     public void addProduct(Product saveProduct) {

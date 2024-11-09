@@ -1,11 +1,12 @@
 package poomasi.domain.wishlist.dto;
 
+import java.math.BigDecimal;
 import poomasi.domain.wishlist.entity.WishList;
 
 public record WishListResponse(
         Long productId,
         String productName,
-        Long price,
+        BigDecimal price,
         String imageUrl,
         String description
 ) {

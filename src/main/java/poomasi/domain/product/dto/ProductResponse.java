@@ -1,5 +1,6 @@
 package poomasi.domain.product.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.Builder;
 import poomasi.domain.product.entity.Product;
@@ -9,12 +10,14 @@ import poomasi.domain.product.entity.ProductTagEnum;
 public record ProductResponse(
         Long id,
         String name,
-        Long price,
+        BigDecimal price,
         Integer stock,
         String description,
         String imageUrl,
         Long categoryId,
         String storeName,
+        String growEnv,
+        BigDecimal shippingFee,
         List<String> tags
 ) {
 
@@ -30,6 +33,8 @@ public record ProductResponse(
                 .imageUrl(product.getImageUrl())
                 .storeName(product.getStore().getName())
                 .categoryId(product.getCategoryId())
+                .growEnv(product.getGrowEnv())
+                .shippingFee(product.getShippingFee())
                 .tags(tags)
                 .build();
     }
