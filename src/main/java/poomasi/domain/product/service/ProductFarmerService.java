@@ -6,12 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.product._category.entity.Category;
 import poomasi.domain.product._category.repository.CategoryRepository;
-import poomasi.domain.store.entity.Store;
-import poomasi.domain.store.repository.StoreRepository;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.product.dto.UpdateProductQuantityRequest;
 import poomasi.domain.product.entity.Product;
 import poomasi.domain.product.repository.ProductRepository;
+import poomasi.domain.store.entity.Store;
+import poomasi.domain.store.repository.StoreRepository;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
 
@@ -27,7 +27,7 @@ public class ProductFarmerService {
     public Long registerProduct(Member member, ProductRegisterRequest request) {
         Category category = getCategory(request.categoryId());
         Store store = member.getStore();
-        Product saveProduct = productRepository.save(request.toEntity(member,store));
+        Product saveProduct = productRepository.save(request.toEntity(member, store));
 
         category.addProduct(saveProduct);
         store.addProduct(saveProduct);

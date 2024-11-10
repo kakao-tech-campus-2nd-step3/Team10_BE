@@ -25,9 +25,9 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import poomasi.domain.order.entity.OrderProductDetails;
-import poomasi.domain.store.entity.Store;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.review.entity.Review;
+import poomasi.domain.store.entity.Store;
 
 @Entity
 @Getter

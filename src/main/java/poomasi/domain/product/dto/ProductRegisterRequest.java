@@ -3,8 +3,8 @@ package poomasi.domain.product.dto;
 import java.math.BigDecimal;
 import org.hibernate.annotations.Comment;
 import poomasi.domain.member.entity.Member;
-import poomasi.domain.store.entity.Store;
 import poomasi.domain.product.entity.Product;
+import poomasi.domain.store.entity.Store;
 
 public record ProductRegisterRequest(
         Long categoryId,

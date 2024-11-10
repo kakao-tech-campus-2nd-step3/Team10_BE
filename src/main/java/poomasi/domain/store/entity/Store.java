@@ -15,8 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import poomasi.domain.member.entity.Member;
-import poomasi.domain.store.dto.StoreRegisterRequest;
 import poomasi.domain.product.entity.Product;
+import poomasi.domain.store.dto.StoreRegisterRequest;
 
 @Entity
 @NoArgsConstructor

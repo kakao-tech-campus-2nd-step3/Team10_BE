@@ -28,7 +28,7 @@ public class ProductFarmerController {
 
     private final ProductFarmerService productFarmerService;
 
-    @Secured({"ROLE_FARMER","ROLE_ADMIN"})
+    @Secured({"ROLE_FARMER", "ROLE_ADMIN"})
     @PostMapping("")
     public ResponseEntity<?> registerProduct
             (@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -38,7 +38,7 @@ public class ProductFarmerController {
         return new ResponseEntity<>(productId, HttpStatus.CREATED);
     }
 
-    @Secured({"ROLE_FARMER","ROLE_ADMIN"})
+    @Secured({"ROLE_FARMER", "ROLE_ADMIN"})
     @PutMapping("/{productId}")
     public ResponseEntity<?> modifyProduct(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
