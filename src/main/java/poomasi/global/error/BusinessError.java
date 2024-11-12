@@ -1,5 +1,7 @@
 package poomasi.global.error;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ public enum BusinessError {
     // Product
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
     PRODUCT_STOCK_ZERO(HttpStatus.BAD_REQUEST, "재고가 없습니다."),
+    STOCK_QUANTITY_EXCEEDED(HttpStatus.BAD_REQUEST, "장바구나 수량이 남은 재고를 초과하였습니다"),
 
     // Category
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
@@ -24,6 +27,7 @@ public enum BusinessError {
     MEMBER_ALREADY_CUSTOMER(HttpStatus.BAD_REQUEST, "이미 고객인 회원입니다."),
     MEMBER_ALREADY_FARMER(HttpStatus.BAD_REQUEST, "이미 농부인 회원입니다."),
     MEMBER_ID_MISMATCH(HttpStatus.FORBIDDEN, "권한이 없는 요청입니다."),
+    INVALID_ROLE(HttpStatus.FORBIDDEN, "권한이 없는 요청입니다."),
 
     // MemberProfile
     MEMBER_PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "회원 세부 정보가 존재하지 않습니다."),
@@ -81,15 +85,32 @@ public enum BusinessError {
     ORDER_NOT_OWNED_EXCEPTION(HttpStatus.UNAUTHORIZED, "허가되지 않은 주문입니다."),
     ORDER_PRODUCT_DETAILS_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."),
     ORDER_PRODUCT_DETAILS_NOT_OWNED_EXCEPTION(HttpStatus.UNAUTHORIZED, "허가되지 않은 주문입니다."),
+    ORDERED_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "찾을 수 없는 주문입니다."),
+
 
     // PAYMENT
     PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "결제를 찾을 수 없습니다."),
     PAYMENT_AMOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "사전 결제 금액과 사후 결제 금액이 일치하지 않습니다."),
+    PAYMENT_BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못 된 결제 요청입니다."),
+    CHECKSUM_EXCESSIVE_REFUND_AMOUNT(HttpStatus.BAD_REQUEST, "환불 요청 금액이 환불 가능한 금액보다 더 많습니다"),
 
     //Store
-    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 상점이 없습니다.");
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "등록된 상점이 없습니다."),
+
+    // After sales
+    SHIPPING_ALREADY_IN_PROGRESS(HttpStatus.BAD_REQUEST, "배송 준비 중이거나 배송 중인 주문입니다."),
+    EXCHANGE_NOT_ALLOWED_IN_TRANSIT(HttpStatus.BAD_REQUEST, "배송 중인 상품에 대해선 교환 요청을 할 수 없습니다."),
+    SHIPPING_COST_GREATER_THAN_REFUND(HttpStatus.BAD_REQUEST, "배송비가 환불 금액보다 더 큽니다."),
+    CANCEL_QUANTITY_EXCEEDED(HttpStatus.BAD_REQUEST, "취소 가능한 수량을 초과한 요청입니다."),
+    REFUND_QUANTITY_EXCEEDED(HttpStatus.BAD_REQUEST, "환불 가능한 수량을 초과한 요청입니다."),
+    PURCHASE_ALREADY_CONFIRMED(HttpStatus.BAD_REQUEST, "이미 구매 확정이 된 상태입니다."),
+    REFUND_NOT_ALLOWED_BEFORE_SHIPPING(HttpStatus.BAD_REQUEST, "배송 대기 전 상태에서는 환불을 요청할 수 없습니다."),
+    REFUND_AFTER_SALES_NOT_FOUND(HttpStatus.NOT_FOUND , "찾을 수 없는 환불 요청입니다."),
+    REFUND_AFTER_SALES_REQUEST_INVALID_OWNER(HttpStatus.BAD_REQUEST, "판매자의 환불 요청이 아닙니다."),
+    ;
 
     private final HttpStatus httpStatus;
 
     private final String message;
 }
+

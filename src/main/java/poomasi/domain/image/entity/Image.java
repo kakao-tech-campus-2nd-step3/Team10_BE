@@ -6,11 +6,10 @@ import org.hibernate.annotations.SQLDelete;
 import poomasi.domain.image.dto.ImageRequest;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "image", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"type", "reference_id", "object_key"})
+        @UniqueConstraint(columnNames = {"type", "reference_id"})
 })
 @Getter
 @Setter
@@ -22,10 +21,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String objectKey;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
@@ -37,7 +36,7 @@ public class Image {
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt = new Date();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

@@ -8,8 +8,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import poomasi.domain.order._payment.dto.request.PaymentPreRegisterRequest;
 import poomasi.domain.order._payment.dto.request.PaymentWebHookRequest;
-import poomasi.domain.order._payment.dto.response.PaymentResponse;
-import poomasi.domain.order._payment.service.PaymentService;
+import poomasi.domain.order._payment.service.ProductPaymentService;
 
 import java.io.IOException;
 
@@ -18,26 +17,37 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final PaymentService paymentService;
+    private final ProductPaymentService productPaymentService;
 
     @Description("사전 결제 api")
     @Secured({"ROLE_CUSTOMER", "ROLE_FARMER"})
     @PostMapping("/pre-payment")
-    public void postPrepare(PaymentPreRegisterRequest paymentPreRegisterRequest) throws IamportResponseException, IOException {
-        paymentService.portonePrePaymentRegister(paymentPreRegisterRequest);
+    public ResponseEntity<?> postPrepare(PaymentPreRegisterRequest paymentPreRegisterRequest) throws IamportResponseException, IOException {
+        return ResponseEntity.ok(
+                productPaymentService.portonePrePaymentRegister(paymentPreRegisterRequest)
+        );
     }
 
-    @Description("사후 결제(검증 api)")
-    @PostMapping("/validate")
-    public void validatePayment(PaymentWebHookRequest paymentWebHookRequest) throws IamportResponseException, IOException {
-        paymentService.portoneVerifyPostPayment(paymentWebHookRequest);
+    @Description("결제 바로 직전 포트원에서 보내는 confirm 요청" + " 결제를 진행하려면 HTTP Status 200 응답, 그렇지 않으면 500 응답 보내기" )
+    @PostMapping("/confirm/")
+    public ResponseEntity<?> confirmProductStock(@RequestParam String merchantUid, @RequestParam String impUid) throws IamportResponseException, IOException {
+        productPaymentService.confirmBeforePayment(merchantUid, impUid);
+        return ResponseEntity.ok().build();
     }
+
+
+    @Description("포트원 웹훅 수신 api")
+    @PostMapping("/portone-webhook")
+    public void handleIamportWebhook(@RequestBody PaymentWebHookRequest paymentWebHookRequest) throws IamportResponseException, IOException {
+        productPaymentService.handlePortOneProductWebhookEvent(paymentWebHookRequest);
+    }
+
+
+
+
+
 
     /*
-    *@Description("포트원 webhook + 동기화")
-    *  */
-
-
 
     @GetMapping("/")
     @Secured("ROLE_CUSTOMER")
@@ -55,5 +65,12 @@ public class PaymentController {
         return ResponseEntity.ok(paymentResponse);
     }
 
+    */
+
 
 }
+
+/**TODO : filter 만들어서 webhook URL에 대해 IP 검증해야 함
+ *@Description("포트원 webhook + 동기화")
+ @PostMapping("/portone-webhook")
+  *  */

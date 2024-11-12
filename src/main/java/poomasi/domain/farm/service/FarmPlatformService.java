@@ -22,4 +22,10 @@ public class FarmPlatformService {
                 .map(FarmResponse::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public List<FarmResponse> getFarmsByFarmerId(Long farmerId) {
+        return  farmService.getFarmListByOwnerId(farmerId).stream()
+                .map(FarmResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
 }

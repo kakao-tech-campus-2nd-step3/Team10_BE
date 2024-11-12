@@ -1,8 +1,6 @@
 package poomasi.domain.order.dto.response;
 
-import poomasi.domain.order._payment.dto.response.PaymentResponse;
-import poomasi.domain.order.entity.Order;
-import poomasi.domain.order.entity.OrderStatus;
+import poomasi.domain.order.entity._product.ProductOrder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,12 +10,12 @@ public record OrderResponse(Long orderId,
                             String merchantUid,
                             LocalDateTime createdAt,
                             List<OrderProductDetailsResponse> orderProductDetailsResponseList) {
-    public static OrderResponse fromEntity(Order order) {
+    public static OrderResponse fromEntity(ProductOrder productOrder) {
         return new OrderResponse(
-                order.getId(),
-                order.getMerchantUid(),
-                order.getCreatedAt(),
-                order.getOrderProductDetails()
+                productOrder.getId(),
+                productOrder.getMerchantUid(),
+                productOrder.getCreatedAt(),
+                productOrder.getOrderedProducts()
                         .stream()
                         .map(OrderProductDetailsResponse::fromEntity)
                         .collect(Collectors.toList())

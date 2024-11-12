@@ -25,7 +25,7 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
         this.member = member;
     }
 
-    public UserDetailsImpl(Member member, Map<String, Object> attributes ) {
+    public UserDetailsImpl(Member member, Map<String, Object> attributes){
         this.member = member;
         this.attributes = attributes;
     }
@@ -75,7 +75,6 @@ public class UserDetailsImpl implements UserDetails, OAuth2User {
         return true;
     }
 
-    //Oauth2 member name
     @Override
     public String getName() {
         return null;

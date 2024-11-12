@@ -25,4 +25,9 @@ public class FarmController {
     public ResponseEntity<?> getFarmList(Pageable pageable) {
         return ResponseEntity.ok(farmPlatformService.getFarmList(pageable));
     }
+
+    @GetMapping("byFarmer/{farmerId}")
+    public ResponseEntity<?> getFarmsByFarmerId(@PathVariable Long farmerId) {
+        return ResponseEntity.ok(farmPlatformService.getFarmsByFarmerId(farmerId));
+    }
 }

@@ -6,7 +6,6 @@ import poomasi.domain.order._payment.entity.PaymentMethod;
 import java.math.BigDecimal;
 
 public record PaymentResponse(Long paymentId,
-                              String merchantUid,
                               BigDecimal totalPrice,
                               BigDecimal discountPrice,
                               BigDecimal finalPrice,
@@ -15,7 +14,6 @@ public record PaymentResponse(Long paymentId,
     public static PaymentResponse fromEntity(Payment payment){
         return new PaymentResponse(
                 payment.getId(),
-                payment.getMerchantUid(),
                 payment.getTotalPrice(),
                 payment.getDiscountPrice(),
                 payment.getFinalPrice(),

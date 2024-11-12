@@ -22,7 +22,7 @@ public class ImageController {
 
     // 이미지 정보 저장
     @PostMapping
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<?> saveImageInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ImageRequest imageRequest) {
         Member member = userDetails.getMember();
         Image savedImage = imageService.saveImage(member.getId(), imageRequest);
@@ -31,7 +31,7 @@ public class ImageController {
 
     // 여러 이미지 정보 저장
     @PostMapping("/multiple")
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<List<Image>> saveMultipleImages(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody List<ImageRequest> imageRequests) {
         Member member = userDetails.getMember();
         List<Image> savedImages = imageService.saveMultipleImages(member.getId(), imageRequests);
@@ -40,7 +40,7 @@ public class ImageController {
 
     // 특정 이미지 삭제
     @DeleteMapping("/delete/{id}")
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<Void> deleteImage(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         Member member = userDetails.getMember();
         imageService.deleteImage(member.getId(), id);
@@ -62,7 +62,7 @@ public class ImageController {
 
     // 이미지 정보 수정
     @PutMapping("update/{id}")
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<?> updateImageInfo(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @PathVariable Long id,
                                              @RequestBody ImageRequest imageRequest) {
@@ -72,7 +72,7 @@ public class ImageController {
     }
 
     @PutMapping("/recover/{id}")
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<Void> recoverImage(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id) {
         Member member = userDetails.getMember();
         imageService.recoverImage(member.getId(), id);

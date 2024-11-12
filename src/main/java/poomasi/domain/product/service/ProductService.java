@@ -39,4 +39,8 @@ public class ProductService {
         return productRepository.findByIdAndDeletedAtIsNull(productId)
                 .orElseThrow(() -> new BusinessException(BusinessError.PRODUCT_NOT_FOUND));
     }
+
+    public void saveExistedProduct(Product product) {
+        productRepository.save(product);
+    }
 }

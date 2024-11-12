@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
-import poomasi.domain.order.entity.Order;
 import poomasi.domain.store.entity.Store;
 import poomasi.domain.member._profile.entity.MemberProfile;
+import poomasi.domain.order.entity._product.ProductOrder;
 import poomasi.domain.wishlist.entity.WishList;
 import poomasi.global.error.BusinessError;
 import poomasi.global.error.BusinessException;
@@ -26,9 +26,15 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @Column(nullable = true, length = 50)
+    private String name;
+
+    @Setter
     @Column(unique = true, nullable = true, length = 50)
     private String email;
 
+    @Setter
     @Column(nullable = true)
     private String password;
 
@@ -45,7 +51,7 @@ public class Member {
     @Column(nullable = true)
     private String provideId;
 
-    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private MemberProfile memberProfile;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -55,7 +61,7 @@ public class Member {
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orderLists;
+    private List<ProductOrder> productOrderLists;
 
     @Setter
     @Column(nullable = true)
@@ -63,25 +69,15 @@ public class Member {
 
     @Setter
     @OneToOne(mappedBy="owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Store store;
+    private Store store;
 
-    public Member(String email, String password, LoginType loginType, Role role) {
+    public Member(String name, String email, String password, LoginType loginType, Role role) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.loginType = loginType;
         this.role = role;
-    }
-
-    public Member(String email, Role role) {
-        this.email = email;
-        this.role = role;
-    }
-
-    public void setMemberProfile(MemberProfile memberProfile) {
-        this.memberProfile = memberProfile;
-        if (memberProfile != null) {
-            memberProfile.setMember(this);
-        }
+        this.memberProfile = getOrCreateProfile();
     }
 
     @Builder
@@ -112,5 +108,22 @@ public class Member {
             throw new BusinessException(BusinessError.STORE_NOT_FOUND);
         return store;
     }
+
+    public MemberProfile getOrCreateProfile() {
+        if (this.memberProfile == null) {
+            this.memberProfile = new MemberProfile();
+        }
+        return memberProfile;
+    }
+
+    public Store getOrCreateStore() {
+        if (this.store == null) {
+            this.store = new Store();
+            this.store.setOwner(this);
+        }
+        return store;
+    }
+
+
 
 }

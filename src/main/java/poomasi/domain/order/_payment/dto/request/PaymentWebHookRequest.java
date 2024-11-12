@@ -1,5 +1,8 @@
 package poomasi.domain.order._payment.dto.request;
 
-public record PaymentWebHookRequest(String imp_uid,
-                                    String merchant_uid) {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record PaymentWebHookRequest(@JsonProperty("imp_uid") String impUid,
+                                    @JsonProperty("merchant_uid") String merchantUid,
+                                    String status) {
 }

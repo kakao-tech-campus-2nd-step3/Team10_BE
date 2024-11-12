@@ -15,7 +15,7 @@ public record ReviewResponse
         return new ReviewResponse(
                 review.getId(),
                 review.getEntityId(),
-                review.getReviewer().getMemberProfile()==null?"":review.getReviewer().getMemberProfile().getName(),
+                review.getReviewer().getName(),
                 review.getRating(),
                 review.getContent()
         );

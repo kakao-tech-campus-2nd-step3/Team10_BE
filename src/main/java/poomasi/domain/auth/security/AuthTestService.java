@@ -11,6 +11,8 @@ import poomasi.domain.member.entity.Member;
 @Service
 public class AuthTestService {
 
+    //제가 테스트하려고 만든 건데 다음 pr때 지우겠습니다
+
     public String Test(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object impl = authentication.getPrincipal();

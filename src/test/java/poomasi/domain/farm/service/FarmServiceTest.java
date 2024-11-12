@@ -58,6 +58,19 @@ class FarmServiceTest {
                     .isInstanceOf(BusinessException.class)
                     .hasFieldOrPropertyWithValue("businessError", BusinessError.FARM_NOT_FOUND);
         }
+
+        @Test
+        @DisplayName("농장이 삭제된 경우 예외를 발생시킨다")
+        void should_throwException_when_farmIsDeleted() {
+            // given
+            Farm farm = FarmTestHelper.makeRandomFarm();
+            farm.delete();
+
+            // when & then
+            assertThatThrownBy(() -> farmService.getFarmByFarmId(farm.getId()))
+                    .isInstanceOf(BusinessException.class)
+                    .hasFieldOrPropertyWithValue("businessError", BusinessError.FARM_NOT_FOUND);
+        }
     }
 
 }

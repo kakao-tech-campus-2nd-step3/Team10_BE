@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import poomasi.domain.member.entity.Member;
 import poomasi.domain.product.entity.Product;
@@ -26,10 +27,15 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Setter
     private String name;
+
+    @Setter
     private String address;
     private String phone;
 
+    @Setter
     @OneToOne(fetch = FetchType.LAZY)
     private Member owner;
 

@@ -91,8 +91,6 @@ public class JwtUtil {
         return getClaimFromToken(token, "email", String.class);
     }
 
-    // <-------------------------------------------->
-    // 토큰 생성
 
     public String generateAccessTokenById(final Long memberId) {
         Map<String, Object> claims = createClaims(memberId);

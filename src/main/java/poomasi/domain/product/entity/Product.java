@@ -15,16 +15,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.math.BigDecimal;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import poomasi.domain.order.entity.OrderProductDetails;
+import poomasi.domain.order.entity._product.OrderedProduct;
+import poomasi.domain.store.entity.Store;
 import poomasi.domain.product.dto.ProductRegisterRequest;
 import poomasi.domain.review.entity.Review;
 import poomasi.domain.store.entity.Store;
@@ -51,6 +55,7 @@ public class Product {
     @Comment("상품 설명")
     private String description;
 
+    @Setter
     @Comment("이미지 URL")
     private String imageUrl;
 
@@ -94,8 +99,15 @@ public class Product {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_product_details_id")
-    private List<OrderProductDetails> orderProductDetails;
+    private List<OrderedProduct> orderProductDetails;
 
+//    @PreRemove
+//    public void preRemove() {
+//        // Product가 삭제되기 전에 연관된 이미지를 삭제
+//        for (Image image : images) {
+//            image.setDeletedAt(LocalDateTime.now());
+//        }
+//    }
 
     @Builder
     public Product(Long productId,
@@ -137,5 +149,18 @@ public class Product {
     public void addStock(Integer stock) {
         this.stock += stock;
     }
+
+    public void addReview(Review pReview) {
+        this.reviewList.add(pReview);
+        this.averageRating = reviewList.stream()
+                .mapToDouble(Review::getRating) // 각 리뷰의 평점을 double로 변환
+                .average() // 평균 계산
+                .orElse(0.0);
+    }
+
+    public void subtractStock(Integer stock) {
+        this.stock -= stock;
+    }
+
 
 }

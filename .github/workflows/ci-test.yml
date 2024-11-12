@@ -11,6 +11,11 @@ permissions:
 
 jobs:
   test:
+    env:
+      IMP_API_KEY: ${{ secrets.IMP_API_KEY }}
+      IMP_SECRET_KEY: ${{ secrets.IMP_SECRET_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -21,6 +26,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'adopt'
+        env:
+          IMP_API_KEY: ${{ secrets.IMP_API_KEY }}
+          IMP_SECRET_KEY: ${{ secrets.IMP_SECRET_KEY }}
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -29,12 +37,22 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+        env:
+          IMP_API_KEY: ${{ secrets.IMP_API_KEY }}
+          IMP_SECRET_KEY: ${{ secrets.IMP_SECRET_KEY }}
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: build/reports/tests/test
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
       - name: Run tests
-        run: ./gradlew test
+        run: SPRING_PROFILES_ACTIVE=[test] ./gradlew test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

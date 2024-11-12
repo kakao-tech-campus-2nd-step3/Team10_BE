@@ -1,6 +1,8 @@
 package poomasi.domain.auth.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,16 +17,19 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import poomasi.domain.auth.security.filter.CustomUsernamePasswordAuthenticationFilter;
 import poomasi.domain.auth.security.filter.JwtAuthenticationFilter;
 import poomasi.domain.auth.security.handler.CustomSuccessHandler;
 import poomasi.domain.auth.security.userdetail.OAuth2UserDetailServiceImpl;
-import poomasi.domain.auth.security.handler.*;
 import poomasi.domain.auth.security.userdetail.UserDetailsServiceImpl;
 import poomasi.domain.auth.token.util.JwtUtil;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 
 @AllArgsConstructor
@@ -38,7 +43,7 @@ public class SecurityConfig {
     private final MvcRequestMatcher.Builder mvc;
     private final CustomSuccessHandler customSuccessHandler;
     private final UserDetailsServiceImpl userDetailsService;
-
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Autowired
     private OAuth2UserDetailServiceImpl oAuth2UserDetailServiceImpl;
@@ -61,8 +66,9 @@ public class SecurityConfig {
         //csrf 해제
         http.csrf(AbstractHttpConfigurer::disable);
 
-        //cors 해제
-        http.cors(AbstractHttpConfigurer::disable);
+        //cors 설정
+        http.cors(cors -> cors
+                .configurationSource(corsConfigurationSource));
 
         //세션 해제
         http.sessionManagement((session) -> session
@@ -74,28 +80,33 @@ public class SecurityConfig {
 
         // 기본 경로 및 테스트 경로
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(HttpMethod.GET, "/api/farm/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/farm/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/product/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/review/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/health").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/image/**").permitAll()
-                .requestMatchers("/api/sign-up", "/api/login", "api/reissue", "api/payment/**", "api/order/**", "api/reservation/**", "/api/v1/farmer/reservations").permitAll()
+                .requestMatchers("/api/member/sign-up", "/api/login", "api/reissue", "api/payment/**", "api/order/**", "api/reservation/**", "/api/v1/farmer/reservations").permitAll()
                 .requestMatchers("/api/need-auth/**").authenticated()
                 .anyRequest().
                 authenticated()
         );
 
-        /*
-        http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/**").permitAll()
-                .requestMatchers("/api/auth-test/**",
-                        "/api/cart/**",
-                        "/api/order/**",
-                        "/api/payment/**").authenticated()
-                .anyRequest()
-                .authenticated()
-        );
-        */
+
+        //endpoint : {domain}/oauth2/authentication/kakao
+//        http
+//                .oauth2Login((oauth2) -> oauth2
+//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+//                                .userService(oAuth2UserDetailServiceImpl))
+//                        .successHandler(customSuccessHandler)
+//                );
+
+        CustomUsernamePasswordAuthenticationFilter customUsernameFilter =
+                new CustomUsernamePasswordAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        customUsernameFilter.setFilterProcessesUrl("/api/login");
+
+        http.addFilterAt(customUsernameFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
+
         /*
         로그아웃 필터 등록하기
         LogoutHandler[] handlers = {
@@ -115,26 +126,6 @@ public class SecurityConfig {
         );
         */
 
-        /*
-        oauth2 인증은 현재 해제해놨습니다 -> 차후 code를 front에서 어떤 경로로 받을 것인지
-        아니면 kakao에서 바로 redirect를 백엔드로 할 지 정해지면
-        processing url 작성하겠습니다
-        */
-        http
-                .oauth2Login((oauth2) -> oauth2
-                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                                .userService(oAuth2UserDetailServiceImpl))
-                        .successHandler(customSuccessHandler)
-                );
-
-        http.oauth2Login(AbstractHttpConfigurer::disable);
-
-        CustomUsernamePasswordAuthenticationFilter customUsernameFilter =
-                new CustomUsernamePasswordAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil);
-        customUsernameFilter.setFilterProcessesUrl("/api/login");
-
-        http.addFilterAt(customUsernameFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService), UsernamePasswordAuthenticationFilter.class);
         //http.addFilterAfter(customLogoutFilter, JwtAuthenticationFilter.class);
 
         return http.build();

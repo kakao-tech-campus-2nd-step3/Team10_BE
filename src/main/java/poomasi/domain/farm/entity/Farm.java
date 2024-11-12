@@ -17,6 +17,7 @@ import poomasi.domain.farm.dto.FarmUpdateRequest;
 
 import java.time.LocalDateTime;
 
+import poomasi.domain.order.entity._farm.OrderedFarm;
 import poomasi.domain.review.entity.Review;
 
 @Entity
@@ -31,10 +32,12 @@ public class Farm {
 
     private String name;
 
-    // FIXME: owner_id는 Member의 id를 참조해야 합니다.
     @Comment("농장 소유자 ID")
     @Column(name = "owner_id")
     private Long ownerId;
+
+    @Comment("사업자 등록 번호")
+    private String businessNumber;
 
     @Comment("농장 간단 설명")
     private String description;
@@ -77,10 +80,14 @@ public class Farm {
 
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "entityId")
-    List<Review> reviewList = new ArrayList<>();
+    private List<Review> reviewList = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ordered_farm_id")
+    private OrderedFarm orderedFarm;
 
     @Builder
-    public Farm(Long id, String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description, int experiencePrice, Integer maxCapacity, Integer maxReservation) {
+    public Farm(Long id, String name, Long ownerId, String address, String addressDetail, Double latitude, Double longitude, String description, int experiencePrice, Integer maxCapacity, Integer maxReservation, String businessNumber, LocalDateTime deletedAt) {
         this.id = id;
         this.name = name;
         this.ownerId = ownerId;
@@ -92,6 +99,8 @@ public class Farm {
         this.experiencePrice = experiencePrice;
         this.maxCapacity = maxCapacity;
         this.maxReservation = maxReservation;
+        this.businessNumber = businessNumber;
+        this.deletedAt = deletedAt;
     }
 
     public Farm updateFarm(FarmUpdateRequest farmUpdateRequest) {
@@ -114,5 +123,9 @@ public class Farm {
 
     public void updateMaxReservation(Integer maxReservation) {
         this.maxReservation = maxReservation;
+    }
+
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

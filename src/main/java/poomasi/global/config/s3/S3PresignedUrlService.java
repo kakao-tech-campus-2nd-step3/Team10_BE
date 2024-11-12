@@ -3,6 +3,7 @@ package poomasi.global.config.s3;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import poomasi.global.config.s3.dto.response.PresignedPutUrlResponse;
 import poomasi.global.util.EncryptionUtil;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -46,14 +47,13 @@ public class S3PresignedUrlService {
 
     }
 
-    public String createPresignedPutUrl(String bucketName, String keyPrefix, Map<String, String> metadata) {
+    public PresignedPutUrlResponse createPresignedPutUrl(String bucketName, String region, String keyPrefix, Map<String, String> metadata) {
         LocalDateTime now = LocalDateTime.now();
         String date = now.format(DATE_FORMATTER);
         String encodedTime = encryptionUtil.encodeTime(now).substring(0, 10);
 
         // jpg 말고 다른 형식 파일 들어오는 경우에 대해서도 따로 처리 필요
         // 사진 갯수 5개로 제한하기
-        // 극악의 확률로 url이 겹치면?? -> 그럴일 거의 없긴할텐데 생기면 s3 원래 파일 지워짐
 
         String uniqueIdentifier = UUID.randomUUID().toString();
         String keyName = String.format("%s/%s/%s_%s.jpg", keyPrefix, date, uniqueIdentifier, encodedTime);
@@ -74,7 +74,9 @@ public class S3PresignedUrlService {
         log.info("Presigned URL to upload a file to: [{}]", myURL);
         log.info("HTTP method: [{}]", presignedRequest.httpRequest().method());
 
-        return presignedRequest.url().toExternalForm();
+        String objectUrl = String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, region, keyName);
+
+        return new PresignedPutUrlResponse(presignedRequest.url().toExternalForm(), keyName, objectUrl);
     }
 }
 

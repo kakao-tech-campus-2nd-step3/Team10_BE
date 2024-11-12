@@ -6,6 +6,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import poomasi.global.config.aws.AwsProperties;
 import poomasi.global.config.s3.dto.request.PresignedUrlPutRequest;
+import poomasi.global.config.s3.dto.response.PresignedPutUrlResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,16 +16,19 @@ public class S3PresignedUrlController {
     private final AwsProperties awsProperties;
 
     @GetMapping("/presigned-url-get")
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<?> presignedUrlGet(@RequestParam String keyname) {
         String presignedGetUrl = s3PresignedUrlService.createPresignedGetUrl(awsProperties.getS3().getBucket(), keyname);
         return ResponseEntity.ok(presignedGetUrl);
     }
 
     @PostMapping("/presigned-url-put")
-    @Secured({"ROLE_MEMBER", "ROLE_FARMER", "ROLE_ADMIN"})
+    @Secured({"ROLE_CUSTOMER", "ROLE_FARMER", "ROLE_ADMIN"})
     public ResponseEntity<?> presignedUrlPut(@RequestBody PresignedUrlPutRequest request) {
-        String presignedPutUrl = s3PresignedUrlService.createPresignedPutUrl(awsProperties.getS3().getBucket(), request.keyPrefix(), request.metadata());
+        PresignedPutUrlResponse presignedPutUrl = s3PresignedUrlService.createPresignedPutUrl(
+                awsProperties.getS3().getBucket(),
+                awsProperties.getS3().getRegion(),
+                request.keyPrefix(), request.metadata());
         return ResponseEntity.ok(presignedPutUrl);
     }
 }

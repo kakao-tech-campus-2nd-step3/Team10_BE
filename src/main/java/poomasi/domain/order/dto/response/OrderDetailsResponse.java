@@ -1,17 +1,17 @@
 package poomasi.domain.order.dto.response;
 
-import poomasi.domain.order.entity.OrderDetails;
+import poomasi.domain.order.entity._product.ProductOrderDetails;
 
 public record OrderDetailsResponse(
         String address,
         String addressDetails,
         String deliveryRequest
 ) {
-    public static OrderDetailsResponse fromEntity(OrderDetails orderDetails) {
+    public static OrderDetailsResponse fromEntity(ProductOrderDetails productOrderDetails) {
         return new OrderDetailsResponse(
-                orderDetails.getAddress(),
-                orderDetails.getAddressDetail(),
-                orderDetails.getDeliveryRequest()
+                productOrderDetails.getDestinationAddress(),
+                productOrderDetails.getDestinationAddressDetail(),
+                productOrderDetails.getDeliveryRequest()
         );
     }
 }

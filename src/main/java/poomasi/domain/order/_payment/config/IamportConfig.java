@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class IamportConfig {
 
-    @Value("${IMP_API_KEY}")
+    @Value("${imp.api.key}")
     private String apiKey;
 
     @Value("${imp.api.secretKey}")
@@ -19,5 +19,4 @@ public class IamportConfig {
     public IamportClient iamportClient() {
         return new IamportClient(apiKey, secretKey);
     }
-
 }
