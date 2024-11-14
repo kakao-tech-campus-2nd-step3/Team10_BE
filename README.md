@@ -19,6 +19,11 @@
 - [📄 API 명세서](#API-명세서)
 - [📊 ERD](#ERD)
 - [🚀 프로젝트 실행 방법](#프로젝트-실행-방법)
+- [🔒 보안 설정](#보안-설정)
+- [💳 결제 시스템 설정](#결제-시스템-설정)
+- [🌾 도메인 설명](#도메인-설명)
+    - [농장 도메인](#농장-도메인)
+    - [상품 도메인](#상품-도메인)
 - [🔄 지속적인 통합 및 배포](#지속적인-통합-및-배포)
     - [배포 개요](#배포-개요)
     - [배포 프로세스](#배포-프로세스)
@@ -51,6 +56,11 @@
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white" />
 <img src="https://img.shields.io/badge/RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white" />
 
+### Test
+
+<img src="https://img.shields.io/badge/JUnit5-25A162?style=flat-square&logo=JUnit5&logoColor=white" />
+<img src="https://img.shields.io/badge/Mockito-DA383E?style=flat-square&logo=Mockito&logoColor=white" />
+
 ### Cloud & Deployment
 
 <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white" />
@@ -60,6 +70,7 @@
 <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=Amazon S3&logoColor=white" />
 
 ### AI & OCR
+
 <img src="https://img.shields.io/badge/Naver OCR-03C75A?style=flat-square&logo=Naver&logoColor=white" />
 
 </div>
@@ -75,6 +86,7 @@
 </details>
 
 ## 📂프로젝트 구성
+
 ```
 .
 ├── build
@@ -128,6 +140,7 @@
         │       └── global
         └── resources
 ```
+
 ## 📄 API 명세서
 
 [배포용 품앗이 명세서](https://bubble-pick-143.notion.site/1e48cc52884d4df993857a1e8f58ff26?pvs=4)
@@ -142,6 +155,16 @@ cd Team10_BE
 ./gradlew bootRun
 
 ```
+
+## 🌾 도메인 설명
+
+### 농장 도메인
+
+### 상품 도메인
+
+## 🔒 Security 설정
+
+## 💳 결제 시스템
 
 ## 🔄 지속적인 통합 및 배포
 
