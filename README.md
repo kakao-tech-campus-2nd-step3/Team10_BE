@@ -149,14 +149,101 @@
 
 ## 🚀 프로젝트 실행 방법
 
+1. 프로젝트를 클론하고 디렉토리로 이동합니다.
+
 ```bash
 git clone
 cd Team10_BE
-./gradlew bootRun
-
 ```
 
-## 🌾 도메인 설명
+2. `application-secret.yml` 파일을 프로젝트 루트에 생성하고, 다음과 같은 내용을 추가합니다.
+
+```yaml
+spring:
+  application:
+    name: poomasi
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        enable_lazy_load_no_trans: true
+        hbm2ddl:
+          jdbc_metadata_extraction_strategy: individually
+  datasource:
+    url: jdbc:mysql://localhost:3306/poomasi
+    username: root
+    password: <DB_PASSWORD>
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      port: 6379
+      host: <REDIS_HOST>
+
+  security:
+    redirect_url: http://localhost:3000
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: <KAKAO_CLIENT_ID>
+            client-secret: <KAKAO_CLIENT_SECRET>
+            scope: account_email, profile_nickname
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: kakao_account
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+
+jwt:
+  secret: <JWT_SECRET>
+  access-token-expiration-time: 3600000  # 1시간
+  refresh-token-expiration-time: 604800000  # 7일
+
+aws:
+  s3:
+    bucket: poomasi
+    region: ap-northeast-2
+  access: <AWS_ACCESS_KEY>
+  secret: <AWS_SECRET_KEY>
+
+imp:
+  api:
+    key: <IMP_API_KEY>
+    secretKey: <IMP_SECRET_KEY>
+
+naver:
+  ocr:
+    secret: <NAVER_OCR_SECRET>
+    invoke: <NAVER_OCR_INVOKE_URL>
+    template: <NAVER_OCR_TEMPLATE_ID>
+```
+
+3. application-secret.yml 파일을 저장한 후, 프로젝트를 실행합니다.
+
+```
+./gradlew bootRun
+```
+
+
+## 🌾 Feature
+
+> 개발한 API들의 핵심 특성을 서술합니다.
 
 ### 농장 도메인
 
