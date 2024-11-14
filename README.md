@@ -74,7 +74,59 @@
 </details>
 
 ## 📂프로젝트 구성
-
+```
+.
+├── build
+│   ├── classes
+│   ├── generated
+│   ├── reports
+│   └── resources
+├── gradle
+│   └── wrapper
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── poomasi
+    │   │       ├── Application.java
+    │   │       ├── domain
+    │   │       │   ├── auth
+    │   │       │   │   ├── security
+    │   │       │   │   │   ├── filter
+    │   │       │   │   │   ├── handler
+    │   │       │   │   │   └── oauth2
+    │   │       │   │   ├── signup
+    │   │       │   │   └── token
+    │   │       │   ├── farm
+    │   │       │   │   ├── _category
+    │   │       │   │   └── _schedule
+    │   │       │   ├── member
+    │   │       │   │   ├── _biz
+    │   │       │   │   └── _profile
+    │   │       │   ├── order
+    │   │       │   │   └── _aftersales
+    │   │       │   ├── product
+    │   │       │   │   ├── _cart
+    │   │       │   │   ├── _category
+    │   │       │   │   └── _intro
+    │   │       │   ├── reservation
+    │   │       │   ├── review
+    │   │       │   │   ├── farm
+    │   │       │   │   └── product
+    │   │       │   └── wishlist
+    │   │       ├── global
+    │   │       │   ├── common
+    │   │       │   ├── health
+    │   │       │   ├── ocr
+    │   │       │   └── util
+    │   │       └── payment
+    │   └── resources
+    └── test
+        ├── java
+        │   └── poomasi
+        │       ├── domain
+        │       └── global
+        └── resources
+```
 ## 📄 API 명세서
 
 [배포용 품앗이 명세서](https://bubble-pick-143.notion.site/1e48cc52884d4df993857a1e8f58ff26?pvs=4)
