@@ -43,6 +43,7 @@
 <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=flat-square&logo=Spring Data JPA&logoColor=white" />
 <img src="https://img.shields.io/badge/JPA-007396?style=flat-square&logo=Java&logoColor=white" />
 <img src="https://img.shields.io/badge/JWT-000000?style=flat-square&logo=JSON Web Tokens&logoColor=white" />
+<img src="https://img.shields.io/badge/Kakao oauth2.0-FFCD00?style=flat-square&logo=Kakao&logoColor=white" />
 
 ### Build & Database
 
@@ -59,8 +60,8 @@
 <img src="https://img.shields.io/badge/Amazon S3-569A31?style=flat-square&logo=Amazon S3&logoColor=white" />
 
 ### AI & OCR
-
 <img src="https://img.shields.io/badge/Naver OCR-03C75A?style=flat-square&logo=Naver&logoColor=white" />
+
 </div>
 
 <details>
