@@ -145,26 +145,15 @@
 
 [배포용 품앗이 명세서](https://bubble-pick-143.notion.site/1e48cc52884d4df993857a1e8f58ff26?pvs=4)
 
-## 📊 ERD
+## 📊 ERD 요약
 
-### 회원 ERD
-
-![회원 ERD](docs/member-erd.png)
-
-### 상품 ERD
-
-**상품**
-![상품 ERD](docs/product-erd.png)
-**장바구니**
-![장바구니](docs/cart-erd.png)
-
-### 농장 ERD
-
-![농장 ERD](docs/farm-erd.png)
-
-### 위시리스트 ERD
-
-![위시리스트](docs/wishlist-erd.png)
+| 항목    | 설명               | ERD 이미지                         |
+|-------|------------------|---------------------------------|
+| 회원    | 회원의 기본 정보와 관계    | ![회원 ERD](docs/member-erd.png)  |
+| 상품    | 상품 관련 정보와 카테고리   | ![상품 ERD](docs/product-erd.png) |
+| 장바구니  | 상품과 사용자의 연관 관계   | ![장바구니](docs/cart-erd.png)      |
+| 농장    | 농장 정보와 예약 시스템    | ![농장 ERD](docs/farm-erd.png)    |
+| 위시리스트 | 사용자의 관심 상품 저장 정보 | ![위시리스트](docs/wishlist-erd.png) |
 
 ## 🚀 프로젝트 실행 방법
 
