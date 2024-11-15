@@ -283,11 +283,22 @@ naver:
 
 ![상품 도메인](docs/product-domain.png)
 
+> 상품의 소개를 등록할 수 있습니다.
+
+![상품 도메인](https://github.com/user-attachments/assets/2d5e3f50-300e-46ba-996a-48892c6c95a3)
+
+> 구매하고 싶은 상품을 장바구니에 담을 수 있습니다.
+
+![image](https://github.com/user-attachments/assets/e57721dc-64e6-45a1-8a38-6eac57609490)
+
+
 ### 농장 도메인
 
 > 농장 도메인은 농장 정보를 관리하는 도메인입니다.
 
 ![농장 도메인](docs/farm-domain.png)
+
+
 
 #### 1. 농장 사업자 등록
 
