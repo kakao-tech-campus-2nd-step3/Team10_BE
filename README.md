@@ -297,7 +297,10 @@ naver:
 
 ## 🔒 Security 설정
 
+
 ## 💳 결제 시스템
+
+![포트원 API 결제 프로세스](docs/payment-process.png)
 
 ## 🔄 지속적인 통합 및 배포
 
