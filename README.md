@@ -280,7 +280,7 @@ naver:
 
 > 상품 도메인은 상품 정보를 관리하는 도메인입니다.
 
-![상품 도메인](docs/farm-domain.png)
+![상품 도메인](docs/product-domain.png)
 
 ### 농장 도메인
 
