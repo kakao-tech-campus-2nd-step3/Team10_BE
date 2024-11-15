@@ -12,23 +12,23 @@
 
 - [📌 프로젝트 소개](#프로젝트-소개)
 - [🛠️ 기술 스택](#기술-스택)
-  - [Backend](#Backend)
-  - [Build & Database](#Build-&-Database)
-  - [Cloud & Deployment](#Cloud-&-Deployment)
+    - [Backend](#Backend)
+    - [Build & Database](#Build-&-Database)
+    - [Cloud & Deployment](#Cloud-&-Deployment)
 - [📂 프로젝트 구조](#프로젝트-구조)
 - [📄 API 명세서](#API-명세서)
 - [📊 ERD](#ERD)
 - [🚀 프로젝트 실행 방법](#프로젝트-실행-방법)
 - [🌾 도메인 설명](#도메인-설명)
-  - [농장 도메인](#농장-도메인)
-  - [상품 도메인](#상품-도메인)
+    - [농장 도메인](#농장-도메인)
+    - [상품 도메인](#상품-도메인)
 - [🔒 보안 설정](#보안-설정)
 - [💳 결제 시스템 설정](#결제-시스템-설정)
 - [🌃 이미지 관리(S3: PresignedUrl)](#이미지-관리s3-presignedurl)
 - [🔄 지속적인 통합 및 배포](#지속적인-통합-및-배포)
-  - [배포 개요](#배포-개요)
-  - [배포 프로세스](#배포-프로세스)
-  - [알림 및 모니터링](#알림-및-모니터링)
+    - [배포 개요](#배포-개요)
+    - [배포 프로세스](#배포-프로세스)
+    - [알림 및 모니터링](#알림-및-모니터링)
 - [👥 Collaborators](#Collaborators)
 
 ## 📌 프로젝트 소개
@@ -45,7 +45,7 @@
 
 ![가락시장 유통구조](docs/grak.png)
 
-**도매 시장 문제로 인한 물가 변동 및 온라인 도매시장 도입 후 구조 변화**
+### **도매 시장 문제로 인한 물가 변동 및 온라인 도매시장 도입 후 구조 변화**
 
 ![도매법](docs/domae.png)
 
@@ -55,9 +55,14 @@
     - 농민이 직접 농산물을 판매할 수 있는 플랫폼 제공
     - 소비자가 농산물을 구매할 때 농민에게 공정한 가격을 지불
 
-![품앗이의 목표](docs/goal.png)
+### **배포 URL**
 
-더 자세한 이야기는 [품앗이 소개 페이지]()로
+| **서비스** | **URL**                                              |
+|---------|------------------------------------------------------|
+| 백엔드     | [https://api.poomasi.shop](https://api.poomasi.shop) |
+| 프론트엔드   | [https://poomasi.shop](https://poomasi.shop)         |
+
+더 자세한 이야기는 [품앗이 소개 페이지]()에서 확인하세요.
 
 ## 🛠️ 기술 스택
 
@@ -325,7 +330,7 @@ naver:
 ### JWT token
 
 - `로그인에 성공`하면 JWT(Json Web ToKen)을 발행합니다.
-- Http Header에  Bearer <accessToken> 형태로 access token을 전달합니다.
+- Http Header에 Bearer <accessToken> 형태로 access token을 전달합니다.
 - JWT를 발행하기 위해 `jjwt 0.11.5`을 사용하였습니다.
 - `OAuth2.0` 로그인이 성공하면 자체 서버로 `redirect`를 시킵니다.
 - 이후 `access token`은 query parameter를 통해 브라우저에게 전달합니다.
@@ -354,7 +359,6 @@ naver:
 
 - `Spring Security`의 `UsernamePasswodAuthenticationFilter`를 커스터마이징한 필터입니다.
 - 로그인에 성공하면 `JWT`를 브라우저에게 돌려줍니다.
-
 
 ### 화이트 리스트 방식 구현
 
