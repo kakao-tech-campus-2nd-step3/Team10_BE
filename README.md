@@ -79,6 +79,7 @@
 <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white" />
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white" />
 <img src="https://img.shields.io/badge/RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white" />
+<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=Redis&logoColor=white" />
 
 ### Test
 
@@ -304,11 +305,9 @@ naver:
 
 동 시간대 수용가능한 팀 및 최대 수용가능한 팀원을 확인하여 예약을 진행합니다.
 
-#### 3. 농장 리뷰 조회
-
-> 농장 리뷰 조회는 농장에 대한 리뷰를 조회하는 기능입니다.
-
 ## 🔒 Security 설정
+
+### 화이트 리스트 방식 구현
 
 ## 💳 결제 시스템
 
