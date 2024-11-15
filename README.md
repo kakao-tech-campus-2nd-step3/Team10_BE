@@ -12,25 +12,23 @@
 
 - [📌 프로젝트 소개](#프로젝트-소개)
 - [🛠️ 기술 스택](#기술-스택)
-    - [Backend](#Backend)
-    - [Build & Database](#Build-&-Database)
-    - [Cloud & Deployment](#Cloud-&-Deployment)
+  - [Backend](#Backend)
+  - [Build & Database](#Build-&-Database)
+  - [Cloud & Deployment](#Cloud-&-Deployment)
 - [📂 프로젝트 구조](#프로젝트-구조)
 - [📄 API 명세서](#API-명세서)
 - [📊 ERD](#ERD)
 - [🚀 프로젝트 실행 방법](#프로젝트-실행-방법)
 - [🌾 도메인 설명](#도메인-설명)
-    - [농장 도메인](#농장-도메인)
-    - [상품 도메인](#상품-도메인)
+  - [농장 도메인](#농장-도메인)
+  - [상품 도메인](#상품-도메인)
 - [🔒 보안 설정](#보안-설정)
-    - [◻️ 화이트리스트 방식 구현](#화이트리스트-방식-구현)
-    - [⬛️ 블랙리스트 방식 구현](#블랙리스트-방식-구현)
 - [💳 결제 시스템 설정](#결제-시스템-설정)
 - [🌃 이미지 관리(S3: PresignedUrl)](#이미지-관리s3-presignedurl)
 - [🔄 지속적인 통합 및 배포](#지속적인-통합-및-배포)
-    - [배포 개요](#배포-개요)
-    - [배포 프로세스](#배포-프로세스)
-    - [알림 및 모니터링](#알림-및-모니터링)
+  - [배포 개요](#배포-개요)
+  - [배포 프로세스](#배포-프로세스)
+  - [알림 및 모니터링](#알림-및-모니터링)
 - [👥 Collaborators](#Collaborators)
 
 ## 📌 프로젝트 소개
@@ -247,8 +245,8 @@ logging:
 
 jwt:
   secret: <JWT_SECRET>
-  access-token-expiration-time: 36000  # 1시간
-  refresh-token-expiration-time: 6048000  # 7일
+  access-token-expiration-time: 3600000  # 1시간
+  refresh-token-expiration-time: 604800000  # 7일
 
 aws:
   s3:
@@ -285,21 +283,6 @@ naver:
 
 ![상품 도메인](docs/product-domain.png)
 
-
-<details>
-<summary>상품의 소개를 등록</summary>
-
-![상품 소개 등록](https://github.com/user-attachments/assets/2d5e3f50-300e-46ba-996a-48892c6c95a3)
-</details>
-
-
-
-<details>
-<summary>장바구니에 담기</summary>
-
-![장바구니 담기](https://github.com/user-attachments/assets/e57721dc-64e6-45a1-8a38-6eac57609490)
-</details>
-
 ### 농장 도메인
 
 > 농장 도메인은 농장 정보를 관리하는 도메인입니다.
@@ -322,55 +305,60 @@ naver:
 
 동 시간대 수용가능한 팀 및 최대 수용가능한 팀원을 확인하여 예약을 진행합니다.
 
-### 주문 도메인
-
-> 농장이나 상품의 결제를 진행하면 주문(예약)을 생성합니다.
-
-![img.png](img.png)
-
-### 리뷰 도메인
-
-> 확정된 주문(예약)에 한하여 리뷰를 작성할 수 있습니다.
-
-![img_1.png](img_1.png)
-
 ## 🔒 Security 설정
 
-### ◻️ 화이트리스트 방식 구현
+> Spring Security 6.3.1 버전을 사용하여 인증 및 인가를 진행하였습니다.
+> 기본적으로 Spring Security는 Filter를 기반으로 인증 및 인가를 진행합니다.
+> 필터는 OAuth2.0 필터 -> JWT 인증 필터 -> 로그아웃 -> 일반 로그인 필터 순으로 구현하였습니다.
 
-> 토큰 재발급 시 사용자 검증을 하기 위해 토큰 발급 때마다 `RefreshToken`을 화이트리스트에 저장합니다.
+### 기본 로그인
 
-#### 토큰 재발급 흐름
+- 서버 DB에 저장된 사용자의 정보를 기반으로 진행하는 로그인입니다.
+- `UsernamePasswordAuthenticationFilter`를 커스터마이징하여 로그인을 진행합니다.
 
-	1. 로그인 시 서버는 `RefreshToken`을 Redis 화이트리스트에 추가합니다.
-	2. 토큰 재발급 요청 시 클라이언트는 `AccessToken1`과 `RefreshToken1`을 서버에 보냅니다.
-	3. 서버는 AccessToken1 검증 후 Redis 화이트리스트에서 `RefreshToken1`이 존재하는지 확인합니다.
-	4. `RefreshToken1`이 존재하면, 서버는 `AccessToken2`와 `RefreshToken2`를 새로 생성하여 클라이언트에 반환합니다.
-	5. `RefreshToken1`이 존재하지 않는다면, 서버는 사용자를 로그아웃 처리합니다.
+### 카카오 로그인
 
-화이트리스트 방식을 사용함으로써 사용자가 토큰을 탈취당했을 때, 공격자가 요청을 보내도 이를 허용하지 않습니다.
+- OAuth 2.0 프로토콜을 사용하여 카카오 계정을 통한 로그인을 제공합니다.
+- Spring Security Oauth2.0 로그인을 활성화하여 진행합니다.
+- 이는 `Spring Security`에서 제공하는 `Oauth2.0 로그인`을 활성화시켜 구현하였습니다.
 
-<br>
+### JWT token
 
-### ⬛️ 블랙리스트 방식 구현
+- `로그인에 성공`하면 JWT(Json Web ToKen)을 발행합니다.
+- Http Header에  Bearer <accessToken> 형태로 access token을 전달합니다.
+- JWT를 발행하기 위해 `jjwt 0.11.5`을 사용하였습니다.
+- `OAuth2.0` 로그인이 성공하면 자체 서버로 `redirect`를 시킵니다.
+- 이후 `access token`은 query parameter를 통해 브라우저에게 전달합니다.
+- `refresh token`은 HttpOnly Cookie를 통해 xss 공격을 방지합니다.
 
-> 로그아웃한 사용자의 `AccessToken`을 사용하여 요청을 보내는 것을 방지하기 위해 로그아웃 시 `AccessToken`을 블랙리스트에 저장합니다.
+### OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter
 
-#### 로그아웃 흐름
+- OAuth2.0 로그인을 활성화하면 사용하는 필터입니다.
+- `OAuth2AuthorizationRequestRedirectFilter`필터는 OAuth2.0 인증 서버로 redirect하는 필터입니다.
+- `OAuth2LoginAuthenticationFilter`필터는 OAuth2.0 인증을 실질적으로 수행하는 필터입니다.
+- 카카오톡 동의항목을 통해 유저의 닉네임과, 이메일을 제공받았습니다.
 
-	1. 클라이언트가 로그아웃 요청을 합니다.
-	2. 서버는 요청에서 `AccessToken`을 추출합니다.
-	3. 서버는 해당 `AccessToken`을 Redis 블랙리스트에 추가합니다.
-	4. 클라이언트가 AccessToken과 함께 요청을 보낼 때마다 서버는 Redis 블랙리스트를 확인하여 `AccessToken`의 유효성을 검증합니다.
-	5. `AccessToken`이 블랙리스트에 포함되어 있으면, 서버는 요청을 무효화하고, 클라이언트에 인증 실패 응답을 반환합니다.
+### JwtAuthenticationFilter
 
-블랙리스트 방식을 사용함으로써 로그아웃한 사용자가 요청을 보낼 때, 또는 공격자가 해당 사용자의 토큰으로 요청을 보낼 때, 요청을 허용하지 않습니다.
+- `JWT`를 검증하는 필터입니다.
+- 시간이 만료되면 재발급하라는 메시지를 담아서 보냅니다.
+- 인증되지 않은, 즉 변조된 토큰이라면 이는 잘못된 접근이라 판단해 401 UnAuthorization 에러를 브라우저에게 전달합니다.
 
-<br>
+### JwtLogoutFilter
+
+- `로그아웃`을 진행하는 필터입니다.
+- 토큰을 통한 인증/인가는 웹 통신의 특성상 sniffing 및 spoofing 공격을 대응하기 어렵습니다.
+- 이러한 점을 방지해 로그아웃 요청이 온다면 인메모리 캐시(redis) 혹은 데이터베이스(DB)에 로그아웃 요청이 온 accesstoken을 저장합니다.
+
+### CustomUsernamePasswordAuthenticationFilter
+
+- `Spring Security`의 `UsernamePasswodAuthenticationFilter`를 커스터마이징한 필터입니다.
+- 로그인에 성공하면 `JWT`를 브라우저에게 돌려줍니다.
+
+
+### 화이트 리스트 방식 구현
 
 ## 💳 결제 시스템
-
-#### 결제  도메인
 
 ![포트원 API 결제 프로세스](docs/payment-process.png)
 
@@ -384,7 +372,7 @@ naver:
 	6. PG 사에서 결제 결과를 받아 백엔드에 결제 결과를 전달합니다.
     7. 백엔드에서 결제 결과를 받아 결제 결과를 사용자에게 전달합니다. (재고확인 2회 & PG사에 요쳥해 결제 완료 확인 및 결제 완료 표시)
 
-**환불 정첵**
+**환불 정책**
 
     - 농장 체험일 3일 전에는 환불 수수료 50%를 부과합니다.
     - 상품 구매 후 환불 할 때 배송비 3,000원을 부과합니다.
