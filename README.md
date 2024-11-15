@@ -245,8 +245,8 @@ logging:
 
 jwt:
   secret: <JWT_SECRET>
-  access-token-expiration-time: 3600000  # 1시간
-  refresh-token-expiration-time: 604800000  # 7일
+  access-token-expiration-time: 36000  # 1시간
+  refresh-token-expiration-time: 6048000  # 7일
 
 aws:
   s3:
@@ -319,24 +319,24 @@ naver:
 ## 🔒 Security 설정
 
 ### 1. 화이트리스트 방식 구현
-> 토큰 재발급 시 사용자 검증을 위해 `RefreshToken`을 화이트리스트에 저장합니다.
+> 토큰 재발급 시 사용자 검증을 하기 위해 토큰 발급 때마다 `RefreshToken`을 화이트리스트에 저장합니다.
 
 #### 토큰 재발급 흐름
-	1. **로그인 시** 서버는 `RefreshToken`을 Redis 화이트리스트에 추가합니다.
-	2. **토큰 재발급 요청 시** 클라이언트는 `AccessToken1`과 `RefreshToken1`을 서버에 보냅니다.
-	3. 서버는 Redis 화이트리스트에서 `RefreshToken1`이 존재하는지 확인합니다.
+	1. 로그인 시 서버는 `RefreshToken`을 Redis 화이트리스트에 추가합니다.
+	2. 토큰 재발급 요청 시 클라이언트는 `AccessToken1`과 `RefreshToken1`을 서버에 보냅니다.
+	3. 서버는 AccessToken1 검증 후 Redis 화이트리스트에서 `RefreshToken1`이 존재하는지 확인합니다.
 	4. `RefreshToken1`이 존재하면, 서버는 `AccessToken2`와 `RefreshToken2`를 새로 생성하여 클라이언트에 반환합니다.
 	5. `RefreshToken1`이 존재하지 않는다면, 서버는 사용자를 로그아웃 처리합니다.
 <br>
 
 ### 2. 블랙리스트 방식 구현
-> 로그아웃한 사용자가 `AccessToken`을 사용하여 요청을 보내는 것을 방지하기 위해 로그아웃 시 `AccessToken`을 블랙리스트에 저장합니다.
+> 로그아웃한 사용자의 `AccessToken`을 사용하여 요청을 보내는 것을 방지하기 위해 로그아웃 시 `AccessToken`을 블랙리스트에 저장합니다.
 
 #### 로그아웃 흐름
-	1. 클라이언트가 **로그아웃 요청**을 합니다.
-	2. 서버는 요청에서 `JWT AccessToken`을 추출합니다.
-	3. 서버는 해당 `JWT AccessToken`을 Redis 블랙리스트에 추가합니다.
-	4. **사용자 요청 시**, 서버는 Redis 블랙리스트를 확인하여 `JWT AccessToken`의 유효성을 검증합니다.
+	1. 클라이언트가 로그아웃 요청을 합니다.
+	2. 서버는 요청에서 `AccessToken`을 추출합니다.
+	3. 서버는 해당 `AccessToken`을 Redis 블랙리스트에 추가합니다.
+	4. 클라이언트가 AccessToken과 함께 요청을 보낼 때마다 서버는 Redis 블랙리스트를 확인하여 `AccessToken`의 유효성을 검증합니다.
 	5. `AccessToken`이 블랙리스트에 포함되어 있으면, 서버는 요청을 무효화하고, 클라이언트에 인증 실패 응답을 반환합니다.
 
 
