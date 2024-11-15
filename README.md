@@ -312,55 +312,76 @@ naver:
 
 ## 🔒 Security 설정
 
-> Spring Security 6.3.1 버전을 사용하여 인증 및 인가를 진행하였습니다.
-> 기본적으로 Spring Security는 Filter를 기반으로 인증 및 인가를 진행합니다.
+> Spring Security 6.3.1 버전을 사용하여 인증 및 인가를 진행하였습니다.  
+> 기본적으로 Spring Security는 Filter를 기반으로 인증 및 인가를 진행합니다.  
 > 필터는 OAuth2.0 필터 -> JWT 인증 필터 -> 로그아웃 -> 일반 로그인 필터 순으로 구현하였습니다.
 
-### 기본 로그인
+<details>
+<summary>기본 로그인</summary>
 
 - 서버 DB에 저장된 사용자의 정보를 기반으로 진행하는 로그인입니다.
 - `UsernamePasswordAuthenticationFilter`를 커스터마이징하여 로그인을 진행합니다.
 
-### 카카오 로그인
+</details>
+
+<details>
+<summary>카카오 로그인</summary>
 
 - OAuth 2.0 프로토콜을 사용하여 카카오 계정을 통한 로그인을 제공합니다.
 - Spring Security Oauth2.0 로그인을 활성화하여 진행합니다.
 - 이는 `Spring Security`에서 제공하는 `Oauth2.0 로그인`을 활성화시켜 구현하였습니다.
 
-### JWT token
+</details>
+
+<details>
+<summary>JWT token</summary>
 
 - `로그인에 성공`하면 JWT(Json Web ToKen)을 발행합니다.
-- Http Header에 Bearer <accessToken> 형태로 access token을 전달합니다.
+- Http Header에 Bearer `<accessToken>` 형태로 access token을 전달합니다.
 - JWT를 발행하기 위해 `jjwt 0.11.5`을 사용하였습니다.
 - `OAuth2.0` 로그인이 성공하면 자체 서버로 `redirect`를 시킵니다.
 - 이후 `access token`은 query parameter를 통해 브라우저에게 전달합니다.
 - `refresh token`은 HttpOnly Cookie를 통해 xss 공격을 방지합니다.
 
-### OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter
+</details>
+
+<details>
+<summary>OAuth2AuthorizationRequestRedirectFilter, OAuth2LoginAuthenticationFilter</summary>
 
 - OAuth2.0 로그인을 활성화하면 사용하는 필터입니다.
-- `OAuth2AuthorizationRequestRedirectFilter`필터는 OAuth2.0 인증 서버로 redirect하는 필터입니다.
-- `OAuth2LoginAuthenticationFilter`필터는 OAuth2.0 인증을 실질적으로 수행하는 필터입니다.
-- 카카오톡 동의항목을 통해 유저의 닉네임과, 이메일을 제공받았습니다.
+- `OAuth2AuthorizationRequestRedirectFilter` 필터는 OAuth2.0 인증 서버로 redirect하는 필터입니다.
+- `OAuth2LoginAuthenticationFilter` 필터는 OAuth2.0 인증을 실질적으로 수행하는 필터입니다.
+- 카카오톡 동의항목을 통해 유저의 닉네임과 이메일을 제공받았습니다.
 
-### JwtAuthenticationFilter
+</details>
+
+<details>
+<summary>JwtAuthenticationFilter</summary>
 
 - `JWT`를 검증하는 필터입니다.
 - 시간이 만료되면 재발급하라는 메시지를 담아서 보냅니다.
 - 인증되지 않은, 즉 변조된 토큰이라면 이는 잘못된 접근이라 판단해 401 UnAuthorization 에러를 브라우저에게 전달합니다.
 
-### JwtLogoutFilter
+</details>
+
+<details>
+<summary>JwtLogoutFilter</summary>
 
 - `로그아웃`을 진행하는 필터입니다.
 - 토큰을 통한 인증/인가는 웹 통신의 특성상 sniffing 및 spoofing 공격을 대응하기 어렵습니다.
 - 이러한 점을 방지해 로그아웃 요청이 온다면 인메모리 캐시(redis) 혹은 데이터베이스(DB)에 로그아웃 요청이 온 accesstoken을 저장합니다.
 
-### CustomUsernamePasswordAuthenticationFilter
+</details>
+
+<details>
+<summary>CustomUsernamePasswordAuthenticationFilter</summary>
 
 - `Spring Security`의 `UsernamePasswodAuthenticationFilter`를 커스터마이징한 필터입니다.
 - 로그인에 성공하면 `JWT`를 브라우저에게 돌려줍니다.
 
-### 화이트 리스트 방식 구현
+</details>
+
+
 
 ## 💳 결제 시스템
 
